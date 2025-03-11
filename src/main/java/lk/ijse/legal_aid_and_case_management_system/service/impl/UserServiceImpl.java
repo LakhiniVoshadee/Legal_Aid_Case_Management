@@ -1,6 +1,7 @@
 package lk.ijse.legal_aid_and_case_management_system.service.impl;
 
 import lk.ijse.legal_aid_and_case_management_system.dto.UserDTO;
+import lk.ijse.legal_aid_and_case_management_system.dto.UserProfileUpdateDTO;
 import lk.ijse.legal_aid_and_case_management_system.entity.User;
 import lk.ijse.legal_aid_and_case_management_system.repo.UserRepository;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -27,6 +29,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -54,6 +58,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return null;
         }
     }
+
+
 
     @Override
     public int saveUser(UserDTO userDTO) {
