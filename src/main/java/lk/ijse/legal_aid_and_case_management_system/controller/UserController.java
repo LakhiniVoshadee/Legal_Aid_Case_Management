@@ -15,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -71,4 +72,16 @@ public class UserController {
         userService.updateUserProfile(userId, userDTO);
         return ResponseEntity.ok("Profile updated successfully!");
     }
+
+    @GetMapping("/lawyers")
+    public ResponseEntity<ResponseDTO> getAllLawyers() {
+        try {
+            List<UserDTO> lawyers = userService.searchLawyers();
+            return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Lawyers fetched successfully", lawyers));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
+        }
+    }
+
 }

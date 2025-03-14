@@ -20,16 +20,28 @@ public class User implements Serializable {
     private String name;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    @Column
+    private String specialization;
+
+    @Column
+    private int experienceYears;
+
+    @Column
+    private boolean available;
+
 
     public User() {
     }
 
-    public User(UUID uid, String email, String password, String name, UserRole role) {
+    public User(UUID uid, String email, String password, String name, UserRole role, String specialization, int experienceYears, boolean available) {
         this.uid = uid;
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
+        this.specialization = specialization;
+        this.experienceYears = experienceYears;
+        this.available = available;
     }
 
     public UUID getUid() {
@@ -70,5 +82,29 @@ public class User implements Serializable {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
+
+    public int getExperienceYears() {
+        return experienceYears;
+    }
+
+    public void setExperienceYears(int experienceYears) {
+        this.experienceYears = experienceYears;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

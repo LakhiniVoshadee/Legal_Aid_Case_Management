@@ -52,7 +52,7 @@ public class WebSecurityConfig {
                                 "/swagger-ui.html").permitAll()
                         .requestMatchers("/api/v1/dashboard/admin").hasRole("ADMIN") // Admin specific routes
                         .requestMatchers("/api/v1/dashboard/lawyer").hasRole("LAWYER") // Lawyer specific routes
-                        .requestMatchers("/api/v1/dashboard/client").hasRole("CLIENT") // Client specific ro
+                        .requestMatchers("/api/v1/dashboard/client").hasRole("CLIENT") // Client specific routes
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -4,6 +4,7 @@ import lk.ijse.legal_aid_and_case_management_system.dto.UserDTO;
 import lk.ijse.legal_aid_and_case_management_system.entity.User;
 import lk.ijse.legal_aid_and_case_management_system.repo.UserRepository;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
+import lk.ijse.legal_aid_and_case_management_system.util.Enum.UserRole;
 import lk.ijse.legal_aid_and_case_management_system.util.VarList;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -78,6 +77,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return modelMapper.map(user, UserDTO.class);
     }
 
+    @Override
+    public List<UserDTO> searchLawyers() {
+        List<User> lawyers = userRepository.findByRole(UserRole.LAWYER);
+        return lawyers.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
 
 
     @Override

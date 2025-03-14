@@ -9,15 +9,21 @@ public class UserDTO {
     private String password;
     private String name;
     private UserRole role; // Changed to UserRole enum
+    private String specialization;
+    private int experienceYears;
+    private boolean available;
 
     public UserDTO() {
     }
 
-    public UserDTO(String email, String password, String name, UserRole role) {
+    public UserDTO(String email, String password, String name, UserRole role, String specialization, int experienceYears, boolean available) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
+        this.specialization = specialization;
+        this.experienceYears = experienceYears;
+        this.available = available;
     }
 
     public String getEmail() {
@@ -50,5 +56,29 @@ public class UserDTO {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
+
+    public int getExperienceYears() {
+        return experienceYears;
+    }
+
+    public void setExperienceYears(int experienceYears) {
+        this.experienceYears = experienceYears;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }
