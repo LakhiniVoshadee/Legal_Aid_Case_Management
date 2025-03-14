@@ -3,15 +3,15 @@ package lk.ijse.legal_aid_and_case_management_system.dto;
 public class UserProfileUpdateDTO {
     private String name;
     private String email;
-    private ProfileImageDTO profileImage;
+    private String password;
 
     public UserProfileUpdateDTO() {
     }
 
-    public UserProfileUpdateDTO(String name, String email, ProfileImageDTO profileImage) {
+    public UserProfileUpdateDTO(String name, String email, String password) {
         this.name = name;
         this.email = email;
-        this.profileImage = profileImage;
+        this.password = password;
     }
 
     public String getName() {
@@ -30,11 +30,11 @@ public class UserProfileUpdateDTO {
         this.email = email;
     }
 
-    public ProfileImageDTO getProfileImage() {
-        return profileImage;
+    public String getPassword() {
+        return password;
     }
 
-    public void setProfileImage(ProfileImageDTO profileImage) {
-        this.profileImage = profileImage;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

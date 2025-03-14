@@ -4,12 +4,18 @@ import jakarta.validation.Valid;
 import lk.ijse.legal_aid_and_case_management_system.dto.AuthDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.ResponseDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.UserDTO;
+import lk.ijse.legal_aid_and_case_management_system.dto.UserProfileUpdateDTO;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
 import lk.ijse.legal_aid_and_case_management_system.util.JwtUtil;
+import lk.ijse.legal_aid_and_case_management_system.util.ResponseUtil;
 import lk.ijse.legal_aid_and_case_management_system.util.VarList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -51,4 +57,18 @@ public class UserController {
         }
     }
 
+    @PutMapping("/{userId}/update-profile")
+    public ResponseEntity<String> updateUserProfile(
+            @PathVariable UUID userId,
+            @RequestBody UserDTO userDTO,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        // Ensure the logged-in user is the one being updated
+        if (!userDetails.getUsername().equals(userDTO.getEmail())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only update your own profile!");
+        }
+
+        userService.updateUserProfile(userId, userDTO);
+        return ResponseEntity.ok("Profile updated successfully!");
+    }
 }

@@ -8,23 +8,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/admin")
-@CrossOrigin(origins = "http://localhost:8082")
+@CrossOrigin(origins = "http://localhost:8080")
 public class AdminController {
     @GetMapping("/test1")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String check(){
-        return "passed~!1";
+        return "Admin logged in successfully";
     }
 
-    @GetMapping("/test2")
-    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("/lawyer")
+    @PreAuthorize("hasAuthority('LAWYER')")
     public String checks(){
-        return "passed~!2";
+        return "Lawyer logged in successfully";
     }
-    @GetMapping("/test3")
-    @PreAuthorize("hasAuthority('USER')")
+
+    @GetMapping("/client")
+    @PreAuthorize("hasAuthority('CLIENT')")
     public String checkss(){
-        return "passed~!2";
+        return "Client logged in successfully";
     }
 
 }
