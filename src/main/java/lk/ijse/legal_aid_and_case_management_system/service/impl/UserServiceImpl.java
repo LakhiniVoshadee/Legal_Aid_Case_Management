@@ -1,7 +1,14 @@
 package lk.ijse.legal_aid_and_case_management_system.service.impl;
 
+import ch.qos.logback.core.net.server.Client;
 import lk.ijse.legal_aid_and_case_management_system.dto.UserDTO;
+import lk.ijse.legal_aid_and_case_management_system.entity.Admin;
+import lk.ijse.legal_aid_and_case_management_system.entity.Clients;
+import lk.ijse.legal_aid_and_case_management_system.entity.Lawyer;
 import lk.ijse.legal_aid_and_case_management_system.entity.User;
+import lk.ijse.legal_aid_and_case_management_system.repo.AdminRepository;
+import lk.ijse.legal_aid_and_case_management_system.repo.ClientRepository;
+import lk.ijse.legal_aid_and_case_management_system.repo.LawyerRepository;
 import lk.ijse.legal_aid_and_case_management_system.repo.UserRepository;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
 import lk.ijse.legal_aid_and_case_management_system.util.Enum.UserRole;
@@ -27,8 +34,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private AdminRepository adminRepository;
 
+    @Autowired
+    private LawyerRepository lawyerRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
 
     @Override
@@ -39,50 +54,42 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     public UserDTO loadUserDetailsByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username);
-        return modelMapper.map(user,UserDTO.class);
+        return modelMapper.map(user, UserDTO.class);
     }
 
     private Set<SimpleGrantedAuthority> getAuthority(User user) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
+
+        if (adminRepository.existsByUser(user)) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else if (clientRepository.existsByUser(user)) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_CLIENT"));
+        } else if (lawyerRepository.existsByUser(user)) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_LAWYER"));
+        } else {
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
         return authorities;
     }
 
     @Override
     public UserDTO searchUser(String username) {
         if (userRepository.existsByEmail(username)) {
-            User user=userRepository.findByEmail(username);
-            return modelMapper.map(user,UserDTO.class);
+            User user = userRepository.findByEmail(username);
+            return modelMapper.map(user, UserDTO.class);
         } else {
             return null;
         }
     }
 
     @Override
-    public UserDTO updateUserProfile(UUID userId, UserDTO userDTO) {
-        Optional<User> optionalUser = userRepository.findById(String.valueOf(userId));
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
+    public int deleteUserByEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            userRepository.deleteByEmail(email);
+            return VarList.OK;
+        } else {
+            return VarList.Not_Acceptable;
         }
-
-        User user = optionalUser.get();
-
-        // Update only editable fields
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-
-        // Save changes
-        userRepository.save(user);
-
-        return modelMapper.map(user, UserDTO.class);
-    }
-
-    @Override
-    public List<UserDTO> searchLawyers() {
-        List<User> lawyers = userRepository.findByRole(UserRole.LAWYER);
-        return lawyers.stream()
-                .map(user -> modelMapper.map(user, UserDTO.class))
-                .collect(Collectors.toList());
     }
 
 
@@ -90,11 +97,38 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public int saveUser(UserDTO userDTO) {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             return VarList.Not_Acceptable;
-        } else {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-            //userDTO.setRole("USER");
-            userRepository.save(modelMapper.map(userDTO, User.class));
-            return VarList.Created;
         }
-    }}
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+        User user = modelMapper.map(userDTO, User.class);
+        user.setRole(userDTO.getRole().toUpperCase());
+        userRepository.save(user);
+
+        switch (userDTO.getRole().toUpperCase()) {
+            case "ADMIN" -> {
+                Admin admin = new Admin();
+                admin.setUser(user);
+                admin.setAdmin_name(userDTO.getAdmin_name());
+                adminRepository.save(admin);
+            }
+            case "CLIENT" -> {
+                Clients client = new Clients();
+                client.setUser(user);
+                client.setFull_name(client.getFull_name());
+                clientRepository.save(client);
+            }
+            case "LAWYER" -> {
+                Lawyer lawyer = new Lawyer();
+                lawyer.setUser(user);
+                lawyer.setLawyer_name(userDTO.getLawyer_name());
+                lawyerRepository.save(lawyer);
+            }
+            default -> {
+                return VarList.Not_Acceptable;
+            }
+        }
+        return VarList.Created;
+    }
+}

@@ -9,39 +9,31 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "user")
-
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(updatable = false, nullable = false)
     private UUID uid;
-    @Column(unique = true)
+    @Column(nullable = false,unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String name;
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
-    @Column
-    private String specialization;
-
-    @Column
-    private int experienceYears;
-
-    @Column
-    private boolean available;
+   // @Enumerated(EnumType.STRING)
+   @Column(nullable = false)
+    private String role;
 
 
     public User() {
     }
 
-    public User(UUID uid, String email, String password, String name, UserRole role, String specialization, int experienceYears, boolean available) {
+    public User(UUID uid, String email, String password, String name, String role) {
         this.uid = uid;
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
-        this.specialization = specialization;
-        this.experienceYears = experienceYears;
-        this.available = available;
     }
 
     public UUID getUid() {
@@ -76,35 +68,11 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public UserRole getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(String role) {
         this.role = role;
-    }
-
-    public String getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
-
-    public int getExperienceYears() {
-        return experienceYears;
-    }
-
-    public void setExperienceYears(int experienceYears) {
-        this.experienceYears = experienceYears;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
     }
 }

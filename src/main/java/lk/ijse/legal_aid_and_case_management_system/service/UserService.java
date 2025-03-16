@@ -8,9 +8,6 @@ import java.util.UUID;
 public interface UserService {
     int saveUser(UserDTO userDTO);
     UserDTO searchUser(String username);
-   // UserDTO updateUserProfile(UUID userId, UserProfileUpdateDTO profileUpdateDTO);
-
-    UserDTO updateUserProfile(UUID userId, UserDTO userDTO);
-    List<UserDTO> searchLawyers();
+    int deleteUserByEmail(String email);
 
 }

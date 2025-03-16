@@ -8,22 +8,23 @@ public class UserDTO {
     private String email;
     private String password;
     private String name;
-    private UserRole role; // Changed to UserRole enum
-    private String specialization;
-    private int experienceYears;
-    private boolean available;
+    private String role; // Changed to UserRole enum
+
+    private String admin_name;
+    private String full_name;
+    private String lawyer_name;
 
     public UserDTO() {
     }
 
-    public UserDTO(String email, String password, String name, UserRole role, String specialization, int experienceYears, boolean available) {
+    public UserDTO(String email, String password, String name, String role, String admin_name, String full_name, String lawyer_name) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
-        this.specialization = specialization;
-        this.experienceYears = experienceYears;
-        this.available = available;
+        this.admin_name = admin_name;
+        this.full_name = full_name;
+        this.lawyer_name = lawyer_name;
     }
 
     public String getEmail() {
@@ -50,35 +51,35 @@ public class UserDTO {
         this.name = name;
     }
 
-    public UserRole getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
-    public String getSpecialization() {
-        return specialization;
+    public String getAdmin_name() {
+        return admin_name;
     }
 
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
+    public void setAdmin_name(String admin_name) {
+        this.admin_name = admin_name;
     }
 
-    public int getExperienceYears() {
-        return experienceYears;
+    public String getFull_name() {
+        return full_name;
     }
 
-    public void setExperienceYears(int experienceYears) {
-        this.experienceYears = experienceYears;
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
     }
 
-    public boolean isAvailable() {
-        return available;
+    public String getLawyer_name() {
+        return lawyer_name;
     }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
+    public void setLawyer_name(String lawyer_name) {
+        this.lawyer_name = lawyer_name;
     }
 }
