@@ -7,24 +7,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/admin")
+@RequestMapping("api/v1/dashboard")
 @CrossOrigin(origins = "http://localhost:8080")
 public class AdminController {
-    @GetMapping("/test1")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public String check(){
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String adminAccess(){
         return "Admin logged in successfully";
     }
 
     @GetMapping("/lawyer")
-    @PreAuthorize("hasAuthority('LAWYER')")
-    public String checks(){
+    @PreAuthorize("hasRole('LAWYER')")
+    public String lawyerAccess(){
         return "Lawyer logged in successfully";
     }
 
     @GetMapping("/client")
-    @PreAuthorize("hasAuthority('CLIENT')")
-    public String checkss(){
+    @PreAuthorize("hasRole('CLIENT')")
+    public String clientAccess(){
         return "Client logged in successfully";
     }
 
