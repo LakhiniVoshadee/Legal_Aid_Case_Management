@@ -53,9 +53,9 @@ public class WebSecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/v1/dashboard/**").hasRole("ADMIN") // Admin specific routes
-                        .requestMatchers("/api/v1/dashboard/**").hasRole("LAWYER") // Lawyer specific routes
-                        .requestMatchers("/api/v1/dashboard/**").hasRole("CLIENT") // Client specific routes
+                        .requestMatchers("/api/v1/dashboard/admin").hasRole("ADMIN") // Admin specific routes
+                        .requestMatchers("/api/v1/dashboard/lawyer").hasRole("LAWYER") // Lawyer specific routes
+                        .requestMatchers("/api/v1/dashboard/client").hasRole("CLIENT") // Client specific routes
                         .requestMatchers("/api/v1/auth/**", "/api/v1/user/register").permitAll()
                         .anyRequest().authenticated()
                 )
