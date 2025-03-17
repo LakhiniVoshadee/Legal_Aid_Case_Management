@@ -11,9 +11,17 @@ public class UserDTO {
     private String password;
     private String name;
     private String role; // Changed to UserRole enum
-
     private String admin_name;
+
+    //Client
     private String full_name;
+    private String phone_number;
+    private LocalDate date_of_birth;
+    private String preferred_language;
+    private String gender;
+    private String NIC;
+
+    //Lawyer
     private String lawyer_name;
     private String address;
     private String specialization;
@@ -25,13 +33,7 @@ public class UserDTO {
     private String province;
     private String district;
 
-    private String phone_number;
-    private LocalDate date_of_birth;
 
-    private String preferred_language;
-
-    private String gender;
-    private String NIC;
 
     public UserDTO() {
     }

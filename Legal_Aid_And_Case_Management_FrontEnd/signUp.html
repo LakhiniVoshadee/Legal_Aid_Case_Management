@@ -8,10 +8,39 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="/css/signUp.css.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <!-- Header (same as in your example) -->
-
+<header class="lawnet-header fixed-top">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <span class="logo-text">Law<span class="logo-highlight">Net</span></span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Clients</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Lawyers</a>
+          </li>
+        </ul>
+        <div class="nav-buttons">
+          <a href="/signIn.html" class="btn btn-outline-primary">Sign In</a>
+          <a href="/signUp.html" class="btn btn-primary">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
 <div class="sign-up-container">
   <div class="container">
     <div class="text-center mb-5">
@@ -33,7 +62,7 @@
             <li><i class="fas fa-check"></i> Request consultations</li>
             <li><i class="fas fa-check"></i> Access legal resources</li>
           </ul>
-          <a href="sign-up-client.html" class="btn btn-outline-primary w-100">Sign Up as Client</a>
+          <a href="clientSignUp.html" class="btn btn-outline-primary w-100">Sign Up as Client</a>
         </div>
       </div>
 
