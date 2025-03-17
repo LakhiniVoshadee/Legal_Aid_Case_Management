@@ -1,12 +1,10 @@
-// Sign In Page JavaScript
-
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // Toggle password visibility
   const togglePassword = document.querySelector('.toggle-password');
   const passwordField = document.querySelector('#password');
 
   if (togglePassword && passwordField) {
-    togglePassword.addEventListener('click', function() {
+    togglePassword.addEventListener('click', function () {
       const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
       passwordField.setAttribute('type', type);
 
@@ -17,15 +15,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Form validation
+  // Form validation and AJAX login request
   const signInForm = document.getElementById('signInForm');
 
   if (signInForm) {
-    signInForm.addEventListener('submit', function(e) {
+    signInForm.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
 
       // Basic validation
       if (!email || !password) {
@@ -39,18 +37,30 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // Submit form - in a real app, you would send this to your server
-      console.log('Form submitted', { email, password });
-      showAlert('Signing in...', 'success');
+      // Prepare AJAX request
+      $.ajax({
+        url: "http://localhost:8080/api/v1/auth/authenticate", // Correct backend URL
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ email, password }),
+        success: function(response) {
+          if (response.code === 201) {
+            showAlert("Login successful!", "success");
+            localStorage.setItem("token", response.data.token);
+            window.location.href = "dashboard.html";
+          } else {
+            showAlert(response.message, "danger");
+          }
+        },
+        error: function(xhr) {
+          showAlert("Invalid credentials or server error", "danger");
+        }
+      });
 
-      // Simulate redirect after success
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 1500);
     });
   }
 
-  // Helper function to validate email
+  // Helper function to validate email format
   function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -58,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Helper function to show alerts
   function showAlert(message, type) {
-    // Check if alert container exists, if not create it
     let alertContainer = document.querySelector('.alert-container');
 
     if (!alertContainer) {
@@ -67,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
       signInForm.insertAdjacentElement('beforebegin', alertContainer);
     }
 
-    // Create alert
     const alert = document.createElement('div');
     alert.className = `alert alert-${type} mt-3`;
     alert.textContent = message;
@@ -87,7 +95,9 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
       alert.classList.add('fade');
       setTimeout(() => {
-        alertContainer.removeChild(alert);
+        if (alertContainer.contains(alert)) {
+          alertContainer.removeChild(alert);
+        }
       }, 500);
     }, 3000);
   }
