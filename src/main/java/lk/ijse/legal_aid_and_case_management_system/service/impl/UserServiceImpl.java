@@ -117,6 +117,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 Clients client = new Clients();
                 client.setUser(user);
                 client.setFull_name(userDTO.getFull_name());
+                client.setPhone_number(userDTO.getPhone_number());
+                client.setDate_of_birth(userDTO.getDate_of_birth());
+                client.setAddress(userDTO.getAddress());
+                client.setPreferred_language(userDTO.getPreferred_language());
+                client.setGender(userDTO.getGender());
+                client.setNIC(userDTO.getNIC());
                 clientRepository.save(client);
             }
             case "LAWYER" -> {
@@ -124,6 +130,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 lawyer.setUser(user);
                 lawyer.setLawyer_name(userDTO.getLawyer_name());
                 lawyer.setAddress(userDTO.getAddress());
+                lawyer.setSpecialization(userDTO.getSpecialization());
+                lawyer.setYearsOfExperience(userDTO.getYearsOfExperience());
+                lawyer.setBarAssociationNumber(userDTO.getBarAssociationNumber());
+                lawyer.setContactNumber(userDTO.getContactNumber());
+                lawyer.setOfficeLocation(userDTO.getOfficeLocation());
+                lawyer.setBio(userDTO.getBio());
+                lawyer.setProvince(userDTO.getProvince());
+                lawyer.setDistrict(userDTO.getDistrict());
                 lawyerRepository.save(lawyer);
             }
             default -> {
