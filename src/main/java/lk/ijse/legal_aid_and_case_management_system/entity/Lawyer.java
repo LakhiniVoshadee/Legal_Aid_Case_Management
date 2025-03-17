@@ -11,6 +11,7 @@ public class Lawyer {
 
     private String lawyer_name;
 
+    private String address;
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
@@ -18,9 +19,10 @@ public class Lawyer {
     public Lawyer() {
     }
 
-    public Lawyer(Long lawyer_id, String lawyer_name, User user) {
+    public Lawyer(Long lawyer_id, String lawyer_name, String address, User user) {
         this.lawyer_id = lawyer_id;
         this.lawyer_name = lawyer_name;
+        this.address = address;
         this.user = user;
     }
 
@@ -38,6 +40,14 @@ public class Lawyer {
 
     public void setLawyer_name(String lawyer_name) {
         this.lawyer_name = lawyer_name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public User getUser() {

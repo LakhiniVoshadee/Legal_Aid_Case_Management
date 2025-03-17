@@ -116,13 +116,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             case "CLIENT" -> {
                 Clients client = new Clients();
                 client.setUser(user);
-                client.setFull_name(client.getFull_name());
+                client.setFull_name(userDTO.getFull_name());
                 clientRepository.save(client);
             }
             case "LAWYER" -> {
                 Lawyer lawyer = new Lawyer();
                 lawyer.setUser(user);
                 lawyer.setLawyer_name(userDTO.getLawyer_name());
+                lawyer.setAddress(userDTO.getAddress());
                 lawyerRepository.save(lawyer);
             }
             default -> {

@@ -13,11 +13,12 @@ public class UserDTO {
     private String admin_name;
     private String full_name;
     private String lawyer_name;
+    private String address;
 
     public UserDTO() {
     }
 
-    public UserDTO(String email, String password, String name, String role, String admin_name, String full_name, String lawyer_name) {
+    public UserDTO(String email, String password, String name, String role, String admin_name, String full_name, String lawyer_name, String address) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -25,6 +26,7 @@ public class UserDTO {
         this.admin_name = admin_name;
         this.full_name = full_name;
         this.lawyer_name = lawyer_name;
+        this.address = address;
     }
 
     public String getEmail() {
@@ -81,5 +83,13 @@ public class UserDTO {
 
     public void setLawyer_name(String lawyer_name) {
         this.lawyer_name = lawyer_name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
