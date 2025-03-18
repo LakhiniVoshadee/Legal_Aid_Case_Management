@@ -12,4 +12,5 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     Admin findByUser_Email(String email);
 
     void deleteByUser_Email(String email);
+
 }

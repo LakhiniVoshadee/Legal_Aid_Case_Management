@@ -1,6 +1,8 @@
 package lk.ijse.legal_aid_and_case_management_system.service.impl;
 
 import ch.qos.logback.core.net.server.Client;
+import lk.ijse.legal_aid_and_case_management_system.dto.AdminUpdateDTO;
+import lk.ijse.legal_aid_and_case_management_system.dto.ClientUpdateDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.LawyerUpdateDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.UserDTO;
 import lk.ijse.legal_aid_and_case_management_system.entity.Admin;
@@ -189,5 +191,55 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         lawyerRepository.save(lawyer);
         return VarList.OK;
+    }
+    @Override
+    public int updateClientProfile(String email, ClientUpdateDTO clientUpdateDTO) {
+        if (!clientRepository.existsByUser_Email(email)) {
+            return VarList.Not_Found;
+        }
+
+        Clients client = clientRepository.findByUser_Email(email);
+
+        // Update only non-null fields (partial update)
+        if (clientUpdateDTO.getFull_name() != null) {
+            client.setFull_name(clientUpdateDTO.getFull_name());
+        }
+        if (clientUpdateDTO.getPhone_number() != null) {
+            client.setPhone_number(clientUpdateDTO.getPhone_number());
+        }
+        if (clientUpdateDTO.getDate_of_birth() != null) {
+            client.setDate_of_birth(clientUpdateDTO.getDate_of_birth());
+        }
+        if (clientUpdateDTO.getAddress() != null) {
+            client.setAddress(clientUpdateDTO.getAddress());
+        }
+        if (clientUpdateDTO.getPreferred_language() != null) {
+            client.setPreferred_language(clientUpdateDTO.getPreferred_language());
+        }
+        if (clientUpdateDTO.getGender() != null) {
+            client.setGender(clientUpdateDTO.getGender());
+        }
+        if (clientUpdateDTO.getNIC() != null) {
+            client.setNIC(clientUpdateDTO.getNIC());
+        }
+
+        clientRepository.save(client);
+        return VarList.OK;
+    }
+    @Override
+    public int updateAdminProfile(String email, AdminUpdateDTO adminUpdateDTO) {
+        if (!adminRepository.existsByUser_Email(email)) {
+            return 404; // Admin not found
+        }
+
+        Admin admin = adminRepository.findByUser_Email(email);
+
+        // Update admin_name if provided
+        if (adminUpdateDTO.getAdmin_name() != null) {
+            admin.setAdmin_name(adminUpdateDTO.getAdmin_name());
+        }
+
+        adminRepository.save(admin);
+        return 200; // Success
     }
 }

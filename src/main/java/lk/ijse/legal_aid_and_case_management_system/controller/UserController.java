@@ -1,10 +1,7 @@
 package lk.ijse.legal_aid_and_case_management_system.controller;
 
 import jakarta.validation.Valid;
-import lk.ijse.legal_aid_and_case_management_system.dto.AuthDTO;
-import lk.ijse.legal_aid_and_case_management_system.dto.LawyerUpdateDTO;
-import lk.ijse.legal_aid_and_case_management_system.dto.ResponseDTO;
-import lk.ijse.legal_aid_and_case_management_system.dto.UserDTO;
+import lk.ijse.legal_aid_and_case_management_system.dto.*;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
 import lk.ijse.legal_aid_and_case_management_system.util.JwtUtil;
 import lk.ijse.legal_aid_and_case_management_system.util.VarList;
@@ -81,6 +78,50 @@ public class UserController {
         }
     }
 
+    @PutMapping("/update-client")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<ResponseDTO> updateClientProfile(@RequestBody ClientUpdateDTO clientUpdateDTO,
+                                                           @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            String email = userDetails.getUsername(); // Email from JWT token
+            int res = userService.updateClientProfile(email, clientUpdateDTO);
 
+            if (res == VarList.OK) {
+                return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Profile updated successfully", null));
+            } else if (res == VarList.Not_Found) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO(VarList.Not_Found, "Client profile not found", null));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ResponseDTO(VarList.Internal_Server_Error, "Error updating profile", null));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
+        }
+    }
+
+    @PutMapping("/update-admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseDTO> updateAdminProfile(@RequestBody AdminUpdateDTO adminUpdateDTO,
+                                                          @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            String email = userDetails.getUsername(); // Email from JWT token
+            int res = userService.updateAdminProfile(email, adminUpdateDTO);
+
+            if (res == 200) {
+                return ResponseEntity.ok(new ResponseDTO(200, "Profile updated successfully", null));
+            } else if (res == 404) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO(404, "Admin profile not found", null));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ResponseDTO(500, "Error updating profile", null));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(500, e.getMessage(), null));
+        }
+    }
 
 }
