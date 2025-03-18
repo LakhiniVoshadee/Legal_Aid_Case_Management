@@ -15,5 +15,6 @@ public interface UserService {
     int updateLawyerProfile(String email, LawyerUpdateDTO lawyerUpdateDTO);
     int updateClientProfile(String email, ClientUpdateDTO clientUpdateDTO);
     int updateAdminProfile(String email, AdminUpdateDTO adminUpdateDTO);
+    int deleteLawyerByEmail(String email); //
 
 }

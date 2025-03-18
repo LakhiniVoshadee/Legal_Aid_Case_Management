@@ -123,5 +123,29 @@ public class UserController {
                     .body(new ResponseDTO(500, e.getMessage(), null));
         }
     }
+    @PostMapping(value = "/delete-account")
+    @PreAuthorize("hasRole('LAWYER')") // Restrict to lawyers only
+    public ResponseEntity<ResponseDTO> deleteLawyerAccount(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody @Valid LawyerDTO lawyerDTO) {
+        try {
+            String authenticatedEmail = userDetails.getUsername(); // Email from JWT
+            if (!authenticatedEmail.equals(lawyerDTO.getEmail())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ResponseDTO(VarList.Forbidden, "You can only delete your own account", null));
+            }
 
+            int res = userService.deleteLawyerByEmail(lawyerDTO.getEmail());
+            if (res == VarList.OK) {
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new ResponseDTO(VarList.OK, "Account deleted successfully", null));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO(VarList.Not_Found, "Lawyer not found", null));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
+        }
+    }
 }
