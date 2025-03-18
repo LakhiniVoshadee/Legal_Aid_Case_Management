@@ -86,13 +86,20 @@ document.addEventListener('DOMContentLoaded', function () {
       };
 
       try {
+        // Add a timeout to the fetch request
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
         const response = await fetch('http://localhost:8080/api/v1/user/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(formData),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         const result = await response.json();
 
@@ -114,7 +121,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } catch (err) {
         console.error('Request failed:', err);
-        alert('Something went wrong. Please try again.');
+
+        // Handle specific errors with better messages
+        if (err.name === 'AbortError') {
+          alert('Request timed out. Please check if the server is running.');
+        } else if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
+          alert('Cannot connect to the server. Please check if the server is running at http://localhost:8080.');
+        } else {
+          alert('Something went wrong. Please try again.');
+        }
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Register';
