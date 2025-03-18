@@ -1,6 +1,7 @@
 package lk.ijse.legal_aid_and_case_management_system.service.impl;
 
 import ch.qos.logback.core.net.server.Client;
+import lk.ijse.legal_aid_and_case_management_system.dto.LawyerUpdateDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.UserDTO;
 import lk.ijse.legal_aid_and_case_management_system.entity.Admin;
 import lk.ijse.legal_aid_and_case_management_system.entity.Clients;
@@ -145,5 +146,48 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             }
         }
         return VarList.Created;
+    }
+    @Override
+    public int updateLawyerProfile(String email, LawyerUpdateDTO lawyerUpdateDTO) {
+        if (!lawyerRepository.existsByUser_Email(email)) {
+            return VarList.Not_Found;
+        }
+
+        Lawyer lawyer = lawyerRepository.findByUser_Email(email);
+
+        // Update only non-null fields (partial update)
+        if (lawyerUpdateDTO.getLawyer_name() != null) {
+            lawyer.setLawyer_name(lawyerUpdateDTO.getLawyer_name());
+        }
+        if (lawyerUpdateDTO.getAddress() != null) {
+            lawyer.setAddress(lawyerUpdateDTO.getAddress());
+        }
+        if (lawyerUpdateDTO.getSpecialization() != null) {
+            lawyer.setSpecialization(lawyerUpdateDTO.getSpecialization());
+        }
+        if (lawyerUpdateDTO.getYearsOfExperience() != null) {
+            lawyer.setYearsOfExperience(lawyerUpdateDTO.getYearsOfExperience());
+        }
+        if (lawyerUpdateDTO.getBarAssociationNumber() != null) {
+            lawyer.setBarAssociationNumber(lawyerUpdateDTO.getBarAssociationNumber());
+        }
+        if (lawyerUpdateDTO.getContactNumber() != null) {
+            lawyer.setContactNumber(lawyerUpdateDTO.getContactNumber());
+        }
+        if (lawyerUpdateDTO.getOfficeLocation() != null) {
+            lawyer.setOfficeLocation(lawyerUpdateDTO.getOfficeLocation());
+        }
+        if (lawyerUpdateDTO.getBio() != null) {
+            lawyer.setBio(lawyerUpdateDTO.getBio());
+        }
+        if (lawyerUpdateDTO.getProvince() != null) {
+            lawyer.setProvince(lawyerUpdateDTO.getProvince());
+        }
+        if (lawyerUpdateDTO.getDistrict() != null) {
+            lawyer.setDistrict(lawyerUpdateDTO.getDistrict());
+        }
+
+        lawyerRepository.save(lawyer);
+        return VarList.OK;
     }
 }
