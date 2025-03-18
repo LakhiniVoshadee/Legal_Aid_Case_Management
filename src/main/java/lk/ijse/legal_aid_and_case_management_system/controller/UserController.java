@@ -5,6 +5,7 @@ import lk.ijse.legal_aid_and_case_management_system.dto.*;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
 import lk.ijse.legal_aid_and_case_management_system.util.JwtUtil;
 import lk.ijse.legal_aid_and_case_management_system.util.VarList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -142,6 +143,29 @@ public class UserController {
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ResponseDTO(VarList.Not_Found, "Lawyer not found", null));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
+        }
+    }
+
+
+    @DeleteMapping("/delete-client")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<ResponseDTO> deleteClientProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            String email = userDetails.getUsername();
+            int res = userService.deleteClientProfile(email);
+
+            if (res == VarList.OK) {
+                return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Profile deleted successfully", null));
+            } else if (res == VarList.Not_Found) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO(VarList.Not_Found, "Client profile not found", null));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ResponseDTO(VarList.Internal_Server_Error, "Error deleting profile", null));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

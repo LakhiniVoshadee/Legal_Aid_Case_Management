@@ -56,11 +56,13 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/v1/dashboard/admin").hasRole("ADMIN") // Admin specific routes
                         .requestMatchers("/api/v1/dashboard/lawyer").hasRole("LAWYER") // Lawyer specific routes
                         .requestMatchers("/api/v1/dashboard/client").hasRole("CLIENT") // Client specific routes
+                        .requestMatchers("/api/**").permitAll() // Allow all API calls
                         .requestMatchers("/api/v1/auth/**", "/api/v1/user/register").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .build();
     }
 

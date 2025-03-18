@@ -15,4 +15,5 @@ public interface ClientRepository extends JpaRepository<Clients, Long> {
 
     void deleteByUser_Email(String email);
 
+
 }

@@ -260,4 +260,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         return VarList.OK;
     }
+    @Override
+    public int deleteClientProfile(String email) {
+        if (!clientRepository.existsByUser_Email(email)) {
+            return VarList.Not_Found;
+        }
+
+        // Delete the Clients record
+        clientRepository.deleteByUser_Email(email);
+
+        // Delete the associated User record
+        userRepository.deleteByEmail(email);
+
+        return VarList.OK;
+    }
 }
