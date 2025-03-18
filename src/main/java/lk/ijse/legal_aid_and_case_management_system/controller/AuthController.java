@@ -12,6 +12,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("api/v1/auth")
 @CrossOrigin(origins = "http://localhost:63342")
@@ -59,5 +62,19 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDTO(VarList.Created, "Success", authDTO));
     }
+
+    @GetMapping("/userRole")
+    public ResponseEntity<Map<String, String>> getUserRole(@RequestHeader("Authorization") String token) {
+        String email = jwtUtil.extractUsername(token.substring(7)); // Remove 'Bearer ' prefix
+        UserDTO user = userService.loadUserDetailsByUsername(email);
+
+        if (user != null) {
+            Map<String, String> response = new HashMap<>();
+            response.put("role", user.getRole()); // Assuming `getRole()` returns "ADMIN", "LAWYER", or "CLIENT"
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
 
 }
