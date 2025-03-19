@@ -1,0 +1,222 @@
+/* Additional styles for the update form */
+.modal-content {
+  border-radius: 10px;
+  border: none;
+}
+
+.modal-header {
+  border-bottom: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.modal-footer {
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #212529;
+  box-shadow: 0 0 0 0.25rem rgba(33, 37, 41, 0.25);
+}
+
+.btn-dark {
+  background-color: #212529;
+  border-color: #212529;
+  transition: all 0.3s ease;
+}
+
+.btn-dark:hover {
+  background-color: #000;
+  border-color: #000;
+}
+
+.btn-outline-secondary {
+  color: #6c757d;
+  border-color: #6c757d;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: #fff;
+}
+
+/* Loading spinner styles */
+#loading-spinner {
+  z-index: 2000;
+}
+
+/* Toast styles */
+.toast {
+  min-width: 250px;
+}
+
+.toast-header {
+  padding: 0.5rem 0.75rem;
+}
+
+/* Animation for form fields */
+.form-control, .form-select {
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+}
+/* Main Dashboard Styling */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  background-color: #2c3e50;
+  color: #fff;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 2rem 1rem;
+}
+
+.logo {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s;
+}
+
+.sidebar-nav .nav-link:hover,
+.sidebar-nav .nav-link.active {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content Styling */
+.content-wrapper {
+  margin-left: 16.666667%;
+}
+
+@media (max-width: 992px) {
+  .content-wrapper {
+    margin-left: 25%;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .content-wrapper {
+    margin-left: 0;
+  }
+}
+
+.header {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.notification-btn {
+  padding: 0.25rem;
+  text-decoration: none;
+}
+
+.main-content {
+  padding-bottom: 2rem;
+}
+
+/* Content Section Styling */
+.content-section {
+  display: none;
+}
+
+.content-section.active {
+  display: block;
+}
+
+/* Profile Form Styling */
+.card {
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.card-header {
+  border-radius: 8px 8px 0 0;
+  padding: 1rem 1.5rem;
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+}
+
+#profile-form {
+  max-width: 100%;
+}
+
+/* Button Styling */
+.btn-primary {
+  background-color: #3498db;
+  border-color: #3498db;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+  border-color: #2980b9;
+}
+
+.btn-outline-secondary {
+  color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-outline-light {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Alert Styling */
+.alert {
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+}

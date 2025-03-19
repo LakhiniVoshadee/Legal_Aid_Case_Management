@@ -58,6 +58,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/v1/dashboard/client").hasRole("CLIENT") // Client specific routes
                         .requestMatchers("/api/**").permitAll() // Allow all API calls
                         .requestMatchers("/api/v1/auth/**", "/api/v1/user/register").permitAll()
+                        .requestMatchers("/api/v1/user/lawyers-byProvinceDistrict").hasRole("CLIENT")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

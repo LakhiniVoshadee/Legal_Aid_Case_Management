@@ -172,4 +172,36 @@ public class UserController {
                     .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
         }
     }
+
+    @GetMapping("/lawyers")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<ResponseDTO> getAllLawyers() {
+        try {
+            List<LawyerDTO> lawyers = userService.getAllLawyers();
+            return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Success", lawyers));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/lawyers-byProvinceDistrict")
+    @PreAuthorize("hasRole('CLIENT')")
+
+    public ResponseEntity<ResponseDTO> getLawyers(
+            @RequestParam(required = false) String province,
+            @RequestParam(required = false) String district) {
+        try {
+            List<LawyerDTO> lawyers;
+            if (province != null && district != null) {
+                lawyers = userService.getLawyersByProvinceAndDistrict(province, district);
+            } else {
+                lawyers = userService.getAllLawyers();
+            }
+            return ResponseEntity.ok(new ResponseDTO(200, "Success", lawyers));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(500, e.getMessage(), null));
+        }
+    }
 }

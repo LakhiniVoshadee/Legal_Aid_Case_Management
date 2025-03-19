@@ -1,10 +1,7 @@
 package lk.ijse.legal_aid_and_case_management_system.service.impl;
 
 import ch.qos.logback.core.net.server.Client;
-import lk.ijse.legal_aid_and_case_management_system.dto.AdminUpdateDTO;
-import lk.ijse.legal_aid_and_case_management_system.dto.ClientUpdateDTO;
-import lk.ijse.legal_aid_and_case_management_system.dto.LawyerUpdateDTO;
-import lk.ijse.legal_aid_and_case_management_system.dto.UserDTO;
+import lk.ijse.legal_aid_and_case_management_system.dto.*;
 import lk.ijse.legal_aid_and_case_management_system.entity.Admin;
 import lk.ijse.legal_aid_and_case_management_system.entity.Clients;
 import lk.ijse.legal_aid_and_case_management_system.entity.Lawyer;
@@ -273,5 +270,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userRepository.deleteByEmail(email);
 
         return VarList.OK;
+    }
+    @Override
+    public List<LawyerDTO> getAllLawyers() {
+        List<Lawyer> lawyers = lawyerRepository.findAll();
+        return lawyers.stream()
+                .map(lawyer -> modelMapper.map(lawyer, LawyerDTO.class))
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<LawyerDTO> getLawyersByProvinceAndDistrict(String province, String district) {
+        List<Lawyer> lawyers = lawyerRepository.findByProvinceAndDistrict(province, district);
+        return lawyers.stream()
+                .map(lawyer -> modelMapper.map(lawyer, LawyerDTO.class))
+                .collect(Collectors.toList());
     }
 }

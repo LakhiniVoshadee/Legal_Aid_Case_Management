@@ -1,9 +1,6 @@
 package lk.ijse.legal_aid_and_case_management_system.service;
 
-import lk.ijse.legal_aid_and_case_management_system.dto.AdminUpdateDTO;
-import lk.ijse.legal_aid_and_case_management_system.dto.ClientUpdateDTO;
-import lk.ijse.legal_aid_and_case_management_system.dto.LawyerUpdateDTO;
-import lk.ijse.legal_aid_and_case_management_system.dto.UserDTO;
+import lk.ijse.legal_aid_and_case_management_system.dto.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,5 +14,8 @@ public interface UserService {
     int updateAdminProfile(String email, AdminUpdateDTO adminUpdateDTO);
     int deleteLawyerByEmail(String email); //
     int deleteClientProfile(String email);
-
+    List<LawyerDTO> getAllLawyers();
+    List<LawyerDTO> getLawyersByProvinceAndDistrict(String province, String district);
 }
+
+
