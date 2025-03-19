@@ -124,7 +124,7 @@ public class UserController {
                     .body(new ResponseDTO(500, e.getMessage(), null));
         }
     }
-    @PostMapping(value = "/delete-account")
+    @PostMapping(value = "/delete-lawyer-account")
     @PreAuthorize("hasRole('LAWYER')") // Restrict to lawyers only
     public ResponseEntity<ResponseDTO> deleteLawyerAccount(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -151,21 +151,51 @@ public class UserController {
     }
 
 
-    @DeleteMapping("/delete-client")
-    @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<ResponseDTO> deleteClientProfile(@AuthenticationPrincipal UserDetails userDetails) {
+    @PostMapping(value = "/delete-client-account")
+    @PreAuthorize("hasRole('CLIENT')") // Restrict to lawyers only
+    public ResponseEntity<ResponseDTO> deleteClientAccount(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody @Valid ClientDTO clientDTO) {
         try {
-            String email = userDetails.getUsername();
-            int res = userService.deleteClientProfile(email);
+            String authenticatedEmail = userDetails.getUsername(); // Email from JWT
+            if (!authenticatedEmail.equals(clientDTO.getEmail())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ResponseDTO(VarList.Forbidden, "You can only delete your own account", null));
+            }
 
+            int res = userService.deleteClientProfile(clientDTO.getEmail());
             if (res == VarList.OK) {
-                return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Profile deleted successfully", null));
-            } else if (res == VarList.Not_Found) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ResponseDTO(VarList.Not_Found, "Client profile not found", null));
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new ResponseDTO(VarList.OK, "Account deleted successfully", null));
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(new ResponseDTO(VarList.Internal_Server_Error, "Error deleting profile", null));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO(VarList.Not_Found, "Lawyer not found", null));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
+        }
+    }
+
+    @PostMapping(value = "/delete-admin-account")
+    @PreAuthorize("hasRole('ADMIN')") // Restrict to lawyers only
+    public ResponseEntity<ResponseDTO> deleteAdminAccount(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody @Valid AdminDTO adminDTO) {
+        try {
+            String authenticatedEmail = userDetails.getUsername(); // Email from JWT
+            if (!authenticatedEmail.equals(adminDTO.getEmail())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ResponseDTO(VarList.Forbidden, "You can only delete your own account", null));
+            }
+
+            int res = userService.deleteAdminProfile(adminDTO.getEmail());
+            if (res == VarList.OK) {
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new ResponseDTO(VarList.OK, "Account deleted successfully", null));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO(VarList.Not_Found, "Lawyer not found", null));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

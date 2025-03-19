@@ -259,14 +259,37 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
     @Override
     public int deleteClientProfile(String email) {
-        if (!clientRepository.existsByUser_Email(email)) {
+        if (!userRepository.existsByEmail(email)) {
             return VarList.Not_Found;
         }
 
-        // Delete the Clients record
-        clientRepository.deleteByUser_Email(email);
+        User user = userRepository.findByEmail(email);
+        if (!user.getRole().equals("CLIENT")) {
+            return VarList.Forbidden; // Only lawyers can be deleted this way
+        }
 
-        // Delete the associated User record
+        // Delete Lawyer entity
+        clientRepository.deleteByUser_Email(email);
+        // Delete User entity
+        userRepository.deleteByEmail(email);
+
+        return VarList.OK;
+    }
+
+    @Override
+    public int deleteAdminProfile(String email) {
+        if (!userRepository.existsByEmail(email)) {
+            return VarList.Not_Found;
+        }
+
+        User user = userRepository.findByEmail(email);
+        if (!user.getRole().equals("ADMIN")) {
+            return VarList.Forbidden; // Only lawyers can be deleted this way
+        }
+
+        // Delete Lawyer entity
+        adminRepository.deleteByUser_Email(email);
+        // Delete User entity
         userRepository.deleteByEmail(email);
 
         return VarList.OK;

@@ -14,8 +14,11 @@ public interface UserService {
     int updateAdminProfile(String email, AdminUpdateDTO adminUpdateDTO);
     int deleteLawyerByEmail(String email); //
     int deleteClientProfile(String email);
+    int deleteAdminProfile(String email);
     List<LawyerDTO> getAllLawyers();
     List<LawyerDTO> getLawyersByProvinceAndDistrict(String province, String district);
+
+
 }
 
 
