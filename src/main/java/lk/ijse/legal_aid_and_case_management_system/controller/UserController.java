@@ -107,7 +107,7 @@ public class UserController {
     public ResponseEntity<ResponseDTO> updateAdminProfile(@RequestBody AdminUpdateDTO adminUpdateDTO,
                                                           @AuthenticationPrincipal UserDetails userDetails) {
         try {
-            String email = userDetails.getUsername(); // Email from JWT token
+            String email = userDetails.getUsername();
             int res = userService.updateAdminProfile(email, adminUpdateDTO);
 
             if (res == 200) {
@@ -125,12 +125,12 @@ public class UserController {
         }
     }
     @PostMapping(value = "/delete-lawyer-account")
-    @PreAuthorize("hasRole('LAWYER')") // Restrict to lawyers only
+    @PreAuthorize("hasRole('LAWYER')")
     public ResponseEntity<ResponseDTO> deleteLawyerAccount(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody @Valid LawyerDTO lawyerDTO) {
         try {
-            String authenticatedEmail = userDetails.getUsername(); // Email from JWT
+            String authenticatedEmail = userDetails.getUsername();
             if (!authenticatedEmail.equals(lawyerDTO.getEmail())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(new ResponseDTO(VarList.Forbidden, "You can only delete your own account", null));
@@ -152,12 +152,12 @@ public class UserController {
 
 
     @PostMapping(value = "/delete-client-account")
-    @PreAuthorize("hasRole('CLIENT')") // Restrict to lawyers only
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<ResponseDTO> deleteClientAccount(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody @Valid ClientDTO clientDTO) {
         try {
-            String authenticatedEmail = userDetails.getUsername(); // Email from JWT
+            String authenticatedEmail = userDetails.getUsername();
             if (!authenticatedEmail.equals(clientDTO.getEmail())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(new ResponseDTO(VarList.Forbidden, "You can only delete your own account", null));
@@ -178,12 +178,12 @@ public class UserController {
     }
 
     @PostMapping(value = "/delete-admin-account")
-    @PreAuthorize("hasRole('ADMIN')") // Restrict to lawyers only
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> deleteAdminAccount(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody @Valid AdminDTO adminDTO) {
         try {
-            String authenticatedEmail = userDetails.getUsername(); // Email from JWT
+            String authenticatedEmail = userDetails.getUsername();
             if (!authenticatedEmail.equals(adminDTO.getEmail())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(new ResponseDTO(VarList.Forbidden, "You can only delete your own account", null));
@@ -203,7 +203,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/lawyers")
+   /* @GetMapping("/lawyers")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<ResponseDTO> getAllLawyers() {
         try {
@@ -213,9 +213,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
         }
-    }
+    }*/
 
-    @GetMapping("/lawyers-byProvinceDistrict")
+    /*@GetMapping("/lawyers-byProvinceDistrict")
     @PreAuthorize("hasRole('CLIENT')")
 
     public ResponseEntity<ResponseDTO> getLawyers(
@@ -233,5 +233,28 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseDTO(500, e.getMessage(), null));
         }
+    }*/
+
+    /*@GetMapping("/lawyers-byAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseDTO> getAllLawyers() {
+        try {
+            List<LawyerDTO> lawyers = userService.getAllLawyers();
+            return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Success", lawyers));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
+        }
     }
+    @GetMapping("/clients-byAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseDTO> getAllClients() {
+        try {
+            List<ClientDTO> clients = userService.getAllClients();
+            return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Success", clients));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
+        }
+    }*/
 }

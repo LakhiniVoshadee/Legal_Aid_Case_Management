@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Load user data
+
   const email = localStorage.getItem("email");
   const token = localStorage.getItem("token");
 
@@ -8,13 +8,13 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  // Set welcome message
+
   if (email) {
     document.getElementById("welcomeMessage").textContent = `Welcome, ${email}!`;
     document.getElementById("lawyer-name").textContent = email;
   }
 
-  // Navigation functionality
+
   const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
   const contentSections = document.querySelectorAll('.content-section');
   const sectionTitle = document.getElementById('section-title');
@@ -23,24 +23,24 @@ document.addEventListener("DOMContentLoaded", function () {
     link.addEventListener('click', function(e) {
       e.preventDefault();
 
-      // Remove active class from all links and add to clicked link
+
       navLinks.forEach(navLink => navLink.classList.remove('active'));
       this.classList.add('active');
 
-      // Hide all sections and show the target section
+
       const targetSectionId = this.getAttribute('data-section');
       contentSections.forEach(section => section.classList.remove('active'));
       document.getElementById(targetSectionId).classList.add('active');
 
-      // Update section title
+
       sectionTitle.textContent = this.textContent.trim();
     });
   });
 
-  // Fetch lawyer profile data
+
   fetchLawyerProfile();
 
-  // District data for province selection
+
   const districtsByProvince = {
     "Western": ["Colombo", "Gampaha", "Kalutara"],
     "Central": ["Kandy", "Matale", "Nuwara Eliya"],
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "Sabaragamuwa": ["Ratnapura", "Kegalle"]
   };
 
-  // Handle province change to update districts
+
   const provinceSelect = document.getElementById('province');
   const districtSelect = document.getElementById('district');
 
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Form submission
+
   const profileForm = document.getElementById('profile-form');
   profileForm.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = 'login.html';
   });
 
-  // Deactivate account functionality
+
   document.getElementById('confirm-deactivate-btn').addEventListener('click', function() {
     const confirmEmail = document.getElementById('deactivate-confirm-email').value;
 
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Function to fetch lawyer profile data
+
   function fetchLawyerProfile() {
     // This would normally come from an API but we'll simulate it for now
     // In a real application, you would fetch this data from your backend
@@ -173,21 +173,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Function to update lawyer profile
+
   function updateLawyerProfile() {
     const updateBtn = document.getElementById('update-profile-btn');
     const successAlert = document.getElementById('update-success');
     const errorAlert = document.getElementById('update-error');
 
-    // Hide alerts
+
     successAlert.classList.add('d-none');
     errorAlert.classList.add('d-none');
 
-    // Disable button and show loading state
+
     updateBtn.disabled = true;
     updateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
 
-    // Get form data
+
     const lawyerUpdateDTO = {
       lawyer_name: document.getElementById('lawyer_name').value,
       contactNumber: document.getElementById('contactNumber').value,
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
       district: document.getElementById('district').value
     };
 
-    // AJAX request to update profile
+
     fetch('http://localhost:8080/api/v1/user/update-lawyer', {
       method: 'PUT',
       headers: {

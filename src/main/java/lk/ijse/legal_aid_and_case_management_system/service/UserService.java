@@ -16,6 +16,7 @@ public interface UserService {
     int deleteClientProfile(String email);
     int deleteAdminProfile(String email);
     List<LawyerDTO> getAllLawyers();
+    List<ClientDTO> getAllClients();
     List<LawyerDTO> getLawyersByProvinceAndDistrict(String province, String district);
 
 

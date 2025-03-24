@@ -16,6 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @EnableWebSecurity
 @Configuration
@@ -59,6 +66,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/**").permitAll() // Allow all API calls
                         .requestMatchers("/api/v1/auth/**", "/api/v1/user/register").permitAll()
                         .requestMatchers("/api/v1/user/lawyers-byProvinceDistrict").hasRole("CLIENT")
+                        .requestMatchers("/api/v1/dashboard/lawyers-byAdmin").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/dashboard/clients-byAdmin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -67,5 +76,28 @@ public class WebSecurityConfig {
                 .build();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:63342")); // Allowed frontend origin
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true); // If using cookies or auth headers
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config); // Apply to all endpoints
+        return source;
+    }
+
+    @Configuration
+    public class WebConfig implements WebMvcConfigurer {
+        @Override
+        public void addCorsMappings(CorsRegistry registry) {
+            registry.addMapping("/**") // Apply to all endpoints
+                    .allowedOrigins("http://localhost:63342") // Allow this origin
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allowed HTTP methods
+                    .allowedHeaders("*") // Allow all headers
+                    .allowCredentials(true); // Allow credentials (e.g., cookies, authorization headers)
+        }
+    }
 
 }

@@ -301,6 +301,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .map(lawyer -> modelMapper.map(lawyer, LawyerDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ClientDTO> getAllClients() {
+        List<Clients> clients = clientRepository.findAll();
+        return clients.stream()
+                .map(client -> modelMapper.map(client, ClientDTO.class))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public List<LawyerDTO> getLawyersByProvinceAndDistrict(String province, String district) {
         List<Lawyer> lawyers = lawyerRepository.findByProvinceAndDistrict(province, district);

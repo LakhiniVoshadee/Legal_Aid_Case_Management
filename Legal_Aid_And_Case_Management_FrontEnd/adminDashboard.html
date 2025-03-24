@@ -2,9 +2,78 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/adminDashboard.css">
 </head>
 <body>
-
+<div class="container">
+  <h1 class="text-center my-4">Admin Dashboard</h1>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" id="lawyers-tab" href="#lawyers">Lawyers</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="clients-tab" href="#clients">Clients</a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <!-- Lawyers Section -->
+    <div id="lawyers" class="tab-pane active">
+      <h2>Lawyers</h2>
+      <table class="table table-striped" id="lawyers-table">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Specialization</th>
+          <th>Years of Experience</th>
+          <th>Office Location</th>
+          <th>Bar Association Number</th>
+          <th>Contact Number</th>
+          <th>Bio</th>
+          <th>Province</th>
+          <th>District</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="lawyers-tbody"></tbody>
+      </table>
+      <div id="lawyers-loading" class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
+    <!-- Clients Section -->
+    <div id="clients" class="tab-pane">
+      <h2>Clients</h2>
+      <table class="table table-striped" id="clients-table">
+        <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>Date Of Birth</th>
+          <th>Address</th>
+          <th>Preferred Language</th>
+          <th>Gender</th>
+          <th>NIC</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="clients-tbody"></tbody>
+      </table>
+      <div id="clients-loading" class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/adminDashboard.js"></script>
 </body>
 </html>

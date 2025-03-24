@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // Form steps navigation
+
   const steps = document.querySelectorAll('.form-step');
   const nextButtons = document.querySelectorAll('.next-step');
   const prevButtons = document.querySelectorAll('.prev-step');
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
     districtSelect.disabled = districts.length === 0;
   });
 
-  // Success modal navigation
+
   const successModal = document.getElementById('successModal');
   if (successModal) {
     successModal.addEventListener('hidden.bs.modal', function () {

@@ -5,13 +5,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const submitBtn = document.getElementById('submitBtn');
   let currentStep = 1;
 
-  // Show/hide steps
+
   function updateFormView() {
     document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
     document.getElementById(`step${currentStep}`).classList.add('active');
   }
 
-  // Clear previous validation feedback
+
   function clearFeedback() {
     document.querySelectorAll('.form-control').forEach(input => {
       input.classList.remove('is-invalid');
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Validate step
+
   function validateStep(step) {
     clearFeedback();
     let valid = true;
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return valid;
   }
 
-  // Next button click
+
   nextBtn.addEventListener('click', function () {
     if (validateStep(1)) {
       currentStep = 2;
@@ -57,13 +57,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Previous button click
+
   prevBtn.addEventListener('click', function () {
     currentStep = 1;
     updateFormView();
   });
 
-  // Form submission with AJAX
+
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         // Add a timeout to the fetch request
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
 
         const response = await fetch('http://localhost:8080/api/v1/user/register', {
           method: 'POST',
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
           updateFormView();
         } else {
           console.error('Error:', result);
-          if (result.status === 406) { // Not_Acceptable (Email already used)
+          if (result.status === 406) {
             document.getElementById('email').classList.add('is-invalid');
             document.getElementById('emailFeedback').textContent = result.message;
           } else {
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
       } catch (err) {
         console.error('Request failed:', err);
 
-        // Handle specific errors with better messages
+
         if (err.name === 'AbortError') {
           alert('Request timed out. Please check if the server is running.');
         } else if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
