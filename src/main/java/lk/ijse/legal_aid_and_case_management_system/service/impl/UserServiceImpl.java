@@ -1,6 +1,5 @@
 package lk.ijse.legal_aid_and_case_management_system.service.impl;
 
-import ch.qos.logback.core.net.server.Client;
 import lk.ijse.legal_aid_and_case_management_system.dto.*;
 import lk.ijse.legal_aid_and_case_management_system.entity.Admin;
 import lk.ijse.legal_aid_and_case_management_system.entity.Clients;
@@ -11,7 +10,6 @@ import lk.ijse.legal_aid_and_case_management_system.repo.ClientRepository;
 import lk.ijse.legal_aid_and_case_management_system.repo.LawyerRepository;
 import lk.ijse.legal_aid_and_case_management_system.repo.UserRepository;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
-import lk.ijse.legal_aid_and_case_management_system.util.Enum.UserRole;
 import lk.ijse.legal_aid_and_case_management_system.util.VarList;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -146,6 +146,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
         return VarList.Created;
     }
+
     @Override
     public int updateLawyerProfile(String email, LawyerUpdateDTO lawyerUpdateDTO) {
         if (!lawyerRepository.existsByUser_Email(email)) {
@@ -189,6 +190,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         lawyerRepository.save(lawyer);
         return VarList.OK;
     }
+
     @Override
     public int updateClientProfile(String email, ClientUpdateDTO clientUpdateDTO) {
         if (!clientRepository.existsByUser_Email(email)) {
@@ -223,6 +225,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         clientRepository.save(client);
         return VarList.OK;
     }
+
     @Override
     public int updateAdminProfile(String email, AdminUpdateDTO adminUpdateDTO) {
         if (!adminRepository.existsByUser_Email(email)) {
@@ -239,6 +242,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         adminRepository.save(admin);
         return 200; // Success
     }
+
     @Override
     public int deleteLawyerByEmail(String email) {
         if (!userRepository.existsByEmail(email)) {
@@ -257,6 +261,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         return VarList.OK;
     }
+
     @Override
     public int deleteClientProfile(String email) {
         if (!userRepository.existsByEmail(email)) {
@@ -294,6 +299,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         return VarList.OK;
     }
+
     @Override
     public List<LawyerDTO> getAllLawyers() {
         List<Lawyer> lawyers = lawyerRepository.findAll();

@@ -3,8 +3,10 @@ package lk.ijse.legal_aid_and_case_management_system.service.impl;
 import lk.ijse.legal_aid_and_case_management_system.dto.CaseDTO;
 import lk.ijse.legal_aid_and_case_management_system.entity.Case;
 import lk.ijse.legal_aid_and_case_management_system.entity.Clients;
+import lk.ijse.legal_aid_and_case_management_system.entity.Lawyer;
 import lk.ijse.legal_aid_and_case_management_system.repo.CaseRepository;
 import lk.ijse.legal_aid_and_case_management_system.repo.ClientRepository;
+import lk.ijse.legal_aid_and_case_management_system.repo.LawyerRepository;
 import lk.ijse.legal_aid_and_case_management_system.service.CaseService;
 import lk.ijse.legal_aid_and_case_management_system.util.Enum.CaseStatus;
 import org.modelmapper.ModelMapper;
@@ -22,7 +24,11 @@ public class CaseServiceImpl implements CaseService {
     private ClientRepository clientRepository;
 
     @Autowired
+    private LawyerRepository lawyerRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
+
     @Override
     public CaseDTO submitCase(CaseDTO caseDTO) {
         // Fetch the client based on clientId from CaseDTO
@@ -45,5 +51,32 @@ public class CaseServiceImpl implements CaseService {
         // Map the saved entity back to DTO and return
         return modelMapper.map(savedCase, CaseDTO.class);
     }
+
+    @Override
+    public CaseDTO reviewCase(Long caseId, String status, Long lawyerId) {
+        Case caseEntity = caseRepository.findById(caseId)
+                .orElseThrow(() -> new RuntimeException("Case not found with ID: " + caseId));
+
+        Lawyer lawyer = lawyerRepository.findById(lawyerId)
+                .orElseThrow(() -> new RuntimeException("Lawyer not found with ID: " + lawyerId));
+
+        if (!caseEntity.getStatus().equals(CaseStatus.OPEN)) {
+            throw new RuntimeException("Case is already processed.");
+        }
+
+        if ("ACCEPTED".equalsIgnoreCase(status)) {
+            caseEntity.setStatus(CaseStatus.ASSIGNED);
+            caseEntity.setLawyer(lawyer);
+        } else if ("DECLINED".equalsIgnoreCase(status)) {
+            caseEntity.setStatus(CaseStatus.CLOSED);
+        } else {
+            throw new IllegalArgumentException("Invalid status: " + status);
+        }
+
+        caseEntity.setUpdatedAt(LocalDateTime.now());
+        Case updatedCase = caseRepository.save(caseEntity);
+
+        return modelMapper.map(updatedCase, CaseDTO.class);
     }
+}
 

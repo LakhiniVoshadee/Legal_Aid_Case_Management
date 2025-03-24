@@ -5,16 +5,12 @@ import lk.ijse.legal_aid_and_case_management_system.dto.*;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
 import lk.ijse.legal_aid_and_case_management_system.util.JwtUtil;
 import lk.ijse.legal_aid_and_case_management_system.util.VarList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -28,6 +24,7 @@ public class UserController {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
+
     @PostMapping(value = "/register")
     public ResponseEntity<ResponseDTO> registerUser(@RequestBody @Valid UserDTO userDTO) {
         try {
@@ -55,6 +52,7 @@ public class UserController {
                     .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
         }
     }
+
     @PutMapping("/update-lawyer")
     @PreAuthorize("hasRole('LAWYER')")
     public ResponseEntity<ResponseDTO> updateLawyerProfile(@RequestBody LawyerUpdateDTO lawyerUpdateDTO,
@@ -124,6 +122,7 @@ public class UserController {
                     .body(new ResponseDTO(500, e.getMessage(), null));
         }
     }
+
     @PostMapping(value = "/delete-lawyer-account")
     @PreAuthorize("hasRole('LAWYER')")
     public ResponseEntity<ResponseDTO> deleteLawyerAccount(

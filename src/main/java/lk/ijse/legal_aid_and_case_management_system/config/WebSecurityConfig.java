@@ -68,7 +68,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/v1/user/lawyers-byProvinceDistrict").hasRole("CLIENT")
                         .requestMatchers("/api/v1/dashboard/lawyers-byAdmin").hasRole("ADMIN")
                         .requestMatchers("/api/v1/dashboard/clients-byAdmin").hasRole("ADMIN")
-                        .requestMatchers("api/v1/case/submit").hasRole("CLIENT")
+                        .requestMatchers("/api/v1/case/submit").hasRole("CLIENT")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

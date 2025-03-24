@@ -35,6 +35,7 @@ public class ClientController {
                     .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
         }
     }
+
     @GetMapping("/lawyers-byProvinceDistrict")
     @PreAuthorize("hasRole('CLIENT')")
 
