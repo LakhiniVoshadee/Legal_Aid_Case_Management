@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="card-body d-flex flex-column">
               <div class="lawyer-profile-header">
                 <div class="lawyer-avatar">
-                  <i class="bi bi-person"></i>
+              <i class="fa-solid fa-user-tie"></i>
                 </div>
                 <div>
                   <h5 class="lawyer-name">${lawyer.lawyer_name || "Unknown"}</h5>
@@ -298,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
               </div>
               <button onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '&quot;')})"
                       class="btn view-profile-btn mt-3">
-                <i class="bi bi-eye me-2"></i>View Full Profile
+                <i class="bi bi-eye me-2"></i>View Profile
               </button>
             </div>
           </div>
@@ -307,18 +307,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+
   function truncateBio(bio, maxLength = 100) {
     if (!bio) return '';
     return bio.length > maxLength ? bio.substring(0, maxLength) + '...' : bio;
   }
 
+  // Function to view full profile by email
   function viewFullProfile(lawyer) {
-    // Create a modal or alert to show full lawyer details
-    alert(`Full Profile of ${lawyer.lawyer_name}\n\n` +
-      `Specialization: ${lawyer.specialization}\n` +
-      `Contact: ${lawyer.contactNumber}\n` +
-      `Location: ${lawyer.district}, ${lawyer.province}\n\n` +
-      `Bio: ${lawyer.bio || 'No bio available'}`);
+    const lawyerProfileURL = `lawyerProfiles.html?email=${encodeURIComponent(lawyer.email)}`;
+    window.location.href = lawyerProfileURL;
   }
 
   // Moved search functionality inside the main DOMContentLoaded event listener
