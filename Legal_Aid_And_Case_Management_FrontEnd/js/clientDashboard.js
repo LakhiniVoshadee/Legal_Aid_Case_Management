@@ -26,6 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
       contentSections.forEach(section => section.classList.remove("active"));
       document.getElementById(targetSectionId).classList.add("active");
       sectionTitle.textContent = this.textContent.trim();
+
+      // Fetch lawyers when "Find Lawyers" section is selected
+      if (targetSectionId === "clients-section") {
+        fetchLawyers();
+      }
     });
   });
 
@@ -38,21 +43,21 @@ document.addEventListener("DOMContentLoaded", function () {
     updateClientProfile();
   });
 
+  // District options by province
   const districtsByProvince = {
     "Western": ["Colombo", "Gampaha", "Kalutara"],
     "Central": ["Kandy", "Matale", "Nuwara Eliya"],
     "Southern": ["Galle", "Matara", "Hambantota"],
     "Northern": ["Jaffna", "Kilinochchi", "Mannar", "Mullaitivu", "Vavuniya"],
-    "Eastern": ["Batticaloa", "Ampara", "Trincomalee"],
-    "North Western": ["Kurunegala", "Puttalam"],
-    "North Central": ["Anuradhapura", "Polonnaruwa"],
-    "Uva": ["Badulla", "Monaragala"],
-    "Sabaragamuwa": ["Ratnapura", "Kegalle"]
+    "Eastern": ["Batticaloa", "Ampara", "Trincomalee"]
+    // Add more provinces and districts as needed
   };
 
   const provinceSelect = document.getElementById("provinceSelect");
   const districtSelect = document.getElementById("districtSelect");
+  const filterBtn = document.getElementById("filterBtn");
 
+  // Populate districts based on selected province
   provinceSelect.addEventListener("change", function () {
     const selectedProvince = this.value;
     districtSelect.innerHTML = '<option value="">Select District</option>';
@@ -64,6 +69,13 @@ document.addEventListener("DOMContentLoaded", function () {
         districtSelect.appendChild(option);
       });
     }
+  });
+
+  // Filter lawyers when the filter button is clicked
+  filterBtn.addEventListener("click", function () {
+    const province = provinceSelect.value;
+    const district = districtSelect.value;
+    fetchLawyers(province, district);
   });
 
   // Logout functionality
@@ -190,15 +202,45 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Function to fetch lawyers
-  function fetchLawyers() {
-    fetch("http://localhost:8080/api/v1/user/lawyers", {
+  // Function to fetch lawyers with optional province and district filters
+  function fetchLawyers(province = null, district = null) {
+    const lawyersList = document.getElementById("lawyersList");
+    const errorAlert = document.getElementById("errorAlert");
+    errorAlert.classList.add("d-none");
+
+    // Show loading spinner
+    lawyersList.innerHTML = `
+      <div class="col-12 text-center" id="loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p>Loading lawyers...</p>
+      </div>`;
+
+    let url = "http://localhost:8080/api/v1/user/lawyers";
+    if (province && district) {
+      url = `http://localhost:8080/api/v1/user/lawyers-byProvinceDistrict?province=${encodeURIComponent(province)}&district=${encodeURIComponent(district)}`;
+    }
+
+    $.ajax({
+      url: url,
       method: "GET",
-      headers: { "Authorization": `Bearer ${token}` }
-    })
-      .then(response => response.json())
-      .then(data => displayLawyers(data.data || []))
-      .catch(error => console.error("Error fetching lawyers:", error));
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
+      success: function (response) {
+        if (response.code === 200) {
+          displayLawyers(response.data || []);
+        } else {
+          lawyersList.innerHTML = "<p>No lawyers found.</p>";
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching lawyers:", error);
+        lawyersList.innerHTML = "";
+        errorAlert.classList.remove("d-none");
+      }
+    });
   }
 
   // Function to display lawyers
@@ -211,15 +253,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     lawyers.forEach(lawyer => {
       const lawyerCard = `
-        <div class="card">
-          <h5>${lawyer.lawyer_name || "Unknown"}</h5>
-          <p>${lawyer.specialization || "General Practice"}</p>
-          <p>${lawyer.bio || "No bio available"}</p>
-          <p>${lawyer.contactNumber || "N/A"}</p>
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">${lawyer.lawyer_name || "Unknown"}</h5>
+              <p class="card-text"><strong>Specialization:</strong> ${lawyer.specialization || "General Practice"}</p>
+              <p class="card-text"><strong>Bio:</strong> ${lawyer.bio || "No bio available"}</p>
+              <p class="card-text"><strong>Contact:</strong> ${lawyer.contactNumber || "N/A"}</p>
+              <p class="card-text"><strong>Location:</strong> ${lawyer.district}, ${lawyer.province}</p>
+            </div>
+          </div>
         </div>`;
       lawyersList.innerHTML += lawyerCard;
     });
   }
-
-  fetchLawyers();
 });

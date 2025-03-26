@@ -97,7 +97,7 @@
           <!-- Appointments content goes here -->
         </div>
 
-        <!-- Clients Section -->
+        <!-- Clients Section (Find Lawyers) -->
         <div id="clients-section" class="content-section">
           <h2>Lawyers</h2>
           <div class="container mt-4">
@@ -115,11 +115,13 @@
                     <option value="Southern">Southern</option>
                     <option value="Northern">Northern</option>
                     <option value="Eastern">Eastern</option>
+                    <!-- Add more provinces as needed -->
                   </select>
                 </div>
                 <div class="col-md-5 mb-2">
                   <select id="districtSelect" class="form-select">
                     <option value="">Select District</option>
+                    <!-- Districts will be populated dynamically -->
                   </select>
                 </div>
                 <div class="col-md-2 mb-2">
@@ -129,7 +131,7 @@
             </div>
 
             <!-- Lawyers List -->
-            <div id="lawyersList" class="row">
+            <div id="lawyersList" class="row mt-4">
               <div class="col-12 text-center" id="loading">
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Loading...</span>
