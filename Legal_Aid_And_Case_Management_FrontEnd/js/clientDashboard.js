@@ -253,33 +253,49 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     lawyers.forEach(lawyer => {
       const lawyerCard = `
-                    <div class="col-md-4 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">${lawyer.lawyer_name || "Unknown"}</h5>
-                                <p class="card-text">
-                                    <strong>Specialization:</strong> ${lawyer.specialization || "General Practice"}
-                                </p>
-                                <p class="card-text">
-                                    <strong>Bio:</strong> ${truncateBio(lawyer.bio) || "No bio available"}
-                                </p>
-                                <p class="card-text">
-                                    <strong>Contact:</strong> ${lawyer.contactNumber || "N/A"}
-                                </p>
-                                <p class="card-text">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                         class="bi bi-geo-alt-fill location-icon" viewBox="0 0 16 16">
-                                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                                    </svg>
-                                    ${lawyer.district}, ${lawyer.province}
-                                </p>
-                                <button onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '&quot;')})"
-                                        class="btn view-profile-btn mt-auto">
-                                    View Full Profile
-                                </button>
-                            </div>
-                        </div>
-                    </div>`;
+        <div class="col-md-4 mb-3">
+          <div class="card lawyer-card h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="lawyer-profile-header">
+                <div class="lawyer-avatar">
+                  <i class="bi bi-person"></i>
+                </div>
+                <div>
+                  <h5 class="lawyer-name">${lawyer.lawyer_name || "Unknown"}</h5>
+                  <p class="lawyer-specialization">
+                    ${lawyer.specialization || "General Practice"}
+                  </p>
+                </div>
+              </div>
+              <p class="card-text mb-3">
+                <i class="bi bi-text-paragraph me-2"></i>
+                ${truncateBio(lawyer.bio) || "No bio available"}
+              </p>
+              <div class="lawyer-stats">
+                <div class="stat-item">
+                  <div class="stat-value">
+                    <i class="bi bi-telephone-fill"></i>
+                  </div>
+                  <div class="stat-label">
+                    ${lawyer.contactNumber || "N/A"}
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value">
+                    <i class="bi bi-geo-alt-fill"></i>
+                  </div>
+                  <div class="stat-label">
+                    ${lawyer.district}, ${lawyer.province}
+                  </div>
+                </div>
+              </div>
+              <button onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '&quot;')})"
+                      class="btn view-profile-btn mt-3">
+                <i class="bi bi-eye me-2"></i>View Full Profile
+              </button>
+            </div>
+          </div>
+        </div>`;
       lawyersList.innerHTML += lawyerCard;
     });
   }
@@ -297,4 +313,43 @@ document.addEventListener("DOMContentLoaded", function () {
       `Location: ${lawyer.district}, ${lawyer.province}\n\n` +
       `Bio: ${lawyer.bio || 'No bio available'}`);
   }
+
+  // Moved search functionality inside the main DOMContentLoaded event listener
+  // Add search functionality
+  const searchBar = document.createElement('input');
+  searchBar.type = 'text';
+  searchBar.placeholder = 'Search lawyers...';
+  searchBar.classList.add('form-control', 'search-bar');
+
+  const searchContainer = document.createElement('div');
+  searchContainer.classList.add('search-bar-container');
+  searchContainer.appendChild(searchBar);
+
+  // Search icon
+  const searchIcon = document.createElement('i');
+  searchIcon.classList.add('bi', 'bi-search', 'search-icon');
+  searchContainer.appendChild(searchIcon);
+
+  // Insert search bar before the filter section
+  const filterSection = document.querySelector('.filter-section');
+  if (filterSection) {
+    filterSection.parentNode.insertBefore(searchContainer, filterSection);
+  }
+
+  // Search functionality
+  searchBar.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const lawyerCards = document.querySelectorAll('#lawyersList .card');
+
+    lawyerCards.forEach(card => {
+      const lawyerName = card.querySelector('.lawyer-name').textContent.toLowerCase();
+      const lawyerSpecialization = card.querySelector('.lawyer-specialization').textContent.toLowerCase();
+
+      if (lawyerName.includes(searchTerm) || lawyerSpecialization.includes(searchTerm)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
 });
