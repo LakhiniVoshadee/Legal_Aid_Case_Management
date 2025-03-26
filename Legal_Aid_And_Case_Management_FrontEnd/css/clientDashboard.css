@@ -248,3 +248,49 @@ body {
 .badge-specialization {
   background-color: #198754;
 }
+body {
+  background-color: #f4f4f4;
+  font-family: 'Arial', sans-serif;
+}
+.card {
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+.card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+.card-title {
+  color: #000;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+.card-text {
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+.view-profile-btn {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin-top: auto;
+  transition: background-color 0.3s ease;
+}
+.view-profile-btn:hover {
+  background-color: #333;
+  color: #f4f4f4;
+}
+.location-icon {
+  margin-right: 0.5rem;
+  color: #666;
+}

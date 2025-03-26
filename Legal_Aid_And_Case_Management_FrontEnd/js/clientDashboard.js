@@ -253,18 +253,48 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     lawyers.forEach(lawyer => {
       const lawyerCard = `
-        <div class="col-md-4 mb-3">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">${lawyer.lawyer_name || "Unknown"}</h5>
-              <p class="card-text"><strong>Specialization:</strong> ${lawyer.specialization || "General Practice"}</p>
-              <p class="card-text"><strong>Bio:</strong> ${lawyer.bio || "No bio available"}</p>
-              <p class="card-text"><strong>Contact:</strong> ${lawyer.contactNumber || "N/A"}</p>
-              <p class="card-text"><strong>Location:</strong> ${lawyer.district}, ${lawyer.province}</p>
-            </div>
-          </div>
-        </div>`;
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">${lawyer.lawyer_name || "Unknown"}</h5>
+                                <p class="card-text">
+                                    <strong>Specialization:</strong> ${lawyer.specialization || "General Practice"}
+                                </p>
+                                <p class="card-text">
+                                    <strong>Bio:</strong> ${truncateBio(lawyer.bio) || "No bio available"}
+                                </p>
+                                <p class="card-text">
+                                    <strong>Contact:</strong> ${lawyer.contactNumber || "N/A"}
+                                </p>
+                                <p class="card-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-geo-alt-fill location-icon" viewBox="0 0 16 16">
+                                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                                    </svg>
+                                    ${lawyer.district}, ${lawyer.province}
+                                </p>
+                                <button onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '&quot;')})"
+                                        class="btn view-profile-btn mt-auto">
+                                    View Full Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
       lawyersList.innerHTML += lawyerCard;
     });
+  }
+
+  function truncateBio(bio, maxLength = 100) {
+    if (!bio) return '';
+    return bio.length > maxLength ? bio.substring(0, maxLength) + '...' : bio;
+  }
+
+  function viewFullProfile(lawyer) {
+    // Create a modal or alert to show full lawyer details
+    alert(`Full Profile of ${lawyer.lawyer_name}\n\n` +
+      `Specialization: ${lawyer.specialization}\n` +
+      `Contact: ${lawyer.contactNumber}\n` +
+      `Location: ${lawyer.district}, ${lawyer.province}\n\n` +
+      `Bio: ${lawyer.bio || 'No bio available'}`);
   }
 });
