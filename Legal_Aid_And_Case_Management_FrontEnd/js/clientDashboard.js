@@ -29,7 +29,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  fetchLawyerProfile();
+  // Fetch and populate client profile
+  fetchClientProfile();
+
+  // Handle profile form submission
+  document.getElementById("profile-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    updateClientProfile();
+  });
 
   const districtsByProvince = {
     "Western": ["Colombo", "Gampaha", "Kalutara"],
@@ -43,8 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
     "Sabaragamuwa": ["Ratnapura", "Kegalle"]
   };
 
-  const provinceSelect = document.getElementById("province");
-  const districtSelect = document.getElementById("district");
+  const provinceSelect = document.getElementById("provinceSelect");
+  const districtSelect = document.getElementById("districtSelect");
 
   provinceSelect.addEventListener("change", function () {
     const selectedProvince = this.value;
@@ -59,12 +66,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Logout functionality
   document.getElementById("logout-btn").addEventListener("click", function () {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
     window.location.href = "login.html";
   });
 
+  // Deactivate account functionality
   document.getElementById("confirm-deactivate-btn").addEventListener("click", function () {
     const confirmEmail = document.getElementById("deactivate-confirm-email").value;
     if (confirmEmail === email) {
@@ -74,37 +83,90 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  function fetchLawyerProfile() {
-    setTimeout(() => {
-      populateProfileForm({
-        lawyer_name: "John Doe",
-        contactNumber: "0771234567",
-        address: "123 Main St, Colombo 05",
-        specialization: "Family Law",
-        yearsOfExperience: 8,
-        barAssociationNumber: "BAR12345",
-        officeLocation: "Law Chambers, Hulftsdorp",
-        bio: "Experienced family lawyer with expertise in divorce, child custody, and property settlements.",
-        province: "Western",
-        district: "Colombo"
+  // Function to fetch client profile
+  function fetchClientProfile() {
+    fetch(`http://localhost:8080/api/v1/user/client?email=${email}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.code === 200 && data.data) {
+          populateProfileForm(data.data);
+        } else {
+          console.error("Error fetching client profile:", data.message);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching client profile:", error);
       });
-    }, 500);
   }
 
+  // Function to populate profile form
   function populateProfileForm(data) {
-    if (!data) return;
-    Object.keys(data).forEach(key => {
-      const field = document.getElementById(key);
-      if (field) field.value = data[key] || "";
-    });
-    provinceSelect.dispatchEvent(new Event("change"));
-    setTimeout(() => {
-      districtSelect.value = data.district || "";
-    }, 100);
+    document.getElementById("lawyer_name").value = data.full_name || "";
+    document.getElementById("contactNumber").value = data.phone_number || "";
+    document.getElementById("address").value = data.address || "";
+    document.getElementById("gender").value = data.gender || "";
   }
 
+  // Function to update client profile
+  function updateClientProfile() {
+    const updateBtn = document.getElementById('update-profile-btn');
+    const successAlert = document.getElementById('update-success');
+    const errorAlert = document.getElementById('update-error');
+
+    successAlert.classList.add('d-none');
+    errorAlert.classList.add('d-none');
+
+    updateBtn.disabled = true;
+    updateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
+
+    const clientUpdateDTO = {
+      full_name: document.getElementById('lawyer_name').value,
+      phone_number: document.getElementById('contactNumber').value,
+      address: document.getElementById('address').value,
+      gender: document.getElementById('gender').value
+    };
+
+    fetch('http://localhost:8080/api/v1/user/update-client', {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(clientUpdateDTO)
+    })
+      .then(response => response.json())
+      .then(data => {
+        updateBtn.disabled = false;
+        updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
+
+        if (data.code === 200) {
+          successAlert.classList.remove('d-none');
+          setTimeout(() => {
+            successAlert.classList.add('d-none');
+          }, 3000);
+        } else {
+          errorAlert.textContent = data.message || 'Error updating profile!';
+          errorAlert.classList.remove('d-none');
+        }
+      })
+      .catch(error => {
+        updateBtn.disabled = false;
+        updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
+        console.error('Error updating profile:', error);
+        errorAlert.textContent = 'Network error. Please try again.';
+        errorAlert.classList.remove('d-none');
+      });
+  }
+
+  // Function to deactivate account
   function deactivateAccount() {
-    fetch("http://localhost:8080/api/v1/user/delete-client", {
+    fetch("http://localhost:8080/api/v1/user/delete-client-account", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -128,6 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  // Function to fetch lawyers
   function fetchLawyers() {
     fetch("http://localhost:8080/api/v1/user/lawyers", {
       method: "GET",
@@ -138,6 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch(error => console.error("Error fetching lawyers:", error));
   }
 
+  // Function to display lawyers
   function displayLawyers(lawyers) {
     const lawyersList = document.getElementById("lawyersList");
     lawyersList.innerHTML = "";
