@@ -35,6 +35,12 @@
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="#message-section" data-section="message-section">
+                <i class="bi bi-chat-text"></i>  Messages
+              </a>
+            </li>
+
+            <li class="nav-item">
               <a class="nav-link" href="#profile-section" data-section="profile-section">
                 <i class="bi bi-person-circle me-2"></i> Profile
               </a>
@@ -99,13 +105,13 @@
 
         <!-- Clients Section (Find Lawyers) -->
         <div id="clients-section" class="content-section">
-          <h2>Lawyers</h2>
+         <!-- <h2>Lawyers</h2>-->
           <div class="container mt-4">
-            <h2 class="text-center mb-4">Available Lawyers</h2>
+            <h2 class="text-center mb-4">Suggested for you</h2>
 
             <!-- Filter Section -->
             <div class="filter-section">
-              <h5>Filter Lawyers</h5>
+              <h5>Find Lawyers</h5>
               <div class="row">
                 <div class="col-md-5 mb-2">
                   <select id="provinceSelect" class="form-select">
@@ -115,7 +121,11 @@
                     <option value="Southern">Southern</option>
                     <option value="Northern">Northern</option>
                     <option value="Eastern">Eastern</option>
-                    <!-- Add more provinces as needed -->
+                    <option value="North Western">North Western</option>
+                    <option value="North Central">North Central</option>
+                    <option value="Uva">Uva</option>
+                    <option value="Sabaragamuwa">Sabaragamuwa</option>
+
                   </select>
                 </div>
                 <div class="col-md-5 mb-2">
@@ -146,6 +156,12 @@
             </div>
           </div>
         </div>
+
+        <div id="message-section" class="content-section">
+          <h2>Messages</h2>
+          <!-- Appointments content goes here -->
+        </div>
+
 
         <!-- Profile Section -->
         <div id="profile-section" class="content-section">
