@@ -427,3 +427,138 @@ body {
     margin-bottom: 15px;
   }
 }
+/* Dashboard Section Styles */
+#dashboard-section {
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+.dashboard-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-card .card-title {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 10px;
+}
+
+.dashboard-card .card-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.dashboard-card .icon {
+  font-size: 2.5rem;
+  color: #6c757d;
+  opacity: 0.7;
+}
+
+.dashboard-card .count {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #343a40;
+}
+
+/* Total Lawyers Card */
+.dashboard-card:nth-child(1) .icon {
+  color: #3498db;
+}
+
+/* Time Card */
+.dashboard-card:nth-child(2) .icon {
+  color: #2ecc71;
+}
+
+/* Calendar Card */
+.dashboard-card:nth-child(3) {
+  padding: 20px;
+}
+
+.dashboard-card:nth-child(3) iframe {
+  border-radius: 8px;
+  max-width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .dashboard-card {
+    margin-bottom: 15px;
+  }
+
+  .dashboard-card .count {
+    font-size: 1.5rem;
+  }
+
+  .dashboard-card .icon {
+    font-size: 2rem;
+  }
+}
+
+/* Subtle Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.dashboard-card:hover .icon {
+  animation: pulse 1.5s infinite;
+}
+
+/* Light Color Scheme */
+.dashboard-card {
+  background: linear-gradient(to bottom right, #ffffff, #f1f3f5);
+}
+
+.dashboard-card:hover {
+  background: linear-gradient(to bottom right, #f8f9fa, #f1f3f5);
+}
+
+/* Soft Color Palette */
+@media (prefers-color-scheme: light) {
+  #dashboard-section {
+    background-color: #f1f3f5;
+  }
+
+  .dashboard-card {
+    background: linear-gradient(to bottom right, #ffffff, #f4f5f7);
+    border-color: #e6e8eb;
+  }
+
+  .dashboard-card .card-title {
+    color: #5a6169;
+    border-bottom-color: #e1e4e8;
+  }
+
+  .dashboard-card .icon {
+    color: #6c757d;
+  }
+
+  .dashboard-card .count {
+    color: #3a3f44;
+  }
+}

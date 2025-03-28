@@ -1,0 +1,50 @@
+body {
+  background-color: #f4f7fa;
+  font-family: 'Arial', sans-serif;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  border-radius: 10px 10px 0 0;
+}
+
+.lawyer-avatar {
+  background-color: #e9ecef;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.lawyer-avatar i {
+  color: #495057;
+}
+
+h3 {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.text-muted {
+  font-size: 1.1rem;
+}
+
+.btn-success, .btn-primary {
+  border-radius: 5px;
+  padding: 8px 16px;
+}
+
+.form-control {
+  border-radius: 5px;
+}
+
+#appointment-message, #chat-message {
+  font-size: 0.9rem;
+}

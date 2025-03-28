@@ -95,8 +95,37 @@
       <div class="container-fluid main-content p-4">
         <!-- Dashboard Section -->
         <div id="dashboard-section" class="content-section active">
-          <h2>Dashboard Content</h2>
-          <!-- Dashboard content goes here -->
+          <div class="row">
+            <!-- Total Lawyers Count -->
+            <div class="col-md-4 mb-4">
+              <div class="dashboard-card">
+                <h5 class="card-title">Total Lawyers</h5>
+                <div class="card-content">
+                  <i class="bi bi-people-fill icon"></i>
+                  <span id="total-lawyers" class="count">0</span>
+                </div>
+              </div>
+            </div>
+            <!-- Live Time -->
+            <div class="col-md-4 mb-4">
+              <div class="dashboard-card">
+                <h5 class="card-title">Current Time</h5>
+                <div class="card-content">
+                  <i class="bi bi-clock-fill icon"></i>
+                  <span id="live-time" class="count"></span>
+                </div>
+              </div>
+            </div>
+            <!-- Google Calendar -->
+            <div class="col-md-4 mb-4">
+              <div class="dashboard-card">
+                <h5 class="card-title">Your Calendar</h5>
+                <div class="card-content">
+                  <iframe id="google-calendar" src="https://calendar.google.com/calendar/embed?height=200&wkst=1&bgcolor=%23ffffff&ctz=UTC" style="border: 0" width="100%" height="200" frameborder="0" scrolling="no"></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Appointments Section -->

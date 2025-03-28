@@ -357,4 +357,125 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+    // Live Time Function
+    function updateLiveTime() {
+      const liveTimeElement = document.getElementById('live-time');
+
+      function formatTime() {
+        const now = new Date();
+        const options = {
+          weekday: 'short',
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        };
+        return now.toLocaleString('en-US', options);
+      }
+
+      // Update time immediately and then every second
+      function updateDisplay() {
+        liveTimeElement.textContent = formatTime();
+      }
+
+      updateDisplay();
+      setInterval(updateDisplay, 1000);
+    }
+
+    // Fetch Total Lawyers Count
+    function fetchTotalLawyersCount() {
+      const totalLawyersElement = document.getElementById('total-lawyers');
+
+      // Check for authentication token (adjust as per your auth mechanism)
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        totalLawyersElement.textContent = 'N/A';
+        return;
+      }
+
+      // Fetch total lawyers count from API
+      fetch('http://localhost:8080/api/v1/user/total-lawyers-count', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.code === 200) {
+            // Animate number counting
+            animateCountUp(totalLawyersElement, 0, data.data || 0, 1000);
+          } else {
+            totalLawyersElement.textContent = 'Error';
+            console.error('Failed to fetch lawyers count:', data.message);
+          }
+        })
+        .catch(error => {
+          totalLawyersElement.textContent = 'Error';
+          console.error('Error fetching lawyers count:', error);
+        });
+    }
+
+    // Number counting animation
+    function animateCountUp(element, start, end, duration) {
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        element.textContent = Math.floor(progress * (end - start) + start);
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    // Google Calendar Refresh (optional)
+    function refreshGoogleCalendar() {
+      const calendarIframe = document.getElementById('google-calendar');
+
+      // Refresh iframe src to get latest calendar
+      calendarIframe.src = calendarIframe.src;
+    }
+
+    // Initialize Dashboard
+    function initializeDashboard() {
+      // Verify user authentication
+      const token = localStorage.getItem('token');
+      if (!token) {
+        // Redirect to login if not authenticated
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Initialize components
+      updateLiveTime();
+      fetchTotalLawyersCount();
+
+      // Optional: Refresh calendar periodically
+      setInterval(refreshGoogleCalendar, 5 * 60 * 1000); // Every 5 minutes
+    }
+
+    // Error Handling Wrapper
+    function safeInitialize() {
+      try {
+        initializeDashboard();
+      } catch (error) {
+        console.error('Dashboard initialization error:', error);
+        // Optionally show user-friendly error message
+        const errorContainer = document.createElement('div');
+        errorContainer.className = 'alert alert-danger';
+        errorContainer.textContent = 'Unable to load dashboard. Please try again later.';
+        document.getElementById('dashboard-section').prepend(errorContainer);
+      }
+    }
+
+    // Run initialization
+    safeInitialize();
+
 });
