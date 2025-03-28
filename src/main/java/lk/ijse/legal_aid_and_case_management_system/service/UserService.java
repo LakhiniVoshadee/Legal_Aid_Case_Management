@@ -29,6 +29,9 @@ public interface UserService {
 
     List<LawyerDTO> getLawyersByProvinceAndDistrict(String province, String district);
 
+    long getRegisteredLawyersCount();
+
+    ClientDTO getClientProfile(String email);
 
 }
 

@@ -323,4 +323,32 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .map(lawyer -> modelMapper.map(lawyer, LawyerDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public long getRegisteredLawyersCount() {
+        return lawyerRepository.count();
+    }
+
+    @Override
+    public ClientDTO getClientProfile(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return null;
+        }
+        Clients client = clientRepository.findClientByUser(user);
+        if (client == null) {
+            return null;
+        }
+        ClientDTO clientDTO = new ClientDTO();
+        clientDTO.setEmail(user.getEmail());
+        clientDTO.setFull_name(client.getFull_name());
+        clientDTO.setPhone_number(client.getPhone_number());
+        clientDTO.setDate_of_birth(client.getDate_of_birth());
+        clientDTO.setAddress(client.getAddress());
+        clientDTO.setPreferred_language(client.getPreferred_language());
+        clientDTO.setGender(client.getGender());
+        clientDTO.setNIC(client.getNIC());
+        clientDTO.setLawyersCount(client.getLawyersCount());
+        return clientDTO;
+    }
 }

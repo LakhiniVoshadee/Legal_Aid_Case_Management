@@ -24,6 +24,8 @@ public class Clients {
 
     private String NIC;
 
+    private long lawyersCount;
+
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
@@ -32,7 +34,7 @@ public class Clients {
     public Clients() {
     }
 
-    public Clients(Long client_id, String full_name, String phone_number, LocalDate date_of_birth, String address, String preferred_language, String gender, String NIC, User user) {
+    public Clients(Long client_id, String full_name, String phone_number, LocalDate date_of_birth, String address, String preferred_language, String gender, String NIC, long lawyersCount, User user) {
         this.client_id = client_id;
         this.full_name = full_name;
         this.phone_number = phone_number;
@@ -41,6 +43,7 @@ public class Clients {
         this.preferred_language = preferred_language;
         this.gender = gender;
         this.NIC = NIC;
+        this.lawyersCount = lawyersCount;
         this.user = user;
     }
 
@@ -106,6 +109,14 @@ public class Clients {
 
     public void setNIC(String NIC) {
         this.NIC = NIC;
+    }
+
+    public long getLawyersCount() {
+        return lawyersCount;
+    }
+
+    public void setLawyersCount(long lawyersCount) {
+        this.lawyersCount = lawyersCount;
     }
 
     public User getUser() {

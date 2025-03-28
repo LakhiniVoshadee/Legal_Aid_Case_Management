@@ -11,12 +11,13 @@ public class ClientDTO {
     private String preferred_language;
     private String gender;
     private String NIC;
+    private long lawyersCount;
 
 
     // Default constructor
     public ClientDTO() {}
 
-    public ClientDTO(String email, String full_name, String phone_number, LocalDate date_of_birth, String address, String preferred_language, String gender, String NIC) {
+    public ClientDTO(String email, String full_name, String phone_number, LocalDate date_of_birth, String address, String preferred_language, String gender, String NIC, long lawyersCount) {
         this.email = email;
         this.full_name = full_name;
         this.phone_number = phone_number;
@@ -25,6 +26,7 @@ public class ClientDTO {
         this.preferred_language = preferred_language;
         this.gender = gender;
         this.NIC = NIC;
+        this.lawyersCount = lawyersCount;
     }
 
     public String getEmail() {
@@ -89,5 +91,13 @@ public class ClientDTO {
 
     public void setNIC(String NIC) {
         this.NIC = NIC;
+    }
+
+    public long getLawyersCount() {
+        return lawyersCount;
+    }
+
+    public void setLawyersCount(long lawyersCount) {
+        this.lawyersCount = lawyersCount;
     }
 }

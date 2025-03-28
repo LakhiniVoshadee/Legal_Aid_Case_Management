@@ -1,5 +1,6 @@
 package lk.ijse.legal_aid_and_case_management_system.controller;
 
+import lk.ijse.legal_aid_and_case_management_system.dto.ClientDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.LawyerDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.ResponseDTO;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
@@ -8,6 +9,8 @@ import lk.ijse.legal_aid_and_case_management_system.util.VarList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,6 +56,23 @@ public class ClientController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseDTO(500, e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/client-profile")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<ResponseDTO> getClientProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            String email = userDetails.getUsername();
+            ClientDTO clientDTO = userService.getClientProfile(email);
+            if (clientDTO == null) {
+                return new ResponseEntity<>(new ResponseDTO(404, "Client profile not found", null), HttpStatus.NOT_FOUND);
+            }
+            long lawyersCount = userService.getRegisteredLawyersCount();
+            clientDTO.setLawyersCount(lawyersCount);
+            return new ResponseEntity<>(new ResponseDTO(200, "Success", clientDTO), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseDTO(500, e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
