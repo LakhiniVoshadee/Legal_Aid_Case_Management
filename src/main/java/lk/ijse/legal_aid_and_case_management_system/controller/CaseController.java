@@ -9,9 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/case")
-@CrossOrigin(origins = "http://localhost:63342")
+@CrossOrigin(origins = "http://localhost:63342", allowedHeaders = "*", methods = {RequestMethod.POST, RequestMethod.PUT})
 public class CaseController {
 
     private final CaseService caseService;
@@ -47,6 +49,18 @@ public class CaseController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ResponseDTO(400, "Error reviewing case: " + e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/open-cases")
+    @PreAuthorize("hasRole('LAWYER')")
+    public ResponseEntity<ResponseDTO> getOpenCases() {
+        try {
+            List<CaseDTO> openCases = caseService.getOpenCases();
+            return ResponseEntity.ok().body(new ResponseDTO(200, "Open cases retrieved successfully", openCases));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(500, "Error retrieving open cases: " + e.getMessage(), null));
         }
     }
 }

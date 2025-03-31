@@ -11,7 +11,8 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.7;
   color: var(--text-color);
   background-color: var(--light-gray);
 }

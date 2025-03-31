@@ -1,119 +1,142 @@
-// LawNet Header JavaScript
-
 document.addEventListener('DOMContentLoaded', function() {
-  // Function to handle header scroll effect
-  function handleHeaderScroll() {
-    const header = document.querySelector('.lawnet-header');
+  // Navbar scroll effect
+  const navbar = document.querySelector('.navbar');
 
+  window.addEventListener('scroll', function() {
     if (window.scrollY > 50) {
-      header.classList.add('scrolled');
+      navbar.classList.add('scrolled');
     } else {
-      header.classList.remove('scrolled');
+      navbar.classList.remove('scrolled');
     }
-  }
-
-  // Add scroll event listener
-  window.addEventListener('scroll', handleHeaderScroll);
-
-  // Initialize header state on page load
-  handleHeaderScroll();
-
-  // Active link highlighting
-  const navLinks = document.querySelectorAll('.nav-link');
-
-  navLinks.forEach(link => {
-    link.addEventListener('click', function() {
-      // Remove active class from all links
-      navLinks.forEach(item => {
-        item.classList.remove('active');
-      });
-
-      // Add active class to clicked link
-      this.classList.add('active');
-    });
   });
-  // Smooth scroll for anchor links
+
+  // Smooth scrolling for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
-      if (this.getAttribute('href') !== '#') {
-        e.preventDefault();
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
 
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-          });
-        }
+      if (target) {
+        window.scrollTo({
+          top: target.offsetTop - 70,
+          behavior: 'smooth'
+        });
       }
     });
   });
 
-  // Simple image loading animation
-  const heroImage = document.querySelector('.hero-image img');
-  if (heroImage) {
-    heroImage.style.opacity = '0';
+  // Active link highlighting
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('.nav-link');
 
-    heroImage.onload = function() {
-      setTimeout(function() {
-        heroImage.style.transition = 'opacity 1s ease';
-        heroImage.style.opacity = '1';
-      }, 300);
-    };
+  window.addEventListener('scroll', () => {
+    let current = '';
 
-    // If image is already loaded
-    if (heroImage.complete) {
-      heroImage.onload();
-    }
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.clientHeight;
+
+      if (window.pageYOffset >= sectionTop - 150) {
+        current = section.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href').substring(1) === current) {
+        link.classList.add('active');
+      }
+    });
+  });
+
+  // Statistics counter animation
+  function animateCounter(element, target) {
+    let current = 0;
+    const increment = target / 100;
+    const timer = setInterval(() => {
+      current += increment;
+      element.textContent = Math.floor(current) + (element.dataset.suffix || '');
+
+      if (current >= target) {
+        element.textContent = target + (element.dataset.suffix || '');
+        clearInterval(timer);
+      }
+    }, 10);
   }
-  // LawNet Footer JavaScript
 
-  document.addEventListener('DOMContentLoaded', function() {
-    // Smooth hover effect for footer links
-    const footerLinks = document.querySelectorAll('.footer-links a, .footer-bottom-links a');
+  // Intersection Observer for counter animation
+  const counters = document.querySelectorAll('.counter');
+  const observerOptions = {
+    threshold: 0.5
+  };
 
-    footerLinks.forEach(link => {
-      link.addEventListener('mouseenter', function() {
-        this.style.transition = 'all 0.3s ease';
-      });
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const target = parseInt(entry.target.textContent);
+        animateCounter(entry.target, target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  counters.forEach(counter => observer.observe(counter));
+
+  // Contact form handling
+  const contactForm = document.querySelector('.contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Get form data
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData);
+
+      // Simulate form submission
+      const submitButton = this.querySelector('button[type="submit"]');
+      const originalText = submitButton.innerHTML;
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+
+      // Simulate API call
+      setTimeout(() => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
+        alert('Message sent successfully!');
+        this.reset();
+      }, 2000);
+    });
+  }
+
+  // Image lazy loading
+  const images = document.querySelectorAll('img[data-src]');
+  const imageOptions = {
+    threshold: 0.5,
+    rootMargin: '0px 0px 50px 0px'
+  };
+
+  const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        img.src = img.dataset.src;
+        img.classList.add('fade-in');
+        observer.unobserve(img);
+      }
+    });
+  }, imageOptions);
+
+  images.forEach(image => imageObserver.observe(image));
+
+  // Service card hover effect
+  const serviceCards = document.querySelectorAll('.service-card');
+  serviceCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-10px)';
     });
 
-    // Initialize current year for copyright
-    const yearElement = document.querySelector('.footer-bottom p');
-    if (yearElement && yearElement.textContent.includes('2025')) {
-      const currentYear = new Date().getFullYear();
-      yearElement.textContent = yearElement.textContent.replace('2025', currentYear);
-    }
-
-    // Fade in footer elements on scroll
-    const footerElements = document.querySelectorAll('.footer-about, .footer-links, .footer-contact');
-
-    function checkFooterVisibility() {
-      const triggerBottom = window.innerHeight * 0.8;
-
-      footerElements.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-
-        if (elementTop < triggerBottom) {
-          element.style.opacity = '1';
-          element.style.transform = 'translateY(0)';
-        }
-      });
-    }
-
-    // Set initial state for footer elements
-    footerElements.forEach(element => {
-      element.style.opacity = '0';
-      element.style.transform = 'translateY(20px)';
-      element.style.transition = 'all 0.5s ease';
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
     });
-
-    // Add scroll event listener
-    window.addEventListener('scroll', checkFooterVisibility);
-
-    // Check visibility on initial load
-    checkFooterVisibility();
   });
 });

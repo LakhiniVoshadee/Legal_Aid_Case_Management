@@ -44,4 +44,31 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.href = `chat.html?lawyerId=${lawyer.id}`;
     });
   }
+  function fetchLawyerProfile() {
+    fetch('http://localhost:8080/api/v1/user/lawyer?email=' + email, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => {
+            throw new Error(`HTTP ${response.status}: ${text || 'Unknown error'}`);
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.code === 200 && data.data) {
+          populateProfileForm(data.data);
+        } else {
+          console.error('Unexpected response format:', data);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching profile:', error.message);
+      });
+  }
 });

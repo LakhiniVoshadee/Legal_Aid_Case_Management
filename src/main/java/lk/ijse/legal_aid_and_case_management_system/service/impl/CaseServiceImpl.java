@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CaseServiceImpl implements CaseService {
@@ -77,6 +79,20 @@ public class CaseServiceImpl implements CaseService {
         Case updatedCase = caseRepository.save(caseEntity);
 
         return modelMapper.map(updatedCase, CaseDTO.class);
+    }
+    @Override
+    public List<CaseDTO> getOpenCases() {
+        List<Case> openCases = caseRepository.findByStatus(CaseStatus.OPEN);
+        return openCases.stream()
+                .map(caseEntity -> {
+                    CaseDTO caseDTO = modelMapper.map(caseEntity, CaseDTO.class);
+                    caseDTO.setClientName(caseEntity.getClient().getFull_name()); // Assuming Clients has getFullName()
+                    if (caseEntity.getLawyer() != null) {
+                        caseDTO.setLawyerName(caseEntity.getLawyer().getLawyer_name()); // Assuming Lawyer has getLawyerName()
+                    }
+                    return caseDTO;
+                })
+                .collect(Collectors.toList());
     }
 }
 

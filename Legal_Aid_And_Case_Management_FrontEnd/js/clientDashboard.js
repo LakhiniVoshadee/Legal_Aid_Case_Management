@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById(targetSectionId).classList.add("active");
       sectionTitle.textContent = this.textContent.trim();
 
-      // Fetch lawyers when "Find Lawyers" section is selected
       if (targetSectionId === "clients-section") {
         fetchLawyers();
       }
@@ -43,9 +42,14 @@ document.addEventListener("DOMContentLoaded", function () {
     updateClientProfile();
   });
 
+  // Case submission
+  document.getElementById("case-submit-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    submitCase();
+  });
+
   // District options by province
   const districtsByProvince = {
-
     "Western": ["Colombo", "Gampaha", "Kalutara"],
     "Central": ["Kandy", "Matale", "Nuwara Eliya"],
     "Southern": ["Galle", "Matara", "Hambantota"],
@@ -55,16 +59,12 @@ document.addEventListener("DOMContentLoaded", function () {
     "North Central": ["Anuradhapura", "Polonnaruwa"],
     "Uva": ["Badulla", "Monaragala"],
     "Sabaragamuwa": ["Ratnapura", "Kegalle"]
-
-
-  // Add more provinces and districts as needed
   };
 
   const provinceSelect = document.getElementById("provinceSelect");
   const districtSelect = document.getElementById("districtSelect");
   const filterBtn = document.getElementById("filterBtn");
 
-  // Populate districts based on selected province
   provinceSelect.addEventListener("change", function () {
     const selectedProvince = this.value;
     districtSelect.innerHTML = '<option value="">Select District</option>';
@@ -78,7 +78,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Filter lawyers when the filter button is clicked
   filterBtn.addEventListener("click", function () {
     const province = provinceSelect.value;
     const district = districtSelect.value;
@@ -102,7 +101,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Function to fetch client profile
   function fetchClientProfile() {
     fetch(`http://localhost:8080/api/v1/user/client?email=${email}`, {
       method: "GET",
@@ -124,7 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Function to populate profile form
   function populateProfileForm(data) {
     document.getElementById("lawyer_name").value = data.full_name || "";
     document.getElementById("contactNumber").value = data.phone_number || "";
@@ -132,7 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("gender").value = data.gender || "";
   }
 
-  // Function to update client profile
   function updateClientProfile() {
     const updateBtn = document.getElementById('update-profile-btn');
     const successAlert = document.getElementById('update-success');
@@ -183,7 +179,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Function to deactivate account
   function deactivateAccount() {
     fetch("http://localhost:8080/api/v1/user/delete-client-account", {
       method: "POST",
@@ -209,13 +204,11 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Function to fetch lawyers with optional province and district filters
   function fetchLawyers(province = null, district = null) {
     const lawyersList = document.getElementById("lawyersList");
     const errorAlert = document.getElementById("errorAlert");
     errorAlert.classList.add("d-none");
 
-    // Show loading spinner
     lawyersList.innerHTML = `
       <div class="col-12 text-center" id="loading">
         <div class="spinner-border text-primary" role="status">
@@ -250,7 +243,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Function to display lawyers
   function displayLawyers(lawyers) {
     const lawyersList = document.getElementById("lawyersList");
     lawyersList.innerHTML = "";
@@ -265,13 +257,11 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="card-body d-flex flex-column">
               <div class="lawyer-profile-header">
                 <div class="lawyer-avatar">
-              <i class="fa-solid fa-user-tie"></i>
+                  <i class="fa-solid fa-user-tie"></i>
                 </div>
                 <div>
                   <h5 class="lawyer-name">${lawyer.lawyer_name || "Unknown"}</h5>
-                  <p class="lawyer-specialization">
-                    ${lawyer.specialization || "General Practice"}
-                  </p>
+                  <p class="lawyer-specialization">${lawyer.specialization || "General Practice"}</p>
                 </div>
               </div>
               <p class="card-text mb-3">
@@ -280,24 +270,15 @@ document.addEventListener("DOMContentLoaded", function () {
               </p>
               <div class="lawyer-stats">
                 <div class="stat-item">
-                  <div class="stat-value">
-                    <i class="bi bi-telephone-fill"></i>
-                  </div>
-                  <div class="stat-label">
-                    ${lawyer.contactNumber || "N/A"}
-                  </div>
+                  <div class="stat-value"><i class="bi bi-telephone-fill"></i></div>
+                  <div class="stat-label">${lawyer.contactNumber || "N/A"}</div>
                 </div>
                 <div class="stat-item">
-                  <div class="stat-value">
-                    <i class="bi bi-geo-alt-fill"></i>
-                  </div>
-                  <div class="stat-label">
-                    ${lawyer.district}, ${lawyer.province}
-                  </div>
+                  <div class="stat-value"><i class="bi bi-geo-alt-fill"></i></div>
+                  <div class="stat-label">${lawyer.district}, ${lawyer.province}</div>
                 </div>
               </div>
-              <button onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '&quot;')})"
-                      class="btn view-profile-btn mt-3">
+              <button onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '"')})" class="btn view-profile-btn mt-3">
                 <i class="bi bi-eye me-2"></i>View Profile
               </button>
             </div>
@@ -307,20 +288,60 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-
   function truncateBio(bio, maxLength = 100) {
     if (!bio) return '';
     return bio.length > maxLength ? bio.substring(0, maxLength) + '...' : bio;
   }
 
-  // Function to view full profile by email
   function viewFullProfile(lawyer) {
     const lawyerProfileURL = `lawyerProfiles.html?email=${encodeURIComponent(lawyer.email)}`;
     window.location.href = lawyerProfileURL;
   }
 
-  // Moved search functionality inside the main DOMContentLoaded event listener
-  // Add search functionality
+  // Case Submission Function
+  function submitCase() {
+    const description = document.getElementById("caseDescription").value;
+    const submitBtn = document.getElementById("submit-case-btn");
+    const messageDiv = document.getElementById("case-message");
+
+    // Generate a simple unique case number
+    const caseNumber = `CASE-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+    const caseData = {
+      caseNumber: caseNumber,
+      description: description,
+      clientId: 1 // Assuming clientId is 1 for testing; replace with actual client ID from auth
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+    $.ajax({
+      url: "http://localhost:8080/api/v1/case/submit",
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      data: JSON.stringify(caseData),
+      success: function (response) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "Submit Case";
+        if (response.code === 200) {
+          messageDiv.innerHTML = '<div class="alert alert-success">Case submitted successfully! Case Number: ' + response.data.caseNumber + '</div>';
+          document.getElementById("case-submit-form").reset();
+        } else {
+          messageDiv.innerHTML = '<div class="alert alert-danger">' + response.message + '</div>';
+        }
+      },
+      error: function (xhr, status, error) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "Submit Case";
+        messageDiv.innerHTML = '<div class="alert alert-danger">Error submitting case: ' + error + '</div>';
+      }
+    });
+  }
+
   const searchBar = document.createElement('input');
   searchBar.type = 'text';
   searchBar.placeholder = 'Search lawyers...';
@@ -330,18 +351,15 @@ document.addEventListener("DOMContentLoaded", function () {
   searchContainer.classList.add('search-bar-container');
   searchContainer.appendChild(searchBar);
 
-  // Search icon
   const searchIcon = document.createElement('i');
   searchIcon.classList.add('bi', 'bi-search', 'search-icon');
   searchContainer.appendChild(searchIcon);
 
-  // Insert search bar before the filter section
   const filterSection = document.querySelector('.filter-section');
   if (filterSection) {
     filterSection.parentNode.insertBefore(searchContainer, filterSection);
   }
 
-  // Search functionality
   searchBar.addEventListener('input', function() {
     const searchTerm = this.value.toLowerCase();
     const lawyerCards = document.querySelectorAll('#lawyersList .card');
@@ -357,125 +375,362 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
-    // Live Time Function
-    function updateLiveTime() {
-      const liveTimeElement = document.getElementById('live-time');
 
-      function formatTime() {
-        const now = new Date();
-        const options = {
-          weekday: 'short',
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: true
-        };
-        return now.toLocaleString('en-US', options);
-      }
+  function updateLiveTime() {
+    const liveTimeElement = document.getElementById('live-time');
 
-      // Update time immediately and then every second
-      function updateDisplay() {
-        liveTimeElement.textContent = formatTime();
-      }
-
-      updateDisplay();
-      setInterval(updateDisplay, 1000);
+    function formatTime() {
+      const now = new Date();
+      const options = {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+      return now.toLocaleString('en-US', options);
     }
 
-    // Fetch Total Lawyers Count
-    function fetchTotalLawyersCount() {
-      const totalLawyersElement = document.getElementById('total-lawyers');
+    function updateDisplay() {
+      liveTimeElement.textContent = formatTime();
+    }
 
-      // Check for authentication token (adjust as per your auth mechanism)
-      const token = localStorage.getItem('token');
+    updateDisplay();
+    setInterval(updateDisplay, 1000);
+  }
 
-      if (!token) {
-        totalLawyersElement.textContent = 'N/A';
-        return;
+  function fetchTotalLawyersCount() {
+    const totalLawyersElement = document.getElementById('total-lawyers');
+
+    if (!token) {
+      totalLawyersElement.textContent = 'N/A';
+      return;
+    }
+
+    fetch('http://localhost:8080/api/v1/user/total-lawyers-count', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
-
-      // Fetch total lawyers count from API
-      fetch('http://localhost:8080/api/v1/user/total-lawyers-count', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.code === 200) {
+          animateCountUp(totalLawyersElement, 0, data.data || 0, 1000);
+        } else {
+          totalLawyersElement.textContent = 'Error';
+          console.error('Failed to fetch lawyers count:', data.message);
         }
       })
-        .then(response => response.json())
-        .then(data => {
-          if (data.code === 200) {
-            // Animate number counting
-            animateCountUp(totalLawyersElement, 0, data.data || 0, 1000);
-          } else {
-            totalLawyersElement.textContent = 'Error';
-            console.error('Failed to fetch lawyers count:', data.message);
-          }
-        })
-        .catch(error => {
-          totalLawyersElement.textContent = 'Error';
-          console.error('Error fetching lawyers count:', error);
-        });
-    }
+      .catch(error => {
+        totalLawyersElement.textContent = 'Error';
+        console.error('Error fetching lawyers count:', error);
+      });
+  }
 
-    // Number counting animation
-    function animateCountUp(element, start, end, duration) {
-      let startTimestamp = null;
-      const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        element.textContent = Math.floor(progress * (end - start) + start);
-        if (progress < 1) {
-          window.requestAnimationFrame(step);
+  function animateCountUp(element, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      element.textContent = Math.floor(progress * (end - start) + start);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }
+
+  function refreshGoogleCalendar() {
+    const calendarIframe = document.getElementById('google-calendar');
+    calendarIframe.src = calendarIframe.src;
+  }
+
+  function initializeDashboard() {
+    if (!token) {
+      window.location.href = 'login.html';
+      return;
+    }
+    updateLiveTime();
+    fetchTotalLawyersCount();
+    setInterval(refreshGoogleCalendar, 5 * 60 * 1000);
+  }
+
+  function safeInitialize() {
+    try {
+      initializeDashboard();
+    } catch (error) {
+      console.error('Dashboard initialization error:', error);
+      const errorContainer = document.createElement('div');
+      errorContainer.className = 'alert alert-danger';
+      errorContainer.textContent = 'Unable to load dashboard. Please try again later.';
+      document.getElementById('dashboard-section').prepend(errorContainer);
+    }
+  }
+
+  safeInitialize();
+
+
+  // Case Submission Form Script
+
+
+    // Form validation
+    const form = document.getElementById('case-submit-form');
+    const descriptionField = document.getElementById('caseDescription');
+    const charCountDisplay = document.getElementById('charCount');
+    const caseMessage = document.getElementById('case-message');
+    const successMessage = document.getElementById('success-message');
+    const caseIdDisplay = document.getElementById('case-id');
+    const submitButton = document.getElementById('submit-case-btn');
+    const priorityCheck = document.getElementById('priorityCheck');
+
+    // Character counter for description
+    if (descriptionField && charCountDisplay) {
+      descriptionField.addEventListener('input', function() {
+        const charCount = this.value.length;
+        charCountDisplay.textContent = charCount;
+
+        // Visual feedback for character limit
+        if (charCount > 450) {
+          charCountDisplay.classList.add('text-warning');
+          charCountDisplay.classList.remove('text-danger');
+        } else if (charCount > 500) {
+          charCountDisplay.classList.add('text-danger');
+          charCountDisplay.classList.remove('text-warning');
+        } else {
+          charCountDisplay.classList.remove('text-warning', 'text-danger');
         }
-      };
-      window.requestAnimationFrame(step);
+      });
     }
 
-    // Google Calendar Refresh (optional)
-    function refreshGoogleCalendar() {
-      const calendarIframe = document.getElementById('google-calendar');
+    // Handle form submission
+    if (form) {
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-      // Refresh iframe src to get latest calendar
-      calendarIframe.src = calendarIframe.src;
+        // Bootstrap form validation
+        if (!form.checkValidity()) {
+          event.stopPropagation();
+          form.classList.add('was-validated');
+          shakeInvalidFields();
+          return;
+        }
+
+        // Simulate form submission with loading state
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+        // Generate random case ID
+        const caseId = generateCaseId();
+
+        // Simulate API call with timeout
+        setTimeout(function() {
+          // Show success message
+          caseMessage.classList.remove('d-none');
+          caseIdDisplay.textContent = caseId;
+
+          // Set appropriate message based on priority
+          if (priorityCheck.checked) {
+            successMessage.textContent = 'Your high-priority case has been submitted successfully! Our team will contact you shortly.';
+            caseMessage.className = 'mt-4 alert alert-warning';
+          } else {
+            successMessage.textContent = 'Your case has been submitted successfully! We will review it soon.';
+            caseMessage.className = 'mt-4 alert alert-success';
+          }
+
+          // Scroll to the message
+          caseMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+          // Reset form
+          form.reset();
+          form.classList.remove('was-validated');
+          submitButton.disabled = false;
+          submitButton.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Case';
+          charCountDisplay.textContent = '0';
+        }, 1500);
+      });
     }
 
-    // Initialize Dashboard
-    function initializeDashboard() {
-      // Verify user authentication
-      const token = localStorage.getItem('token');
-      if (!token) {
-        // Redirect to login if not authenticated
-        window.location.href = 'login.html';
-        return;
+    // File input validation
+    const fileInput = document.getElementById('fileAttachment');
+    if (fileInput) {
+      fileInput.addEventListener('change', function() {
+        const files = this.files;
+        let valid = true;
+
+        // Check file count
+        if (files.length > 3) {
+          alert('You can only upload up to 3 files.');
+          valid = false;
+        }
+
+        // Check file size
+        for (let i = 0; i < files.length; i++) {
+          if (files[i].size > 5 * 1024 * 1024) {
+            alert('File ' + files[i].name + ' exceeds the 5MB size limit.');
+            valid = false;
+            break;
+          }
+        }
+
+        if (!valid) {
+          this.value = '';
+        }
+      });
+    }
+
+    // Case category special handling
+    const categorySelect = document.getElementById('caseCategory');
+    if (categorySelect) {
+      categorySelect.addEventListener('change', function() {
+        const selectedCategory = this.value;
+
+        // If billing is selected, show a tooltip
+        if (selectedCategory === 'billing') {
+          const tooltip = document.createElement('div');
+          tooltip.className = 'alert alert-info mt-2';
+          tooltip.innerHTML = '<i class="fas fa-info-circle me-2"></i>For billing questions, please include your account or invoice number for faster assistance.';
+
+          // Remove any existing tooltips
+          const existingTooltip = this.parentNode.querySelector('.alert');
+          if (existingTooltip) {
+            existingTooltip.remove();
+          }
+
+          // Add the new tooltip
+          this.parentNode.appendChild(tooltip);
+
+          // Remove the tooltip after 5 seconds
+          setTimeout(() => {
+            tooltip.remove();
+          }, 5000);
+        }
+      });
+    }
+
+    // Helper function to generate a random case ID
+    function generateCaseId() {
+      const prefix = 'CSE-';
+      const randomNum = Math.floor(10000 + Math.random() * 90000);
+      return prefix + randomNum;
+    }
+
+    // Helper function to shake invalid fields
+    function shakeInvalidFields() {
+      const invalidFields = form.querySelectorAll(':invalid');
+
+      invalidFields.forEach(field => {
+        field.classList.add('shake-animation');
+
+        // Remove the animation class after it completes
+        setTimeout(() => {
+          field.classList.remove('shake-animation');
+        }, 500);
+
+        // Scroll to the first invalid field
+        if (field === invalidFields[0]) {
+          field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    }
+
+    // Add shake animation style
+    const style = document.createElement('style');
+    style.textContent = `
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    .shake-animation {
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+  `;
+    document.head.appendChild(style);
+
+    // Enhance tab switching with fade effects
+    const tabLinks = document.querySelectorAll('.nav-link');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        // Add fade-out class to current active tab
+        tabPanes.forEach(pane => {
+          if (pane.classList.contains('show')) {
+            pane.style.opacity = '0';
+            setTimeout(() => {
+              pane.style.opacity = '1';
+            }, 150);
+          }
+        });
+      });
+    });
+
+    // Form auto-save functionality
+    const formInputs = form.querySelectorAll('input, textarea, select');
+
+    // Load saved data on form load
+    loadSavedFormData();
+
+    // Save form data on input change
+    formInputs.forEach(input => {
+      input.addEventListener('change', saveFormData);
+    });
+
+    function saveFormData() {
+      const formData = {};
+
+      formInputs.forEach(input => {
+        if (input.type === 'checkbox') {
+          formData[input.id] = input.checked;
+        } else {
+          formData[input.id] = input.value;
+        }
+      });
+
+      localStorage.setItem('caseFormData', JSON.stringify(formData));
+    }
+
+    function loadSavedFormData() {
+      const savedData = localStorage.getItem('caseFormData');
+
+      if (savedData) {
+        const formData = JSON.parse(savedData);
+
+        formInputs.forEach(input => {
+          if (formData[input.id] !== undefined) {
+            if (input.type === 'checkbox') {
+              input.checked = formData[input.id];
+            } else {
+              input.value = formData[input.id];
+            }
+          }
+        });
+
+        // Update character count if description is loaded
+        if (descriptionField && charCountDisplay) {
+          charCountDisplay.textContent = descriptionField.value.length;
+        }
       }
-
-      // Initialize components
-      updateLiveTime();
-      fetchTotalLawyersCount();
-
-      // Optional: Refresh calendar periodically
-      setInterval(refreshGoogleCalendar, 5 * 60 * 1000); // Every 5 minutes
     }
 
-    // Error Handling Wrapper
-    function safeInitialize() {
-      try {
-        initializeDashboard();
-      } catch (error) {
-        console.error('Dashboard initialization error:', error);
-        // Optionally show user-friendly error message
-        const errorContainer = document.createElement('div');
-        errorContainer.className = 'alert alert-danger';
-        errorContainer.textContent = 'Unable to load dashboard. Please try again later.';
-        document.getElementById('dashboard-section').prepend(errorContainer);
-      }
+    // Add reset confirmation
+    const resetButton = form.querySelector('button[type="reset"]');
+    if (resetButton) {
+      resetButton.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
+          form.reset();
+          localStorage.removeItem('caseFormData');
+          charCountDisplay.textContent = '0';
+          caseMessage.classList.add('d-none');
+          form.classList.remove('was-validated');
+        }
+      });
     }
-
-    // Run initialization
-    safeInitialize();
-
-});
+  });
