@@ -58,3 +58,12 @@ body {
   color: #ef4444;
   font-weight: 500;
 }
+
+/* Styles for the all-cases table */
+#cases-table {
+  width: 100%;
+}
+
+#cases-table th, #cases-table td {
+  text-align: left;
+}

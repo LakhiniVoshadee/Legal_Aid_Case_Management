@@ -106,6 +106,58 @@ $(document).ready(function() {
     });
   }
 
+  // Function to load all cases
+  function loadAllCases() {
+    if (!token) {
+      $('#cases-tbody').html('<tr><td colspan="9" class="text-center text-danger">Please log in to view data.</td></tr>');
+      return;
+    }
+
+    $('#cases-loading').show();
+    $('#cases-tbody').empty();
+
+    $.ajax({
+      url: 'http://localhost:8080/api/v1/dashboard/cases-byAdmin',
+      type: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
+      success: function(response) {
+        $('#cases-loading').hide();
+        if (response && response.code === 200 && response.data) {
+          const cases = response.data;
+          cases.forEach(function(caseItem) {
+            const row = `
+              <tr>
+                <td>${caseItem.caseId || 'N/A'}</td>
+                <td>${caseItem.caseNumber || 'N/A'}</td>
+                <td>${caseItem.description || 'N/A'}</td>
+                <td>${caseItem.status || 'N/A'}</td>
+                <td>${caseItem.clientName || 'N/A'}</td>
+                <td>${caseItem.lawyerName || 'Not Assigned'}</td>
+                <td>${caseItem.createdAt ? new Date(caseItem.createdAt).toLocaleString() : 'N/A'}</td>
+                <td>${caseItem.updatedAt ? new Date(caseItem.updatedAt).toLocaleString() : 'N/A'}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-dark view-case" data-case='${JSON.stringify(caseItem)}'>
+                    View
+                  </button>
+                </td>
+              </tr>
+            `;
+            $('#cases-tbody').append(row);
+          });
+        } else {
+          $('#cases-tbody').html('<tr><td colspan="9" class="text-center">No cases found</td></tr>');
+        }
+      },
+      error: function(xhr) {
+        $('#cases-loading').hide();
+        $('#cases-tbody').html('<tr><td colspan="9" class="text-center text-danger">Error loading data. Please try again.</td></tr>');
+        console.error('Error loading cases:', xhr);
+      }
+    });
+  }
+
   // Function to assign lawyer to case
   function assignLawyerToCase(caseId, lawyerId) {
     if (!token) {
@@ -154,6 +206,12 @@ $(document).ready(function() {
     $('#assign-result').text(''); // Clear previous messages
   });
 
+  $('#all-cases-tab').click(function(e) {
+    e.preventDefault();
+    $(this).tab('show');
+    loadAllCases();
+  });
+
   // Initial load of lawyers when the page loads
   loadLawyers();
 
@@ -167,6 +225,12 @@ $(document).ready(function() {
   $(document).on('click', '.view-client', function() {
     const client = JSON.parse($(this).attr('data-client'));
     alert('Client Details:\nName: ' + client.full_name + '\nEmail: ' + client.email);
+  });
+
+  // Handle "View" button clicks for cases
+  $(document).on('click', '.view-case', function() {
+    const caseItem = JSON.parse($(this).attr('data-case'));
+    alert('Case Details:\nCase Number: ' + caseItem.caseNumber + '\nDescription: ' + caseItem.description + '\nStatus: ' + caseItem.status);
   });
 
   // Handle form submission for assigning lawyer to case
