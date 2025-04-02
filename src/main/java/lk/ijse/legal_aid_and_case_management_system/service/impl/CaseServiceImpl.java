@@ -72,7 +72,7 @@ public class CaseServiceImpl implements CaseService {
         } else if ("DECLINED".equalsIgnoreCase(status)) {
             caseEntity.setStatus(CaseStatus.CLOSED);
         } else {
-            throw new IllegalArgumentException("Invalid status: " + status);
+            throw new IllegalArgumentException("Invalid statusn : " + status);
         }
 
         caseEntity.setUpdatedAt(LocalDateTime.now());
@@ -93,6 +93,18 @@ public class CaseServiceImpl implements CaseService {
                     return caseDTO;
                 })
                 .collect(Collectors.toList());
+    }
+    @Override
+    public CaseDTO getCaseStatusByCaseNumber(String caseNumber) {
+        Case caseEntity = caseRepository.findByCaseNumber(caseNumber)
+                .orElseThrow(() -> new RuntimeException("Case not found with number: " + caseNumber));
+
+        CaseDTO caseDTO = modelMapper.map(caseEntity, CaseDTO.class);
+        caseDTO.setClientName(caseEntity.getClient().getFull_name());
+        if (caseEntity.getLawyer() != null) {
+            caseDTO.setLawyerName(caseEntity.getLawyer().getLawyer_name());
+        }
+        return caseDTO;
     }
 }
 

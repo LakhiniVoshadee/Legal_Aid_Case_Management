@@ -63,6 +63,19 @@ public class CaseController {
                     .body(new ResponseDTO(500, "Error retrieving open cases: " + e.getMessage(), null));
         }
     }
+
+    @GetMapping("/status/{caseNumber}")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<ResponseDTO> getCaseStatus(@PathVariable String caseNumber) {
+        try {
+            CaseDTO caseDTO = caseService.getCaseStatusByCaseNumber(caseNumber);
+            return ResponseEntity.ok()
+                    .body(new ResponseDTO(200, "Case status retrieved successfully", caseDTO));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseDTO(404, "Case not found: " + e.getMessage(), null));
+        }
+    }
 }
 
 

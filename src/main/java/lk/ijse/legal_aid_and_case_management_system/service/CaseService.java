@@ -9,4 +9,5 @@ public interface CaseService {
     CaseDTO reviewCase(Long caseId, String status, Long lawyerId);
 
     List<CaseDTO> getOpenCases();
+    CaseDTO getCaseStatusByCaseNumber(String caseNumber);
 }
