@@ -3,127 +3,510 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
+  <title>Legal Admin Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/adminDashboard.css">
 </head>
 <body>
-<div class="container">
-  <h1 class="text-center my-4 text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-  <ul class="nav nav-tabs mb-4">
-    <li class="nav-item">
-      <a class="nav-link active" id="lawyers-tab" href="#lawyers">Lawyers</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="clients-tab" href="#clients">Clients</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="cases-tab" href="#cases">Assign Cases</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="all-cases-tab" href="#all-cases">All Cases</a>
-    </li>
-  </ul>
-  <div class="tab-content">
+<!-- Sidebar Navigation -->
+<div class="wrapper">
+  <nav id="sidebar" class="active">
+    <div class="sidebar-header">
+      <h3>Legal Admin</h3>
+    </div>
+    <div class="profile-section">
+      <div class="profile-image">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      <h5>Admin Panel</h5>
+    </div>
+    <ul class="list-unstyled components">
+      <li class="active">
+        <a href="#dashboard" id="dashboard-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      </li>
+      <li>
+        <a href="#lawyers" id="lawyers-nav-link"><i class="fas fa-gavel"></i> Lawyers</a>
+      </li>
+      <li>
+        <a href="#clients" id="clients-nav-link"><i class="fas fa-users"></i> Clients</a>
+      </li>
+      <li>
+        <a href="#cases" id="cases-nav-link"><i class="fas fa-folder-open"></i> Assign Cases</a>
+      </li>
+      <li>
+        <a href="#all-cases" id="all-cases-nav-link"><i class="fas fa-briefcase"></i> All Cases</a>
+      </li>
+      <li>
+        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+      </li>
+      <li>
+        <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Page Content -->
+  <div id="content">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container-fluid">
+        <button type="button" id="sidebarCollapse" class="btn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="d-flex align-items-center ms-auto">
+          <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-bell"></i>
+              <span class="badge">3</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+              <li><a class="dropdown-item" href="#">New case assigned</a></li>
+              <li><a class="dropdown-item" href="#">New lawyer registered</a></li>
+              <li><a class="dropdown-item" href="#">System update completed</a></li>
+            </ul>
+          </div>
+          <div class="user">
+            <img src="https://via.placeholder.com/36" alt="User" class="user-img">
+            <span>Admin</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard-content" class="content-section active">
+      <div class="container-fluid px-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="dashboard-title">Dashboard Overview</h1>
+          <div class="date-display">
+            <i class="far fa-calendar-alt"></i>
+            <span id="current-date"></span>
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row stats-cards">
+          <div class="col-md-3 mb-4">
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-icon bg-primary">
+                  <i class="fas fa-gavel"></i>
+                </div>
+                <div class="stat-details">
+                  <h5>Total Lawyers</h5>
+                  <h2 id="lawyers-count">0</h2>
+                  <p class="growth"><i class="fas fa-arrow-up"></i> 12% this month</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-4">
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-icon bg-info">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-details">
+                  <h5>Total Clients</h5>
+                  <h2 id="clients-count">0</h2>
+                  <p class="growth"><i class="fas fa-arrow-up"></i> 8% this month</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-4">
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-icon bg-success">
+                  <i class="fas fa-folder-open"></i>
+                </div>
+                <div class="stat-details">
+                  <h5>Active Cases</h5>
+                  <h2 id="active-cases-count">0</h2>
+                  <p class="growth"><i class="fas fa-arrow-up"></i> 5% this month</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-4">
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-icon bg-warning">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-details">
+                  <h5>Completed Cases</h5>
+                  <h2 id="completed-cases-count">0</h2>
+                  <p class="growth"><i class="fas fa-arrow-up"></i> 15% this month</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row charts-row mb-4">
+          <div class="col-md-8">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Case Statistics</h5>
+                <div class="card-header-actions">
+                  <select class="form-select form-select-sm" id="case-chart-period">
+                    <option value="week">Last Week</option>
+                    <option value="month" selected>Last Month</option>
+                    <option value="year">Last Year</option>
+                  </select>
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="caseStatisticsChart" height="300"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Case Status Distribution</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="caseStatusChart" height="300"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Second Charts Row -->
+        <div class="row charts-row">
+          <div class="col-md-6">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Lawyer Specialization Distribution</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="lawyerSpecializationChart" height="300"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Client Demographics</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="clientDemographicsChart" height="300"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Lawyers Section -->
-    <div id="lawyers" class="tab-pane active">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Lawyers</h2>
-      <table class="table table-striped shadow-sm" id="lawyers-table">
-        <thead class="bg-gray-100">
-        <tr>
-          <th>Name</th>
-          <th>Specialization</th>
-          <th>Years of Experience</th>
-          <th>Office Location</th>
-          <th>Bar Association Number</th>
-          <th>Contact Number</th>
-          <th>Bio</th>
-          <th>Province</th>
-          <th>District</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody id="lawyers-tbody"></tbody>
-      </table>
-      <div id="lawyers-loading" class="text-center">
-        <div class="spinner-border text-indigo-500" role="status">
-          <span class="visually-hidden">Loading...</span>
+    <div id="lawyers-content" class="content-section">
+      <div class="container-fluid px-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="dashboard-title">Lawyers Management</h1>
+          <button class="btn btn-primary btn-sm export-btn">
+            <i class="fas fa-download me-1"></i> Export Data
+          </button>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Lawyers by Experience</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="lawyerExperienceChart" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Lawyers by Location</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="lawyerLocationChart" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Lawyers by Specialization</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="lawyerTypeChart" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card data-card">
+          <div class="card-header">
+            <h5>Lawyers Directory</h5>
+            <div class="card-header-actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" class="form-control form-control-sm" placeholder="Search lawyers...">
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover" id="lawyers-table">
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Specialization</th>
+                  <th>Years of Experience</th>
+                  <th>Office Location</th>
+                  <th>Bar Association Number</th>
+                  <th>Contact Number</th>
+                  <th>Bio</th>
+                  <th>Province</th>
+                  <th>District</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="lawyers-tbody"></tbody>
+              </table>
+            </div>
+            <div id="lawyers-loading" class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
     <!-- Clients Section -->
-    <div id="clients" class="tab-pane">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Clients</h2>
-      <table class="table table-striped shadow-sm" id="clients-table">
-        <thead class="bg-gray-100">
-        <tr>
-          <th>Full Name</th>
-          <th>Email</th>
-          <th>Phone Number</th>
-          <th>Date Of Birth</th>
-          <th>Address</th>
-          <th>Preferred Language</th>
-          <th>Gender</th>
-          <th>NIC</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody id="clients-tbody"></tbody>
-      </table>
-      <div id="clients-loading" class="text-center">
-        <div class="spinner-border text-indigo-500" role="status">
-          <span class="visually-hidden">Loading...</span>
+    <div id="clients-content" class="content-section">
+      <div class="container-fluid px-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="dashboard-title">Clients Management</h1>
+          <button class="btn btn-primary btn-sm export-btn">
+            <i class="fas fa-download me-1"></i> Export Data
+          </button>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Clients by Gender</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="clientGenderChart" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Clients by Age</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="clientAgeChart" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Clients by Language</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="clientLanguageChart" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card data-card">
+          <div class="card-header">
+            <h5>Clients Directory</h5>
+            <div class="card-header-actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" class="form-control form-control-sm" placeholder="Search clients...">
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover" id="clients-table">
+                <thead>
+                <tr>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>Phone Number</th>
+                  <th>Date Of Birth</th>
+                  <th>Address</th>
+                  <th>Preferred Language</th>
+                  <th>Gender</th>
+                  <th>NIC</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="clients-tbody"></tbody>
+              </table>
+            </div>
+            <div id="clients-loading" class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
     <!-- Assign Cases Section -->
-    <div id="cases" class="tab-pane">
-      <h2 class="text-2xl font-semibold text-700 mb-3">Assign Lawyers to Cases</h2>
-      <div class="bg-white p-6 rounded-lg shadow-md">
-        <form id="assign-case-form" class="space-y-4">
-          <div>
-            <label for="caseId" class="block text-sm font-medium text-gray-700">Case ID</label>
-            <input type="number" id="caseId" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+    <div id="cases-content" class="content-section">
+      <div class="container-fluid px-4">
+        <h1 class="dashboard-title mb-4">Assign Cases to Lawyers</h1>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Assign a Lawyer to a Case</h5>
+              </div>
+              <div class="card-body">
+                <form id="assign-case-form" class="space-y-4">
+                  <div class="mb-3">
+                    <label for="caseId" class="form-label">Case ID</label>
+                    <input type="number" id="caseId" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="lawyerId" class="form-label">Lawyer ID</label>
+                    <input type="number" id="lawyerId" class="form-control" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-100">Assign Lawyer</button>
+                </form>
+                <div id="assign-result" class="mt-4 text-center"></div>
+              </div>
+            </div>
           </div>
-          <div>
-            <label for="lawyerId" class="block text-sm font-medium text-gray-700">Lawyer ID</label>
-            <input type="number" id="lawyerId" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+          <div class="col-md-6">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Lawyer Case Load</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="lawyerCaseLoadChart" height="300"></canvas>
+              </div>
+            </div>
           </div>
-          <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200">Assign Lawyer</button>
-        </form>
-        <div id="assign-result" class="mt-4 text-center"></div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Cases Assignment Timeline</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="casesTimelineChart" height="200"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
     <!-- All Cases Section -->
-    <div id="all-cases" class="tab-pane">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-3">All Submitted Cases</h2>
-      <table class="table table-striped shadow-sm" id="cases-table">
-        <thead class="bg-gray-100">
-        <tr>
-          <th>Case ID</th>
-          <th>Case Number</th>
-          <th>Description</th>
-          <th>Status</th>
-          <th>Client Name</th>
-          <th>Lawyer Name</th>
-          <th>Created At</th>
-          <th>Updated At</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody id="cases-tbody"></tbody>
-      </table>
-      <div id="cases-loading" class="text-center">
-        <div class="spinner-border text-indigo-500" role="status">
-          <span class="visually-hidden">Loading...</span>
+    <div id="all-cases-content" class="content-section">
+      <div class="container-fluid px-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="dashboard-title">All Cases</h1>
+          <button class="btn btn-primary btn-sm export-btn">
+            <i class="fas fa-download me-1"></i> Export Data
+          </button>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Cases by Status</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="casesStatusDistributionChart" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h5>Monthly Case Trend</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="casesTrendChart" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card data-card">
+          <div class="card-header">
+            <h5>Cases Directory</h5>
+            <div class="card-header-actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" class="form-control form-control-sm" placeholder="Search cases...">
+              </div>
+              <div class="filter-dropdown">
+                <select class="form-select form-select-sm">
+                  <option value="all">All Statuses</option>
+                  <option value="pending">Pending</option>
+                  <option value="active">Active</option>
+                  <option value="closed">Closed</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover" id="cases-table">
+                <thead>
+                <tr>
+                  <th>Case ID</th>
+                  <th>Case Number</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Client Name</th>
+                  <th>Lawyer Name</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="cases-tbody"></tbody>
+              </table>
+            </div>
+            <div id="cases-loading" class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/adminDashboard.js"></script>
 </body>
 </html>
