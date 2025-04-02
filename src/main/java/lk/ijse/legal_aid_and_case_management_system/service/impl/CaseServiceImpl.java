@@ -80,6 +80,7 @@ public class CaseServiceImpl implements CaseService {
 
         return modelMapper.map(updatedCase, CaseDTO.class);
     }
+
     @Override
     public List<CaseDTO> getOpenCases() {
         List<Case> openCases = caseRepository.findByStatus(CaseStatus.OPEN);
@@ -94,6 +95,7 @@ public class CaseServiceImpl implements CaseService {
                 })
                 .collect(Collectors.toList());
     }
+
     @Override
     public CaseDTO getCaseStatusByCaseNumber(String caseNumber) {
         Case caseEntity = caseRepository.findByCaseNumber(caseNumber)
@@ -106,6 +108,7 @@ public class CaseServiceImpl implements CaseService {
         }
         return caseDTO;
     }
+
     @Override
     public CaseDTO assignLawyerToCase(Long caseId, Long lawyerId) {
         Case caseEntity = caseRepository.findById(caseId)
@@ -132,6 +135,21 @@ public class CaseServiceImpl implements CaseService {
         caseDTO.setClientName(caseEntity.getClient().getFull_name());
         caseDTO.setLawyerName(caseEntity.getLawyer().getLawyer_name());
         return caseDTO;
+    }
+
+    @Override
+    public List<CaseDTO> getAllCases() {
+        List<Case> allCases = caseRepository.findAll();
+        return allCases.stream()
+                .map(caseEntity -> {
+                    CaseDTO caseDTO = modelMapper.map(caseEntity, CaseDTO.class);
+                    caseDTO.setClientName(caseEntity.getClient().getFull_name());
+                    if (caseEntity.getLawyer() != null) {
+                        caseDTO.setLawyerName(caseEntity.getLawyer().getLawyer_name());
+                    }
+                    return caseDTO;
+                })
+                .collect(Collectors.toList());
     }
 }
 

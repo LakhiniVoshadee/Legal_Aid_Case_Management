@@ -1,8 +1,11 @@
 package lk.ijse.legal_aid_and_case_management_system.controller;
 
+import lk.ijse.legal_aid_and_case_management_system.dto.CaseDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.ClientDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.LawyerDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.ResponseDTO;
+import lk.ijse.legal_aid_and_case_management_system.service.CaseService;
+import lk.ijse.legal_aid_and_case_management_system.service.ClientService;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
 import lk.ijse.legal_aid_and_case_management_system.util.JwtUtil;
 import lk.ijse.legal_aid_and_case_management_system.util.VarList;
@@ -39,11 +42,13 @@ public class AdminController {
     }
 
     private final UserService userService;
+    private final CaseService caseService;
     private final JwtUtil jwtUtil;
 
     //constructor injection
-    public AdminController(UserService userService, JwtUtil jwtUtil) {
+    public AdminController(UserService userService, CaseService caseService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.caseService = caseService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -67,6 +72,18 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/cases-byAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseDTO> getAllCases() {
+        try {
+            List<CaseDTO> cases = caseService.getAllCases();
+            return ResponseEntity.ok(new ResponseDTO(VarList.OK, "All cases retrieved successfully", cases));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(VarList.Internal_Server_Error, "Error retrieving cases: " + e.getMessage(), null));
         }
     }
 
