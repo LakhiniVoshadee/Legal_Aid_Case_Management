@@ -27,12 +27,12 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#appointments-section" data-section="appointments-section">
-                <i class="  class="bi bi-calendar-week me-2"></i> Appointments
+                <i class="bi bi-calendar-week me-2"></i> Appointments
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#case-section" data-section="case-section">
-                <i class="bi bi-calendar-week me-2"></i> Cases
+                <i class="bi bi-briefcase me-2"></i> Cases
               </a>
             </li>
             <li class="nav-item">
@@ -42,7 +42,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#message-section" data-section="message-section">
-                <i class="bi bi-chat-text"></i> Messages
+                <i class="bi bi-chat-text me-2"></i> Messages
               </a>
             </li>
             <li class="nav-item">
@@ -136,240 +136,240 @@
         </div>
 
         <!-- Case Section -->
-          <div id="case-section" class="content-section">
-            <div class="section-header mb-4">
-              <h2 class="text-primary"><i class="fas fa-briefcase me-2"></i>Submit a Case</h2>
-              <p class="text-muted">Please provide all relevant details for faster resolution</p>
-            </div>
-
-            <div class="card shadow-lg border-0">
-              <div class="card-header bg-white border-0 pt-4 px-4">
-                <ul class="nav nav-tabs card-header-tabs" id="caseTab" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="new-case-tab" data-bs-toggle="tab" data-bs-target="#new-case" type="button" role="tab" aria-controls="new-case" aria-selected="true">New Case</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="existing-case-tab" data-bs-toggle="tab" data-bs-target="#existing-case" type="button" role="tab" aria-controls="existing-case" aria-selected="false">Check Status</button>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="card-body p-4">
-                <div class="tab-content" id="caseTabContent">
-                  <div class="tab-pane fade show active" id="new-case" role="tabpanel" aria-labelledby="new-case-tab">
-                    <form id="case-submit-form" class="needs-validation" novalidate>
-                      <div class="row g-3">
-                        <div class="col-md-6">
-                          <label for="firstName" class="form-label">First Name</label>
-                          <input type="text" class="form-control" id="firstName" name="firstName" required>
-                          <div class="invalid-feedback">
-                            Please enter your first name.
-                          </div>
-                        </div>
-
-                        <div class="col-md-6">
-                          <label for="lastName" class="form-label">Last Name</label>
-                          <input type="text" class="form-control" id="lastName" name="lastName" required>
-                          <div class="invalid-feedback">
-                            Please enter your last name.
-                          </div>
-                        </div>
-
-                        <div class="col-md-6">
-                          <label for="email" class="form-label">Email</label>
-                          <input type="email" class="form-control" id="email" name="email" required>
-                          <div class="invalid-feedback">
-                            Please enter a valid email address.
-                          </div>
-                        </div>
-
-                        <div class="col-md-6">
-                          <label for="phone" class="form-label">Phone Number</label>
-                          <input type="tel" class="form-control" id="phone" name="phone">
-                        </div>
-
-                        <div class="col-12">
-                          <label for="caseCategory" class="form-label">Case Category</label>
-                          <select class="form-select" id="caseCategory" name="category" required>
-                            <option value="" selected disabled>Select a category</option>
-                            <option value="technical">Technical Issue</option>
-                            <option value="billing">Billing Question</option>
-                            <option value="account">Account Management</option>
-                            <option value="feature">Feature Request</option>
-                            <option value="other">Other</option>
-                          </select>
-                          <div class="invalid-feedback">
-                            Please select a category.
-                          </div>
-                        </div>
-
-                        <div class="col-12">
-                          <label for="caseSubject" class="form-label">Subject</label>
-                          <input type="text" class="form-control" id="caseSubject" name="subject" required>
-                          <div class="invalid-feedback">
-                            Please enter a subject.
-                          </div>
-                        </div>
-
-                        <div class="col-12">
-                          <label for="caseDescription" class="form-label">Case Description</label>
-                          <textarea class="form-control" id="caseDescription" name="description" rows="4" required></textarea>
-                          <div class="invalid-feedback">
-                            Please provide a description.
-                          </div>
-                          <div class="form-text">
-                            <span id="charCount">0</span>/500 characters
-                          </div>
-                        </div>
-
-                        <div class="col-12">
-                          <label for="fileAttachment" class="form-label">Attachments</label>
-                          <input class="form-control" type="file" id="fileAttachment" multiple>
-                          <div class="form-text">You can upload up to 3 files (max 5MB each)</div>
-                        </div>
-
-                        <div class="col-12">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="priorityCheck">
-                            <label class="form-check-label" for="priorityCheck">
-                              Mark as high priority
-                            </label>
-                          </div>
-                        </div>
-
-                        <div class="col-12 mt-4">
-                          <button type="submit" class="btn btn-primary" id="submit-case-btn">
-                            <i class="fas fa-paper-plane me-2"></i>Submit Case
-                          </button>
-                          <button type="reset" class="btn btn-outline-secondary">
-                            <i class="fas fa-undo me-2"></i>Reset Form
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-
-                    <div id="case-message" class="mt-4 alert alert-success d-none">
-                      <i class="fas fa-check-circle me-2"></i>
-                      <span id="success-message">Your case has been submitted successfully!</span>
-                      <p class="mb-0 mt-2">Case ID: <strong id="case-id">CSE-12345</strong></p>
-                    </div>
-                  </div>
-
-                  <div class="tab-pane fade" id="existing-case" role="tabpanel" aria-labelledby="existing-case-tab">
-                    <div class="p-4 text-center">
-                      <h4>Check Your Case Status</h4>
-                      <p class="text-muted">Enter your case ID to check the current status</p>
-                      <div class="row justify-content-center">
-                        <div class="col-md-8">
-                          <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Enter Case ID (e.g., CSE-12345)" aria-label="Case ID">
-                            <button class="btn btn-primary" type="button">Check Status</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div id="case-section" class="content-section">
+          <div class="section-header mb-4">
+            <h2 class="text-primary"><i class="fas fa-briefcase me-2"></i>Submit a Case</h2>
+            <p class="text-muted">Please provide all relevant details for faster resolution</p>
           </div>
 
-
-        <!-- Clients Section (Find Lawyers) -->
-        <div id="clients-section" class="content-section">
-          <div class="container mt-4">
-            <h2 class="text-center mb-4">Suggested for you</h2>
-            <!-- Filter Section -->
-            <div class="filter-section">
-              <h5>Find Lawyers</h5>
-              <div class="row">
-                <div class="col-md-5 mb-2">
-                  <select id="provinceSelect" class="form-select">
-                    <option value="">Select Province</option>
-                    <option value="Western">Western</option>
-                    <option value="Central">Central</option>
-                    <option value="Southern">Southern</option>
-                    <option value="Northern">Northern</option>
-                    <option value="Eastern">Eastern</option>
-                    <option value="North Western">North Western</option>
-                    <option value="North Central">North Central</option>
-                    <option value="Uva">Uva</option>
-                    <option value="Sabaragamuwa">Sabaragamuwa</option>
-                  </select>
-                </div>
-                <div class="col-md-5 mb-2">
-                  <select id="districtSelect" class="form-select">
-                    <option value="">Select District</option>
-                  </select>
-                </div>
-                <div class="col-md-2 mb-2">
-                  <button id="filterBtn" class="btn btn-primary w-100">Filter</button>
-                </div>
-              </div>
+          <div class="card shadow-lg border-0">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+              <ul class="nav nav-tabs card-header-tabs" id="caseTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="new-case-tab" data-bs-toggle="tab" data-bs-target="#new-case" type="button" role="tab" aria-controls="new-case" aria-selected="true">New Case</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="existing-case-tab" data-bs-toggle="tab" data-bs-target="#existing-case" type="button" role="tab" aria-controls="existing-case" aria-selected="false">Check Status</button>
+                </li>
+              </ul>
             </div>
-            <!-- Lawyers List -->
-            <div id="lawyersList" class="row mt-4">
-              <div class="col-12 text-center" id="loading">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-                <p>Loading lawyers...</p>
-              </div>
-            </div>
-            <!-- Error Alert -->
-            <div id="errorAlert" class="alert alert-danger mt-3 d-none" role="alert">
-              Failed to load lawyers. Please try again later.
-            </div>
-          </div>
-        </div>
 
-        <!-- Messages Section -->
-        <div id="message-section" class="content-section">
-          <h2>Messages</h2>
-          <!-- Messages content goes here -->
-        </div>
+            <div class="card-body p-4">
+              <div class="tab-content" id="caseTabContent">
+                <div class="tab-pane fade show active" id="new-case" role="tabpanel" aria-labelledby="new-case-tab">
+                  <form id="case-submit-form" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" required>
+                        <div class="invalid-feedback">
+                          Please enter your first name.
+                        </div>
+                      </div>
 
-        <!-- Profile Section -->
-        <div id="profile-section" class="content-section">
-          <div class="row">
-            <div class="col-md-12 mb-4">
-              <div class="card">
-                <div class="card-header bg-primary text-white">
-                  <h5 class="mb-0">My Profile</h5>
-                </div>
-                <div class="card-body">
-                  <form id="profile-form">
-                    <div class="alert alert-success d-none" id="update-success">Profile updated successfully!</div>
-                    <div class="alert alert-danger d-none" id="update-error">Error updating profile!</div>
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="lawyer_name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="lawyer_name" name="lawyer_name">
+                      <div class="col-md-6">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" required>
+                        <div class="invalid-feedback">
+                          Please enter your last name.
+                        </div>
                       </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="contactNumber" class="form-label">Contact Number</label>
-                        <input type="text" class="form-control" id="contactNumber" name="contactNumber">
+
+                      <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                        <div class="invalid-feedback">
+                          Please enter a valid email address.
+                        </div>
                       </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12 mb-3">
-                        <label for="address" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="address" name="address">
+
+                      <div class="col-md-6">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone" name="phone">
                       </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12 mb-3">
-                        <label for="gender" class="form-label">Gender</label>
-                        <input type="text" class="form-control" id="gender" name="gender">
+
+                      <div class="col-12">
+                        <label for="caseCategory" class="form-label">Case Category</label>
+                        <select class="form-select" id="caseCategory" name="category" required>
+                          <option value="" selected disabled>Select a category</option>
+                          <option value="technical">Technical Issue</option>
+                          <option value="billing">Billing Question</option>
+                          <option value="account">Account Management</option>
+                          <option value="feature">Feature Request</option>
+                          <option value="other">Other</option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Please select a category.
+                        </div>
                       </div>
-                    </div>
-                    <div class="text-end">
-                      <button type="button" class="btn btn-outline-secondary me-2" id="cancel-btn">Cancel</button>
-                      <button type="submit" class="btn btn-primary" id="update-profile-btn">
-                        <i class="bi bi-save me-1"></i> Update Profile
-                      </button>
+
+                      <div class="col-12">
+                        <label for="caseSubject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="caseSubject" name="subject" required>
+                        <div class="invalid-feedback">
+                          Please enter a subject.
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <label for="caseDescription" class="form-label">Case Description</label>
+                        <textarea class="form-control" id="caseDescription" name="description" rows="4" required></textarea>
+                        <div class="invalid-feedback">
+                          Please provide a description.
+                        </div>
+                        <div class="form-text">
+                          <span id="charCount">0</span>/500 characters
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <label for="fileAttachment" class="form-label">Attachments</label>
+                        <input class="form-control" type="file" id="fileAttachment" multiple>
+                        <div class="form-text">You can upload up to 3 files (max 5MB each)</div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="priorityCheck">
+                          <label class="form-check-label" for="priorityCheck">
+                            Mark as high priority
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-primary" id="submit-case-btn">
+                          <i class="fas fa-paper-plane me-2"></i>Submit Case
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary">
+                          <i class="fas fa-undo me-2"></i>Reset Form
+                        </button>
+                      </div>
                     </div>
                   </form>
+
+                  <div id="case-message" class="mt-4 alert alert-success d-none">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span id="success-message">Your case has been submitted successfully!</span>
+                    <p class="mb-0 mt-2">Case ID: <strong id="case-id">CSE-12345</strong></p>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="existing-case" role="tabpanel" aria-labelledby="existing-case-tab">
+                  <div class="p-4 text-center">
+                    <h4>Check Your Case Status</h4>
+                    <p class="text-muted">Enter your case number to check the current status</p>
+                    <div class="row justify-content-center">
+                      <div class="col-md-8">
+                        <div class="input-group mb-3">
+                          <input type="text" class="form-control" id="case-number-input" placeholder="Enter Case Number (e.g., CASE-123)" aria-label="Case Number" required>
+                          <button class="btn btn-primary" type="button" id="check-status-btn">Check Status</button>
+                        </div>
+                        <div id="case-status-result" class="mt-3"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Clients Section (Find Lawyers) -->
+          <div id="clients-section" class="content-section">
+            <div class="container mt-4">
+              <h2 class="text-center mb-4">Suggested for you</h2>
+              <!-- Filter Section -->
+              <div class="filter-section">
+                <h5>Find Lawyers</h5>
+                <div class="row">
+                  <div class="col-md-5 mb-2">
+                    <select id="provinceSelect" class="form-select">
+                      <option value="">Select Province</option>
+                      <option value="Western">Western</option>
+                      <option value="Central">Central</option>
+                      <option value="Southern">Southern</option>
+                      <option value="Northern">Northern</option>
+                      <option value="Eastern">Eastern</option>
+                      <option value="North Western">North Western</option>
+                      <option value="North Central">North Central</option>
+                      <option value="Uva">Uva</option>
+                      <option value="Sabaragamuwa">Sabaragamuwa</option>
+                    </select>
+                  </div>
+                  <div class="col-md-5 mb-2">
+                    <select id="districtSelect" class="form-select">
+                      <option value="">Select District</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2 mb-2">
+                    <button id="filterBtn" class="btn btn-primary w-100">Filter</button>
+                  </div>
+                </div>
+              </div>
+              <!-- Lawyers List -->
+              <div id="lawyersList" class="row mt-4">
+                <div class="col-12 text-center" id="loading">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <p>Loading lawyers...</p>
+                </div>
+              </div>
+              <!-- Error Alert -->
+              <div id="errorAlert" class="alert alert-danger mt-3 d-none" role="alert">
+                Failed to load lawyers. Please try again later.
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Section -->
+          <div id="message-section" class="content-section">
+            <h2>Messages</h2>
+            <!-- Messages content goes here -->
+          </div>
+
+          <!-- Profile Section -->
+          <div id="profile-section" class="content-section">
+            <div class="row">
+              <div class="col-md-12 mb-4">
+                <div class="card">
+                  <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">My Profile</h5>
+                  </div>
+                  <div class="card-body">
+                    <form id="profile-form">
+                      <div class="alert alert-success d-none" id="update-success">Profile updated successfully!</div>
+                      <div class="alert alert-danger d-none" id="update-error">Error updating profile!</div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label for="lawyer_name" class="form-label">Full Name</label>
+                          <input type="text" class="form-control" id="lawyer_name" name="lawyer_name">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label for="contactNumber" class="form-label">Contact Number</label>
+                          <input type="text" class="form-control" id="contactNumber" name="contactNumber">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12 mb-3">
+                          <label for="address" class="form-label">Address</label>
+                          <input type="text" class="form-control" id="address" name="address">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12 mb-3">
+                          <label for="gender" class="form-label">Gender</label>
+                          <input type="text" class="form-control" id="gender" name="gender">
+                        </div>
+                      </div>
+                      <div class="text-end">
+                        <button type="button" class="btn btn-outline-secondary me-2" id="cancel-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="update-profile-btn">
+                          <i class="bi bi-save me-1"></i> Update Profile
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
@@ -378,37 +378,36 @@
       </div>
     </div>
   </div>
-</div>
 
-<!-- Deactivate Account Modal -->
-<div class="modal fade" id="deactivateModal" tabindex="-1" aria-labelledby="deactivateModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deactivateModalLabel">Deactivate Your Account</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to deactivate your account? This action cannot be undone.</p>
-        <div class="alert alert-danger">
-          <i class="bi bi-exclamation-triangle-fill me-2"></i>
-          All your data, including client information and case records, will be permanently removed.
+  <!-- Deactivate Account Modal -->
+  <div class="modal fade" id="deactivateModal" tabindex="-1" aria-labelledby="deactivateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deactivateModalLabel">Deactivate Your Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="mb-3">
-          <label for="deactivate-confirm-email" class="form-label">Confirm your email</label>
-          <input type="email" class="form-control" id="deactivate-confirm-email" placeholder="Enter your email to confirm">
+        <div class="modal-body">
+          <p>Are you sure you want to deactivate your account? This action cannot be undone.</p>
+          <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            All your data, including client information and case records, will be permanently removed.
+          </div>
+          <div class="mb-3">
+            <label for="deactivate-confirm-email" class="form-label">Confirm your email</label>
+            <input type="email" class="form-control" id="deactivate-confirm-email" placeholder="Enter your email to confirm">
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" id="confirm-deactivate-btn">Deactivate Account</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirm-deactivate-btn">Deactivate Account</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/js/clientDashboard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/clientDashboard.js"></script>
 </body>
 </html>

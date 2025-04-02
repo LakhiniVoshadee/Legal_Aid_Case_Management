@@ -1,34 +1,60 @@
 body {
   background-color: #f8f9fa;
   color: #212529;
+  font-family: 'Inter', sans-serif;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 20px;
 }
 
 .nav-tabs .nav-link {
   color: #495057;
+  font-weight: 500;
+  border-radius: 0;
 }
 
 .nav-tabs .nav-link.active {
   background-color: #fff;
   border-color: #dee2e6 #dee2e6 #fff;
+  color: #4f46e5;
+  border-bottom: 2px solid #4f46e5;
 }
 
 .table {
   background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .table th, .table td {
   vertical-align: middle;
+  padding: 12px;
 }
 
 .spinner-border {
   margin: 20px auto;
+  color: #4f46e5;
 }
 
 .tab-pane {
   padding-top: 20px;
+}
+
+/* Custom styles for the assign form */
+#assign-case-form input {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+#assign-result.success {
+  color: #10b981;
+  font-weight: 500;
+}
+
+#assign-result.error {
+  color: #ef4444;
+  font-weight: 500;
 }

@@ -5,25 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/adminDashboard.css">
 </head>
 <body>
 <div class="container">
-  <h1 class="text-center my-4">Admin Dashboard</h1>
-  <ul class="nav nav-tabs">
+  <h1 class="text-center my-4 text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+  <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
       <a class="nav-link active" id="lawyers-tab" href="#lawyers">Lawyers</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" id="clients-tab" href="#clients">Clients</a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" id="cases-tab" href="#cases">Assign Cases</a>
+    </li>
   </ul>
   <div class="tab-content">
     <!-- Lawyers Section -->
     <div id="lawyers" class="tab-pane active">
-      <h2>Lawyers</h2>
-      <table class="table table-striped" id="lawyers-table">
-        <thead>
+      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Lawyers</h2>
+      <table class="table table-striped shadow-sm" id="lawyers-table">
+        <thead class="bg-gray-100">
         <tr>
           <th>Name</th>
           <th>Specialization</th>
@@ -31,7 +35,7 @@
           <th>Office Location</th>
           <th>Bar Association Number</th>
           <th>Contact Number</th>
-          <th>Bio</th>
+          <th>Bio</th></V>
           <th>Province</th>
           <th>District</th>
           <th>Actions</th>
@@ -40,16 +44,16 @@
         <tbody id="lawyers-tbody"></tbody>
       </table>
       <div id="lawyers-loading" class="text-center">
-        <div class="spinner-border" role="status">
+        <div class="spinner-border text-indigo-500" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
     </div>
     <!-- Clients Section -->
     <div id="clients" class="tab-pane">
-      <h2>Clients</h2>
-      <table class="table table-striped" id="clients-table">
-        <thead>
+      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Clients</h2>
+      <table class="table table-striped shadow-sm" id="clients-table">
+        <thead class="bg-gray-100">
         <tr>
           <th>Full Name</th>
           <th>Email</th>
@@ -65,9 +69,27 @@
         <tbody id="clients-tbody"></tbody>
       </table>
       <div id="clients-loading" class="text-center">
-        <div class="spinner-border" role="status">
+        <div class="spinner-border text-indigo-500" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
+      </div>
+    </div>
+    <!-- Cases Section -->
+    <div id="cases" class="tab-pane">
+      <h2 class="text-2xl font-semibold text-700 mb-3">Assign Lawyers to Cases</h2>
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <form id="assign-case-form" class="space-y-4">
+          <div>
+            <label for="caseId" class="block text-sm font-medium text-gray-700">Case ID</label>
+            <input type="number" id="caseId" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+          </div>
+          <div>
+            <label for="lawyerId" class="block text-sm font-medium text-gray-700">Lawyer ID</label>
+            <input type="number" id="lawyerId" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200">Assign Lawyer</button>
+        </form>
+        <div id="assign-result" class="mt-4 text-center"></div>
       </div>
     </div>
   </div>
