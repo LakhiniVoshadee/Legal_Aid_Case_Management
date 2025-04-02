@@ -10,4 +10,5 @@ public interface CaseService {
 
     List<CaseDTO> getOpenCases();
     CaseDTO getCaseStatusByCaseNumber(String caseNumber);
+    CaseDTO assignLawyerToCase(Long caseId, Long lawyerId);
 }

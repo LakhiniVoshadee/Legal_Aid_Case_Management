@@ -76,6 +76,20 @@ public class CaseController {
                     .body(new ResponseDTO(404, "Case not found: " + e.getMessage(), null));
         }
     }
+    @PutMapping("/assign/{caseId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseDTO> assignLawyerToCase(
+            @PathVariable Long caseId,
+            @RequestParam Long lawyerId) {
+        try {
+            CaseDTO updatedCase = caseService.assignLawyerToCase(caseId, lawyerId);
+            return ResponseEntity.ok()
+                    .body(new ResponseDTO(200, "Lawyer assigned to case successfully", updatedCase));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseDTO(400, "Error assigning lawyer to case: " + e.getMessage(), null));
+        }
+    }
 }
 
 

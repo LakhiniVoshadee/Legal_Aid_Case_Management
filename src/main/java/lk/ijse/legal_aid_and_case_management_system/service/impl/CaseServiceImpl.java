@@ -106,5 +106,32 @@ public class CaseServiceImpl implements CaseService {
         }
         return caseDTO;
     }
+    @Override
+    public CaseDTO assignLawyerToCase(Long caseId, Long lawyerId) {
+        Case caseEntity = caseRepository.findById(caseId)
+                .orElseThrow(() -> new RuntimeException("Case not found with ID: " + caseId));
+
+        Lawyer lawyer = lawyerRepository.findById(lawyerId)
+                .orElseThrow(() -> new RuntimeException("Lawyer not found with ID: " + lawyerId));
+
+        // Check if the case is in a state that allows assignment
+        if (!caseEntity.getStatus().equals(CaseStatus.OPEN)) {
+            throw new RuntimeException("Cannot assign lawyer: Case is not open.");
+        }
+
+        // Assign the lawyer and update the status
+        caseEntity.setLawyer(lawyer);
+        caseEntity.setStatus(CaseStatus.ASSIGNED);
+        caseEntity.setUpdatedAt(LocalDateTime.now());
+
+        // Save the updated case
+        Case updatedCase = caseRepository.save(caseEntity);
+
+        // Map to DTO and return
+        CaseDTO caseDTO = modelMapper.map(updatedCase, CaseDTO.class);
+        caseDTO.setClientName(caseEntity.getClient().getFull_name());
+        caseDTO.setLawyerName(caseEntity.getLawyer().getLawyer_name());
+        return caseDTO;
+    }
 }
 
