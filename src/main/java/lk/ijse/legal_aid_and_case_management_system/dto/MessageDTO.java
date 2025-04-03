@@ -1,30 +1,18 @@
-package lk.ijse.legal_aid_and_case_management_system.entity;
+package lk.ijse.legal_aid_and_case_management_system.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "message")
-public class Message {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class MessageDTO {
     private Long id;
-
-    @Column(nullable = false)
     private String senderEmail;
-
-    @Column(nullable = false)
     private String recipientEmail;
-
-    @Column(nullable = false)
     private String content;
-
-    @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    public Message() {}
+    public MessageDTO() {}
 
-    public Message(String senderEmail, String recipientEmail, String content, LocalDateTime timestamp) {
+    public MessageDTO(Long id, String senderEmail, String recipientEmail, String content, LocalDateTime timestamp) {
+        this.id = id;
         this.senderEmail = senderEmail;
         this.recipientEmail = recipientEmail;
         this.content = content;

@@ -29,6 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (targetSectionId === "clients-section") {
         fetchLawyers();
+      } else if (targetSectionId === "message-section") {
+        initializeMessaging();
+      } else if (typeof socket !== 'undefined' && socket && socket.readyState === WebSocket.OPEN) {
+        socket.close();
       }
     });
   });
@@ -106,6 +110,118 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Messaging Functions
+  let socket;
+  function initializeMessaging() {
+    socket = new WebSocket(`ws://localhost:8080/ws?token=${token}`);
+
+    socket.onopen = () => {
+      document.getElementById("chat-status").textContent = "Connected";
+      document.getElementById("chat-status").classList.replace("bg-secondary", "bg-success");
+      fetchContacts();
+    };
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      displayMessage(message);
+    };
+
+    socket.onclose = () => {
+      document.getElementById("chat-status").textContent = "Disconnected";
+      document.getElementById("chat-status").classList.replace("bg-success", "bg-secondary");
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+      alert("Failed to connect to messaging service.");
+    };
+  }
+
+  function fetchContacts() {
+    $.ajax({
+      url: "http://localhost:8080/api/v1/user/lawyers",
+      method: "GET",
+      headers: { "Authorization": `Bearer ${token}` },
+      success: (response) => {
+        if (response.code === 200) populateContactList(response.data);
+      },
+      error: (xhr) => console.error("Error fetching contacts:", xhr)
+    });
+  }
+
+  function populateContactList(lawyers) {
+    const contactList = document.getElementById("contact-list");
+    if (!contactList) return; // Prevent errors if element is missing
+    contactList.innerHTML = "";
+    lawyers.forEach(lawyer => {
+      const li = document.createElement("li");
+      li.className = "list-group-item list-group-item-action";
+      li.textContent = lawyer.lawyer_name || lawyer.email;
+      li.dataset.email = lawyer.email;
+      li.addEventListener("click", () => selectContact(lawyer.email, lawyer.lawyer_name));
+      contactList.appendChild(li);
+    });
+  }
+
+  let selectedContact = null;
+  function selectContact(contactEmail, contactName) {
+    selectedContact = contactEmail;
+    document.getElementById("chat-with").textContent = `Chat with ${contactName || contactEmail}`;
+    document.getElementById("chat-messages").innerHTML = "";
+    document.querySelectorAll("#contact-list .list-group-item").forEach(item => {
+      item.classList.toggle("active", item.dataset.email === contactEmail);
+    });
+    fetchChatHistory(contactEmail);
+  }
+
+  function fetchChatHistory(contactEmail) {
+    $.ajax({
+      url: `http://localhost:8080/api/v1/user/messages?senderEmail=${email}&recipientEmail=${contactEmail}`,
+      method: "GET",
+      headers: { "Authorization": `Bearer ${token}` },
+      success: (response) => {
+        if (response.code === 200) {
+          const chatMessages = document.getElementById("chat-messages");
+          chatMessages.innerHTML = "";
+          response.data.forEach(displayMessage);
+        }
+      },
+      error: (xhr) => console.error("Error fetching chat history:", xhr)
+    });
+  }
+
+  function displayMessage(message) {
+    if (message.senderEmail === selectedContact || message.recipientEmail === selectedContact) {
+      const chatMessages = document.getElementById("chat-messages");
+      const div = document.createElement("div");
+      div.className = `chat-message ${message.senderEmail === email ? "sent" : "received"}`;
+      div.textContent = `${message.content} (${new Date(message.timestamp).toLocaleTimeString()})`;
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  }
+
+  document.getElementById("message-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!selectedContact) {
+      alert("Please select a contact.");
+      return;
+    }
+    const messageInput = document.getElementById("message-input");
+    const content = messageInput.value.trim();
+    if (content && socket.readyState === WebSocket.OPEN) {
+      const message = {
+        senderEmail: email,
+        recipientEmail: selectedContact,
+        content: content,
+        timestamp: new Date().toISOString()
+      };
+      socket.send(JSON.stringify(message));
+      messageInput.value = "";
+    }
+  });
+
+  // Original Functions (Unchanged)
   function fetchClientProfile() {
     fetch(`http://localhost:8080/api/v1/user/client?email=${email}`, {
       method: "GET",
@@ -304,7 +420,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = lawyerProfileURL;
   }
 
-  // Case Submission Function
   // Case Submission Function
   function submitCase() {
     const description = document.getElementById("caseDescription").value;

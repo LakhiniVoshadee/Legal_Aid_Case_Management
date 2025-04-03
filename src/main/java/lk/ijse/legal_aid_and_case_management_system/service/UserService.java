@@ -1,6 +1,7 @@
 package lk.ijse.legal_aid_and_case_management_system.service;
 
 import lk.ijse.legal_aid_and_case_management_system.dto.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -33,6 +34,11 @@ public interface UserService {
 
     ClientDTO getClientProfile(String email);
 
+    List<MessageDTO> getMessages(String senderEmail, String recipientEmail);
+
+    MessageDTO saveMessage(MessageDTO messageDTO);
+
+    UserDetails loadUserByUsername(String email);
 }
 
 

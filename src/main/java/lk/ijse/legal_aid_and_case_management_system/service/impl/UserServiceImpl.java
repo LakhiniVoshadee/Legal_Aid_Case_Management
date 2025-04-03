@@ -1,14 +1,8 @@
 package lk.ijse.legal_aid_and_case_management_system.service.impl;
 
 import lk.ijse.legal_aid_and_case_management_system.dto.*;
-import lk.ijse.legal_aid_and_case_management_system.entity.Admin;
-import lk.ijse.legal_aid_and_case_management_system.entity.Clients;
-import lk.ijse.legal_aid_and_case_management_system.entity.Lawyer;
-import lk.ijse.legal_aid_and_case_management_system.entity.User;
-import lk.ijse.legal_aid_and_case_management_system.repo.AdminRepository;
-import lk.ijse.legal_aid_and_case_management_system.repo.ClientRepository;
-import lk.ijse.legal_aid_and_case_management_system.repo.LawyerRepository;
-import lk.ijse.legal_aid_and_case_management_system.repo.UserRepository;
+import lk.ijse.legal_aid_and_case_management_system.entity.*;
+import lk.ijse.legal_aid_and_case_management_system.repo.*;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
 import lk.ijse.legal_aid_and_case_management_system.util.VarList;
 import org.modelmapper.ModelMapper;
@@ -44,6 +38,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
 
     @Override
@@ -350,5 +347,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         clientDTO.setNIC(client.getNIC());
         clientDTO.setLawyersCount(client.getLawyersCount());
         return clientDTO;
+    }
+
+    @Override
+    public List<MessageDTO> getMessages(String senderEmail, String recipientEmail) {
+        List<Message> messages = messageRepository.findBySenderEmailAndRecipientEmail(senderEmail, recipientEmail);
+        return messages.stream()
+                .map(message -> modelMapper.map(message, MessageDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public MessageDTO saveMessage(MessageDTO messageDTO) {
+        Message message = modelMapper.map(messageDTO, Message.class);
+        Message savedMessage = messageRepository.save(message);
+        return modelMapper.map(savedMessage, MessageDTO.class);
     }
 }

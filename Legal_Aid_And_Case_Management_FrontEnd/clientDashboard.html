@@ -323,10 +323,44 @@
           </div>
         </div>
 
-        <!-- Messages Section -->
+        <!-- Messages Section (Updated) -->
         <div id="message-section" class="content-section">
           <h2>Messages</h2>
-          <!-- Messages content goes here -->
+          <div class="row">
+            <!-- Contact List -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header bg-primary text-white">
+                  <h5 class="mb-0">Contacts</h5>
+                </div>
+                <div class="card-body p-0">
+                  <ul class="list-group list-group-flush" id="contact-list">
+                    <!-- Contacts populated dynamically -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- Chat Area -->
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                  <h5 class="mb-0" id="chat-with">Chat</h5>
+                  <span id="chat-status" class="badge bg-secondary">Disconnected</span>
+                </div>
+                <div class="card-body chat-area" id="chat-messages" style="height: 400px; overflow-y: auto;">
+                  <!-- Messages populated dynamically -->
+                </div>
+                <div class="card-footer">
+                  <form id="message-form" class="d-flex">
+                    <input type="text" class="form-control me-2" id="message-input" placeholder="Type your message..." required>
+                    <button type="submit" class="btn btn-primary" id="send-message-btn">
+                      <i class="bi bi-send me-1"></i> Send
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Profile Section -->

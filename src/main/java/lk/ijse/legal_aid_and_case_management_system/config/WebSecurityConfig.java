@@ -73,6 +73,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/v1/case/open-cases").hasRole("LAWYER")
                         .requestMatchers("/api/v1/case/status/**").hasRole("CLIENT")
                         .requestMatchers("/api/v1/case/assign/**").hasRole("ADMIN")
+                        .requestMatchers("/ws/**").permitAll() // Allow WebSocket endpoint
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
