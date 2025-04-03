@@ -166,12 +166,13 @@ document.addEventListener("DOMContentLoaded", function () {
         updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
 
         if (data.code === 200) {
+          successAlert.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Your profile has been updated successfully!';
           successAlert.classList.remove('d-none');
           setTimeout(() => {
             successAlert.classList.add('d-none');
           }, 3000);
         } else {
-          errorAlert.textContent = data.message || 'Error updating profile!';
+          errorAlert.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i> Error: ${data.message || 'Failed to update profile'}`;
           errorAlert.classList.remove('d-none');
         }
       })
@@ -179,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateBtn.disabled = false;
         updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
         console.error('Error updating profile:', error);
-        errorAlert.textContent = 'Network error. Please try again.';
+        errorAlert.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i> Network error: Unable to update profile. Please try again.';
         errorAlert.classList.remove('d-none');
       });
   }
@@ -304,6 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Case Submission Function
+  // Case Submission Function
   function submitCase() {
     const description = document.getElementById("caseDescription").value;
     const submitBtn = document.getElementById("submit-case-btn");
@@ -333,16 +335,27 @@ document.addEventListener("DOMContentLoaded", function () {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Case';
         if (response.code === 200) {
-          messageDiv.innerHTML = '<div class="alert alert-success">Case submitted successfully! Case Number: ' + response.data.caseNumber + '</div>';
+          const submittedCaseNumber = response.data.caseNumber;
+          messageDiv.innerHTML = `
+          <div class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i> Case submitted successfully!
+            Case Number: <strong id="case-number-display">${submittedCaseNumber}</strong>
+            <button class="btn btn-sm btn-outline-primary ms-2" onclick="navigator.clipboard.writeText('${submittedCaseNumber}').then(() => alert('Case number copied to clipboard!'))">
+              <i class="bi bi-clipboard me-1"></i> Copy
+            </button>
+          </div>`;
           document.getElementById("case-submit-form").reset();
         } else {
-          messageDiv.innerHTML = '<div class="alert alert-danger">' + response.message + '</div>';
+          messageDiv.innerHTML = `<div class="alert alert-danger">Error: ${response.message || 'Unknown error occurred'}</div>`;
         }
+        messageDiv.classList.remove("d-none"); // Ensure message is visible
       },
       error: function (xhr, status, error) {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Case';
-        messageDiv.innerHTML = '<div class="alert alert-danger">Error submitting case: ' + error + '</div>';
+        const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Unknown error occurred';
+        messageDiv.innerHTML = `<div class="alert alert-danger">Error submitting case: ${errorMsg}</div>`;
+        messageDiv.classList.remove("d-none"); // Ensure error message is visible
       }
     });
   }
