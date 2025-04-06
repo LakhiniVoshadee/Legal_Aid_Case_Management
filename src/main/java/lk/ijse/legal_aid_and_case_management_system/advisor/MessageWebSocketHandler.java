@@ -14,21 +14,27 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class MessageWebSocketHandler extends TextWebSocketHandler {
     private final ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private static final Logger log = LoggerFactory.getLogger(MessageWebSocketHandler.class);
+    private final UserService userService;
 
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Autowired
+    /*@Autowired
     private UserService userService;
-
+*/
     @Autowired
     private ObjectMapper objectMapper;
+
+    public MessageWebSocketHandler(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -70,20 +76,19 @@ public class MessageWebSocketHandler extends TextWebSocketHandler {
             log.info("Received message from {}: {}", session.getId(), message.getPayload());
             String payload = message.getPayload();
             MessageDTO messageDTO = objectMapper.readValue(payload, MessageDTO.class);
-            /*messageDTO.setTimestamp(java.time.LocalDateTime.now());*/
+
+            // Set the timestamp server-side
+            messageDTO.setTimestamp(LocalDateTime.now());
+
+            // Save the message using your service
             userService.saveMessage(messageDTO);
-            WebSocketSession recipientSession = sessions.get(messageDTO.getRecipientEmail());
-            if (recipientSession != null && recipientSession.isOpen()) {
-                log.info("Sending message to recipient: {}", messageDTO.getRecipientEmail());
-                recipientSession.sendMessage(new TextMessage(payload));
-            }
-            if (session.isOpen()) {
-                log.info("Echoing message back to sender");
-                session.sendMessage(new TextMessage(payload));
-            }
+
+            log.info("Message saved successfully: {}", messageDTO);
         } catch (Exception e) {
-            log.error("Error in handleTextMessage: {}", e.getMessage(), e);
-            throw e; // Let Spring handle it
+            log.error("Error processing message: {}", e.getMessage(), e);
+            if (session.isOpen()) {
+                session.sendMessage(new TextMessage("Error: " + e.getMessage()));
+            }
         }
     }
 
