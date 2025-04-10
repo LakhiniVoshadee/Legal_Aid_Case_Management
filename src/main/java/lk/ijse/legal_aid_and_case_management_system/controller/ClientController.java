@@ -76,7 +76,7 @@ public class ClientController {
             return new ResponseEntity<>(new ResponseDTO(500, e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/messages")
+  /*  @GetMapping("/messages")
     @PreAuthorize("hasAnyRole('CLIENT', 'LAWYER')")
     public ResponseEntity<ResponseDTO> getMessages(
             @RequestParam String senderEmail,
@@ -93,5 +93,5 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
         }
-    }
+    }*/
 }

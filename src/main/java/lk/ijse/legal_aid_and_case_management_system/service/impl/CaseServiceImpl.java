@@ -8,6 +8,7 @@ import lk.ijse.legal_aid_and_case_management_system.repo.CaseRepository;
 import lk.ijse.legal_aid_and_case_management_system.repo.ClientRepository;
 import lk.ijse.legal_aid_and_case_management_system.repo.LawyerRepository;
 import lk.ijse.legal_aid_and_case_management_system.service.CaseService;
+import lk.ijse.legal_aid_and_case_management_system.service.EmailService;
 import lk.ijse.legal_aid_and_case_management_system.util.Enum.CaseStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CaseServiceImpl implements CaseService {
+
     @Autowired
     private CaseRepository caseRepository;
 
@@ -31,26 +33,24 @@ public class CaseServiceImpl implements CaseService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public CaseDTO submitCase(CaseDTO caseDTO) {
-        // Fetch the client based on clientId from CaseDTO
         Clients client = clientRepository.findById(caseDTO.getClientId())
                 .orElseThrow(() -> new RuntimeException("Client not found with ID: " + caseDTO.getClientId()));
 
-        // Map DTO to Entity
         Case newCase = new Case();
         newCase.setCaseNumber(caseDTO.getCaseNumber());
         newCase.setDescription(caseDTO.getDescription());
-        newCase.setStatus(CaseStatus.valueOf("OPEN")); // Default status for new cases
+        newCase.setStatus(CaseStatus.OPEN);
         newCase.setClient(client);
-        newCase.setLawyer(null); // No lawyer assigned initially
+        newCase.setLawyer(null);
         newCase.setCreatedAt(LocalDateTime.now());
         newCase.setUpdatedAt(LocalDateTime.now());
 
-        // Save the case to the database
         Case savedCase = caseRepository.save(newCase);
-
-        // Map the saved entity back to DTO and return
         return modelMapper.map(savedCase, CaseDTO.class);
     }
 
@@ -62,23 +62,60 @@ public class CaseServiceImpl implements CaseService {
         Lawyer lawyer = lawyerRepository.findById(lawyerId)
                 .orElseThrow(() -> new RuntimeException("Lawyer not found with ID: " + lawyerId));
 
-        if (!caseEntity.getStatus().equals(CaseStatus.OPEN)) {
-            throw new RuntimeException("Case is already processed.");
+        // Validate case status for review
+        if (!caseEntity.getStatus().equals(CaseStatus.OPEN) && !caseEntity.getStatus().equals(CaseStatus.ASSIGNED)) {
+            throw new RuntimeException("Case cannot be reviewed; it is not open or assigned.");
         }
 
+        // Update case status based on lawyer's decision
         if ("ACCEPTED".equalsIgnoreCase(status)) {
             caseEntity.setStatus(CaseStatus.ASSIGNED);
             caseEntity.setLawyer(lawyer);
         } else if ("DECLINED".equalsIgnoreCase(status)) {
             caseEntity.setStatus(CaseStatus.CLOSED);
         } else {
-            throw new IllegalArgumentException("Invalid statusn : " + status);
+            throw new IllegalArgumentException("Invalid status: " + status + ". Must be 'ACCEPTED' or 'DECLINED'.");
         }
 
         caseEntity.setUpdatedAt(LocalDateTime.now());
         Case updatedCase = caseRepository.save(caseEntity);
 
-        return modelMapper.map(updatedCase, CaseDTO.class);
+        // Send email to client about the lawyer's decision
+        String clientEmail = caseEntity.getClient().getUser().getEmail();
+        String subject = "Case Review Update: " + caseEntity.getCaseNumber();
+        String body;
+
+        if ("ACCEPTED".equalsIgnoreCase(status)) {
+            body = "<h3>Case Accepted</h3>" +
+                    "<p>Dear " + caseEntity.getClient().getFull_name() + ",</p>" +
+                    "<p>Your case <strong>" + caseEntity.getCaseNumber() + "</strong> has been accepted by " +
+                    lawyer.getLawyer_name() + ".</p>" +
+                    "<p><strong>Description:</strong> " + caseEntity.getDescription() + "</p>" +
+                    "<p><strong>Lawyer Contact:</strong> " + lawyer.getContactNumber() + "</p>" +
+                    "<p>You can now proceed with further communication through the Legal Pro dashboard.</p>";
+        } else { // DECLINED
+            body = "<h3>Case Declined</h3>" +
+                    "<p>Dear " + caseEntity.getClient().getFull_name() + ",</p>" +
+                    "<p>We regret to inform you that your case <strong>" + caseEntity.getCaseNumber() +
+                    "</strong> has been declined by " + lawyer.getLawyer_name() + ".</p>" +
+                    "<p><strong>Description:</strong> " + caseEntity.getDescription() + "</p>" +
+                    "<p>Please contact the administrator through the Legal Pro dashboard for further assistance.</p>";
+        }
+
+        try {
+            emailService.sendEmail(clientEmail, subject, body);
+        } catch (RuntimeException e) {
+            // Log the error but don’t fail the operation
+            System.err.println("Failed to send email to client " + clientEmail + ": " + e.getMessage());
+        }
+
+        // Prepare and return the DTO
+        CaseDTO caseDTO = modelMapper.map(updatedCase, CaseDTO.class);
+        caseDTO.setClientName(caseEntity.getClient().getFull_name());
+        if (caseEntity.getLawyer() != null) {
+            caseDTO.setLawyerName(caseEntity.getLawyer().getLawyer_name());
+        }
+        return caseDTO;
     }
 
     @Override
@@ -87,9 +124,9 @@ public class CaseServiceImpl implements CaseService {
         return openCases.stream()
                 .map(caseEntity -> {
                     CaseDTO caseDTO = modelMapper.map(caseEntity, CaseDTO.class);
-                    caseDTO.setClientName(caseEntity.getClient().getFull_name()); // Assuming Clients has getFullName()
+                    caseDTO.setClientName(caseEntity.getClient().getFull_name());
                     if (caseEntity.getLawyer() != null) {
-                        caseDTO.setLawyerName(caseEntity.getLawyer().getLawyer_name()); // Assuming Lawyer has getLawyerName()
+                        caseDTO.setLawyerName(caseEntity.getLawyer().getLawyer_name());
                     }
                     return caseDTO;
                 })
@@ -117,20 +154,29 @@ public class CaseServiceImpl implements CaseService {
         Lawyer lawyer = lawyerRepository.findById(lawyerId)
                 .orElseThrow(() -> new RuntimeException("Lawyer not found with ID: " + lawyerId));
 
-        // Check if the case is in a state that allows assignment
         if (!caseEntity.getStatus().equals(CaseStatus.OPEN)) {
             throw new RuntimeException("Cannot assign lawyer: Case is not open.");
         }
 
-        // Assign the lawyer and update the status
         caseEntity.setLawyer(lawyer);
         caseEntity.setStatus(CaseStatus.ASSIGNED);
         caseEntity.setUpdatedAt(LocalDateTime.now());
 
-        // Save the updated case
         Case updatedCase = caseRepository.save(caseEntity);
 
-        // Map to DTO and return
+        String lawyerEmail = lawyer.getUser().getEmail();
+        String subject = "New Case Assignment: " + caseEntity.getCaseNumber();
+        String body = "<h3>New Case Assigned</h3>" +
+                "<p>You have been assigned to case <strong>" + caseEntity.getCaseNumber() + "</strong>.</p>" +
+                "<p><strong>Description:</strong> " + caseEntity.getDescription() + "</p>" +
+                "<p><strong>Client:</strong> " + caseEntity.getClient().getFull_name() + "</p>" +
+                "<p>Please log in to the Legal Pro dashboard to review and accept/decline the case.</p>";
+        try {
+            emailService.sendEmail(lawyerEmail, subject, body);
+        } catch (RuntimeException e) {
+            System.err.println("Failed to send email to lawyer " + lawyerEmail + ": " + e.getMessage());
+        }
+
         CaseDTO caseDTO = modelMapper.map(updatedCase, CaseDTO.class);
         caseDTO.setClientName(caseEntity.getClient().getFull_name());
         caseDTO.setLawyerName(caseEntity.getLawyer().getLawyer_name());
@@ -152,4 +198,3 @@ public class CaseServiceImpl implements CaseService {
                 .collect(Collectors.toList());
     }
 }
-

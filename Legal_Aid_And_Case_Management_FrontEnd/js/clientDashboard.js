@@ -111,8 +111,14 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Messaging Functions
-  let socket;
+  let socket = null;
+  let selectedContact = null;
+
   function initializeMessaging() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      return; // Prevent multiple connections
+    }
+
     socket = new WebSocket(`ws://localhost:8080/ws?token=${token}`);
 
     socket.onopen = () => {
@@ -123,17 +129,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      displayMessage(message);
+      if (selectedContact &&
+        (message.senderEmail === selectedContact || message.recipientEmail === selectedContact)) {
+        displayMessage(message);
+      }
     };
 
     socket.onclose = () => {
       document.getElementById("chat-status").textContent = "Disconnected";
       document.getElementById("chat-status").classList.replace("bg-success", "bg-secondary");
+      socket = null;
     };
 
     socket.onerror = (error) => {
       console.error("WebSocket error:", error);
-      alert("Failed to connect to messaging service.");
+      document.getElementById("chat-status").textContent = "Error";
+      document.getElementById("chat-messages").innerHTML =
+        '<div class="alert alert-danger">Failed to connect to messaging service. Please refresh.</div>';
     };
   }
 
@@ -143,34 +155,52 @@ document.addEventListener("DOMContentLoaded", function () {
       method: "GET",
       headers: { "Authorization": `Bearer ${token}` },
       success: (response) => {
-        if (response.code === 200) populateContactList(response.data);
+        if (response.code === 200 && response.data.length > 0) {
+          populateContactList(response.data);
+          // Auto-select first contact
+          const firstContact = response.data[0];
+          selectContact(firstContact.email, firstContact.lawyer_name || firstContact.email);
+        } else {
+          document.getElementById("contact-list").innerHTML =
+            '<li class="list-group-item">No contacts available</li>';
+        }
       },
-      error: (xhr) => console.error("Error fetching contacts:", xhr)
+      error: (xhr) => {
+        console.error("Error fetching contacts:", xhr);
+        document.getElementById("contact-list").innerHTML =
+          '<li class="list-group-item text-danger">Error loading contacts</li>';
+      }
     });
   }
 
   function populateContactList(lawyers) {
     const contactList = document.getElementById("contact-list");
-    if (!contactList) return; // Prevent errors if element is missing
+    if (!contactList) return;
+
     contactList.innerHTML = "";
     lawyers.forEach(lawyer => {
       const li = document.createElement("li");
       li.className = "list-group-item list-group-item-action";
       li.textContent = lawyer.lawyer_name || lawyer.email;
       li.dataset.email = lawyer.email;
-      li.addEventListener("click", () => selectContact(lawyer.email, lawyer.lawyer_name));
+      li.dataset.name = lawyer.lawyer_name || lawyer.email;
+      li.addEventListener("click", () => selectContact(lawyer.email, lawyer.lawyer_name || lawyer.email));
       contactList.appendChild(li);
     });
   }
 
-  let selectedContact = null;
   function selectContact(contactEmail, contactName) {
     selectedContact = contactEmail;
-    document.getElementById("chat-with").textContent = `Chat with ${contactName || contactEmail}`;
-    document.getElementById("chat-messages").innerHTML = "";
+    document.getElementById("chat-with").textContent = `Chat with ${contactName}`;
+
+    // Update active contact styling
     document.querySelectorAll("#contact-list .list-group-item").forEach(item => {
       item.classList.toggle("active", item.dataset.email === contactEmail);
     });
+
+    // Clear and fetch chat history
+    const chatMessages = document.getElementById("chat-messages");
+    chatMessages.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"></div></div>';
     fetchChatHistory(contactEmail);
   }
 
@@ -180,48 +210,71 @@ document.addEventListener("DOMContentLoaded", function () {
       method: "GET",
       headers: { "Authorization": `Bearer ${token}` },
       success: (response) => {
-        if (response.code === 200) {
-          const chatMessages = document.getElementById("chat-messages");
-          chatMessages.innerHTML = "";
+        const chatMessages = document.getElementById("chat-messages");
+        chatMessages.innerHTML = "";
+        if (response.code === 200 && response.data.length > 0) {
           response.data.forEach(displayMessage);
+        } else {
+          chatMessages.innerHTML = '<div class="text-center text-muted mt-5">No messages yet</div>';
         }
       },
-      error: (xhr) => console.error("Error fetching chat history:", xhr)
+      error: (xhr) => {
+        console.error("Error fetching chat history:", xhr);
+        document.getElementById("chat-messages").innerHTML =
+          '<div class="alert alert-danger">Error loading chat history</div>';
+      }
     });
   }
 
   function displayMessage(message) {
-    if (message.senderEmail === selectedContact || message.recipientEmail === selectedContact) {
-      const chatMessages = document.getElementById("chat-messages");
-      const div = document.createElement("div");
-      div.className = `chat-message ${message.senderEmail === email ? "sent" : "received"}`;
-      div.textContent = `${message.content} (${new Date(message.timestamp).toLocaleTimeString()})`;
-      chatMessages.appendChild(div);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+    const chatMessages = document.getElementById("chat-messages");
+    const isSent = message.senderEmail === email;
+    const div = document.createElement("div");
+    div.className = `chat-message mb-2 p-2 rounded ${isSent ? "bg-primary text-white ms-auto" : "bg-light text-dark"}`;
+    div.style.maxWidth = "70%";
+    div.innerHTML = `
+      <div>${message.content}</div>
+      <small class="d-block text-muted">${new Date(message.timestamp).toLocaleTimeString()}</small>
+    `;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
   document.getElementById("message-form").addEventListener("submit", function (e) {
     e.preventDefault();
-    if (!selectedContact) {
-      alert("Please select a contact.");
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+      alert("Not connected to messaging service. Please wait or refresh.");
       return;
     }
+    if (!selectedContact) {
+      // Auto-select first contact if available
+      const firstContact = document.querySelector("#contact-list .list-group-item");
+      if (firstContact) {
+        selectContact(firstContact.dataset.email, firstContact.dataset.name);
+      } else {
+        alert("No contacts available to chat with.");
+        return;
+      }
+    }
+
     const messageInput = document.getElementById("message-input");
     const content = messageInput.value.trim();
-    if (content && socket.readyState === WebSocket.OPEN) {
-      const message = {
-        senderEmail: email,
-        recipientEmail: selectedContact,
-        content: content,
-        timestamp: new Date().toISOString()
-      };
-      socket.send(JSON.stringify(message));
-      messageInput.value = "";
-    }
+    if (!content) return;
+
+    const message = {
+      senderEmail: email,
+      recipientEmail: selectedContact,
+      content: content,
+      timestamp: new Date().toISOString()
+    };
+
+    socket.send(JSON.stringify(message));
+    displayMessage(message); // Display sent message immediately
+    messageInput.value = "";
   });
 
-  // Original Functions (Unchanged)
+  // Rest of your original functions remain unchanged below...
+
   function fetchClientProfile() {
     fetch(`http://localhost:8080/api/v1/user/client?email=${email}`, {
       method: "GET",
