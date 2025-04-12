@@ -26,14 +26,12 @@ $(document).ready(function() {
     e.preventDefault();
     activateSection('lawyers');
     loadLawyers();
-    updateLawyerCharts();
   });
 
   $('#clients-nav-link').click(function(e) {
     e.preventDefault();
     activateSection('clients');
     loadClients();
-    updateClientCharts();
   });
 
   $('#cases-nav-link').click(function(e) {
@@ -47,7 +45,6 @@ $(document).ready(function() {
     e.preventDefault();
     activateSection('all-cases');
     loadAllCases();
-    updateCasesCharts();
   });
 
   function activateSection(section) {
@@ -105,12 +102,14 @@ $(document).ready(function() {
           updateLawyerCharts();
         } else {
           $('#lawyers-tbody').html('<tr><td colspan="10" class="text-center">No lawyers found</td></tr>');
+          updateLawyerCharts(); // Still update charts with fallback data
         }
       },
       error: function(xhr) {
         $('#lawyers-loading').hide();
         $('#lawyers-tbody').html('<tr><td colspan="10" class="text-center text-danger">Error loading data. Please try again.</td></tr>');
         console.error('Error loading lawyers:', xhr);
+        updateLawyerCharts(); // Use fallback data on error
       }
     });
   }
@@ -259,8 +258,6 @@ $(document).ready(function() {
         if (response && response.code === 200) {
           $('#assign-result').removeClass('error').addClass('success').text(response.message);
           $('#assign-case-form')[0].reset(); // Reset form
-
-          // Refresh case data
           loadAllCases();
           updateCaseAssignmentCharts();
         } else {
@@ -275,7 +272,7 @@ $(document).ready(function() {
     });
   }
 
-// Handle form submission for assigning lawyer to case
+  // Handle form submission for assigning lawyer to case
   $('#assign-case-form').submit(function(e) {
     e.preventDefault();
     const caseNumber = $('#caseNumber').val();
@@ -301,14 +298,6 @@ $(document).ready(function() {
     alert('Case Details:\nCase Number: ' + caseItem.caseNumber + '\nDescription: ' + caseItem.description + '\nStatus: ' + caseItem.status);
   });
 
-  // Handle form submission for assigning lawyer to case
-  $('#assign-case-form').submit(function(e) {
-    e.preventDefault();
-    const caseId = $('#caseId').val();
-    const lawyerId = $('#lawyerId').val();
-    assignLawyerToCase(caseId, lawyerId);
-  });
-
   // Update all dashboard statistics
   function updateDashboardStats() {
     loadLawyers();
@@ -321,16 +310,14 @@ $(document).ready(function() {
     // Case Status Distribution Chart
     createCaseStatusChart();
 
-    // Lawyer Specialization Chart
-    createLawyerSpecializationChart();
-
     // Client Demographics Chart
     createClientDemographicsChart();
   }
 
   // Create Case Statistics Chart
   function createCaseStatisticsChart() {
-    const ctx = document.getElementById('caseStatisticsChart').getContext('2d');
+    const ctx = document.getElementById('caseStatisticsChart')?.getContext('2d');
+    if (!ctx) return;
 
     const data = {
       labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -392,7 +379,7 @@ $(document).ready(function() {
       }
     };
 
-    if (window.caseStatisticsChart) {
+    if (window.caseStatisticsChart && typeof window.caseStatisticsChart.destroy === 'function') {
       window.caseStatisticsChart.destroy();
     }
 
@@ -400,17 +387,20 @@ $(document).ready(function() {
 
     // Live update simulation
     setInterval(function() {
-      const datasets = window.caseStatisticsChart.data.datasets;
-      for (let i = 0; i < datasets.length; i++) {
-        datasets[i].data = datasets[i].data.map(value => value + Math.floor(Math.random() * 3) - 1);
+      if (window.caseStatisticsChart) {
+        const datasets = window.caseStatisticsChart.data.datasets;
+        for (let i = 0; i < datasets.length; i++) {
+          datasets[i].data = datasets[i].data.map(value => value + Math.floor(Math.random() * 3) - 1);
+        }
+        window.caseStatisticsChart.update();
       }
-      window.caseStatisticsChart.update();
     }, 5000);
   }
 
   // Create Case Status Chart
   function createCaseStatusChart() {
-    const ctx = document.getElementById('caseStatusChart').getContext('2d');
+    const ctx = document.getElementById('caseStatusChart')?.getContext('2d');
+    if (!ctx) return;
 
     const data = {
       labels: ['Active', 'Pending', 'Closed', 'On Hold'],
@@ -441,7 +431,7 @@ $(document).ready(function() {
       }
     };
 
-    if (window.caseStatusChart) {
+    if (window.caseStatusChart && typeof window.caseStatusChart.destroy === 'function') {
       window.caseStatusChart.destroy();
     }
 
@@ -449,81 +439,20 @@ $(document).ready(function() {
 
     // Live update simulation
     setInterval(function() {
-      const data = window.caseStatusChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(5, data[i] + Math.floor(Math.random() * 5) - 2);
-      }
-      window.caseStatusChart.update();
-    }, 7000);
-  }
-
-  // Create Lawyer Specialization Chart
-  function createLawyerSpecializationChart() {
-    const ctx = document.getElementById('lawyerSpecializationChart').getContext('2d');
-
-    const data = {
-      labels: ['Criminal', 'Civil', 'Corporate', 'Family', 'Real Estate', 'Immigration'],
-      datasets: [{
-        label: 'Number of Lawyers',
-        data: [15, 20, 12, 8, 10, 5],
-        backgroundColor: [
-          'rgba(67, 97, 238, 0.7)',
-          'rgba(46, 139, 87, 0.7)',
-          'rgba(255, 183, 3, 0.7)',
-          'rgba(76, 201, 240, 0.7)',
-          'rgba(108, 117, 125, 0.7)',
-          'rgba(230, 57, 70, 0.7)'
-        ],
-        borderWidth: 1
-      }]
-    };
-
-    const config = {
-      type: 'bar',
-      data: data,
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          x: {
-            grid: {
-              display: false
-            }
-          },
-          y: {
-            beginAtZero: true,
-            grid: {
-              borderDash: [2, 2]
-            }
-          }
+      if (window.caseStatusChart) {
+        const data = window.caseStatusChart.data.datasets[0].data;
+        for (let i = 0; i < data.length; i++) {
+          data[i] = Math.max(5, data[i] + Math.floor(Math.random() * 5) - 2);
         }
+        window.caseStatusChart.update();
       }
-    };
-
-    if (window.lawyerSpecializationChart) {
-      window.lawyerSpecializationChart.destroy();
-    }
-
-    window.lawyerSpecializationChart = new Chart(ctx, config);
-
-    // Live update simulation
-    setInterval(function() {
-      const data = window.lawyerSpecializationChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
-      }
-      window.lawyerSpecializationChart.update();
-    }, 8000);
+    }, 7000);
   }
 
   // Create Client Demographics Chart
   function createClientDemographicsChart() {
-    const ctx = document.getElementById('clientDemographicsChart').getContext('2d');
+    const ctx = document.getElementById('clientDemographicsChart')?.getContext('2d');
+    if (!ctx) return;
 
     const data = {
       labels: ['18-25', '26-35', '36-45', '46-55', '56-65', '65+'],
@@ -568,7 +497,7 @@ $(document).ready(function() {
       }
     };
 
-    if (window.clientDemographicsChart) {
+    if (window.clientDemographicsChart && typeof window.clientDemographicsChart.destroy === 'function') {
       window.clientDemographicsChart.destroy();
     }
 
@@ -576,34 +505,59 @@ $(document).ready(function() {
 
     // Live update simulation
     setInterval(function() {
-      const data = window.clientDemographicsChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
+      if (window.clientDemographicsChart) {
+        const data = window.clientDemographicsChart.data.datasets[0].data;
+        for (let i = 0; i < data.length; i++) {
+          data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
+        }
+        window.clientDemographicsChart.update();
       }
-      window.clientDemographicsChart.update();
     }, 6000);
   }
 
   // Update lawyer specific charts
   function updateLawyerCharts() {
-    // Create Lawyer Experience Chart
     createLawyerExperienceChart();
-
-    // Create Lawyer Location Chart
-    createLawyerLocationChart();
-
-    // Create Lawyer Type Chart
+    createLawyerSpecializationChart();
     createLawyerTypeChart();
   }
 
   // Create Lawyer Experience Chart
   function createLawyerExperienceChart() {
-    const ctx = document.getElementById('lawyerExperienceChart').getContext('2d');
+    const ctx = document.getElementById('lawyerExperienceChart')?.getContext('2d');
+    if (!ctx) return;
+
+    // Aggregate experience data from lawyers array
+    const experienceBins = {
+      '0-2 years': 0,
+      '3-5 years': 0,
+      '6-10 years': 0,
+      '11-20 years': 0,
+      '20+ years': 0
+    };
+
+    lawyers.forEach(lawyer => {
+      const years = parseInt(lawyer.yearsOfExperience, 10) || 0;
+      if (years <= 2) {
+        experienceBins['0-2 years']++;
+      } else if (years <= 5) {
+        experienceBins['3-5 years']++;
+      } else if (years <= 10) {
+        experienceBins['6-10 years']++;
+      } else if (years <= 20) {
+        experienceBins['11-20 years']++;
+      } else {
+        experienceBins['20+ years']++;
+      }
+    });
+
+    const labels = Object.keys(experienceBins);
+    const dataValues = Object.values(experienceBins);
 
     const data = {
-      labels: ['0-2 years', '3-5 years', '6-10 years', '11-20 years', '20+ years'],
+      labels: labels.length > 0 ? labels : ['0-2 years', '3-5 years', '6-10 years', '11-20 years', '20+ years'],
       datasets: [{
-        data: [10, 15, 20, 15, 5],
+        data: dataValues.length > 0 ? dataValues : [10, 15, 20, 15, 5],
         backgroundColor: [
           'rgba(67, 97, 238, 0.7)',
           'rgba(76, 201, 240, 0.7)',
@@ -634,81 +588,99 @@ $(document).ready(function() {
       }
     };
 
-    if (window.lawyerExperienceChart) {
+    if (window.lawyerExperienceChart && typeof window.lawyerExperienceChart.destroy === 'function') {
       window.lawyerExperienceChart.destroy();
     }
 
     window.lawyerExperienceChart = new Chart(ctx, config);
-
-    // Live update simulation
-    setInterval(function() {
-      const data = window.lawyerExperienceChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
-      }
-      window.lawyerExperienceChart.update();
-    }, 9000);
   }
 
-  // Create Lawyer Location Chart
-  function createLawyerLocationChart() {
-    const ctx = document.getElementById('lawyerLocationChart').getContext('2d');
+  // Create Lawyer Specialization Chart
+  function createLawyerSpecializationChart() {
+    const ctx = document.getElementById('lawyerSpecializationChart')?.getContext('2d');
+    if (!ctx) return;
+
+    // Aggregate specialization data from lawyers array
+    const specializationCount = {};
+    lawyers.forEach(lawyer => {
+      const spec = lawyer.specialization || 'Unknown';
+      specializationCount[spec] = (specializationCount[spec] || 0) + 1;
+    });
+
+    const labels = Object.keys(specializationCount);
+    const dataValues = Object.values(specializationCount);
 
     const data = {
-      labels: ['Central', 'Northern', 'Southern', 'Eastern', 'Western'],
+      labels: labels.length > 0 ? labels : ['Criminal', 'Civil', 'Corporate', 'Family', 'Real Estate', 'Immigration'],
       datasets: [{
-        label: 'Lawyers by Location',
-        data: [18, 12, 15, 10, 20],
-        backgroundColor: 'rgba(76, 201, 240, 0.5)',
-        borderColor: '#4cc9f0',
-        borderWidth: 2
+        label: 'Number of Lawyers',
+        data: dataValues.length > 0 ? dataValues : [15, 20, 12, 8, 10, 5],
+        backgroundColor: [
+          'rgba(67, 97, 238, 0.7)',
+          'rgba(46, 139, 87, 0.7)',
+          'rgba(255, 183, 3, 0.7)',
+          'rgba(76, 201, 240, 0.7)',
+          'rgba(108, 117, 125, 0.7)',
+          'rgba(230, 57, 70, 0.7)'
+        ],
+        borderWidth: 1
       }]
     };
 
     const config = {
-      type: 'polarArea',
+      type: 'bar',
       data: data,
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            position: 'right',
-            labels: {
-              boxWidth: 10,
-              usePointStyle: true,
-              pointStyle: 'circle'
+            display: false
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              borderDash: [2, 2]
             }
           }
         }
       }
     };
 
-    if (window.lawyerLocationChart) {
-      window.lawyerLocationChart.destroy();
+    if (window.lawyerSpecializationChart && typeof window.lawyerSpecializationChart.destroy === 'function') {
+      window.lawyerSpecializationChart.destroy();
     }
 
-    window.lawyerLocationChart = new Chart(ctx, config);
-
-    // Live update simulation
-    setInterval(function() {
-      const data = window.lawyerLocationChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
-      }
-      window.lawyerLocationChart.update();
-    }, 7500);
+    window.lawyerSpecializationChart = new Chart(ctx, config);
   }
 
   // Create Lawyer Type Chart
   function createLawyerTypeChart() {
-    const ctx = document.getElementById('lawyerTypeChart').getContext('2d');
+    const ctx = document.getElementById('lawyerTypeChart')?.getContext('2d');
+    if (!ctx) return;
+
+    // Aggregate type data from lawyers array (assuming type is derived from specialization)
+    const typeCount = {};
+    lawyers.forEach(lawyer => {
+      const type = lawyer.specialization || 'Unknown'; // Use specialization as type; adjust if there's a specific 'type' field
+      typeCount[type] = (typeCount[type] || 0) + 1;
+    });
+
+    const labels = Object.keys(typeCount);
+    const dataValues = Object.values(typeCount);
 
     const data = {
-      labels: ['Criminal', 'Civil', 'Corporate', 'Family', 'Real Estate', 'Immigration'],
+      labels: labels.length > 0 ? labels : ['Criminal', 'Civil', 'Corporate', 'Family', 'Real Estate', 'Immigration'],
       datasets: [{
         label: 'Number of Lawyers',
-        data: [15, 20, 12, 8, 10, 5],
+        data: dataValues.length > 0 ? dataValues : [15, 20, 12, 8, 10, 5],
         backgroundColor: 'rgba(46, 139, 87, 0.5)',
         borderColor: '#2e8b57',
         borderWidth: 2
@@ -745,37 +717,24 @@ $(document).ready(function() {
       }
     };
 
-    if (window.lawyerTypeChart) {
+    if (window.lawyerTypeChart && typeof window.lawyerTypeChart.destroy === 'function') {
       window.lawyerTypeChart.destroy();
     }
 
     window.lawyerTypeChart = new Chart(ctx, config);
-
-    // Live update simulation
-    setInterval(function() {
-      const data = window.lawyerTypeChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
-      }
-      window.lawyerTypeChart.update();
-    }, 8000);
   }
 
   // Update client specific charts
   function updateClientCharts() {
-    // Create Client Gender Chart
     createClientGenderChart();
-
-    // Create Client Language Chart
     createClientLanguageChart();
-
-    // Create Client Registration Chart
     createClientRegistrationChart();
   }
 
   // Create Client Gender Chart
   function createClientGenderChart() {
-    const ctx = document.getElementById('clientGenderChart').getContext('2d');
+    const ctx = document.getElementById('clientGenderChart')?.getContext('2d');
+    if (!ctx) return;
 
     const data = {
       labels: ['Male', 'Female', 'Other'],
@@ -810,7 +769,7 @@ $(document).ready(function() {
       }
     };
 
-    if (window.clientGenderChart) {
+    if (window.clientGenderChart && typeof window.clientGenderChart.destroy === 'function') {
       window.clientGenderChart.destroy();
     }
 
@@ -818,17 +777,20 @@ $(document).ready(function() {
 
     // Live update simulation
     setInterval(function() {
-      const data = window.clientGenderChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 5) - 2);
+      if (window.clientGenderChart) {
+        const data = window.clientGenderChart.data.datasets[0].data;
+        for (let i = 0; i < data.length; i++) {
+          data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 5) - 2);
+        }
+        window.clientGenderChart.update();
       }
-      window.clientGenderChart.update();
     }, 6500);
   }
 
   // Create Client Language Chart
   function createClientLanguageChart() {
-    const ctx = document.getElementById('clientLanguageChart').getContext('2d');
+    const ctx = document.getElementById('clientLanguageChart')?.getContext('2d');
+    if (!ctx) return;
 
     const data = {
       labels: ['English', 'French', 'Spanish', 'Mandarin', 'Arabic', 'Other'],
@@ -874,7 +836,7 @@ $(document).ready(function() {
       }
     };
 
-    if (window.clientLanguageChart) {
+    if (window.clientLanguageChart && typeof window.clientLanguageChart.destroy === 'function') {
       window.clientLanguageChart.destroy();
     }
 
@@ -882,17 +844,20 @@ $(document).ready(function() {
 
     // Live update simulation
     setInterval(function() {
-      const data = window.clientLanguageChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
+      if (window.clientLanguageChart) {
+        const data = window.clientLanguageChart.data.datasets[0].data;
+        for (let i = 0; i < data.length; i++) {
+          data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
+        }
+        window.clientLanguageChart.update();
       }
-      window.clientLanguageChart.update();
     }, 7200);
   }
 
   // Create Client Registration Chart
   function createClientRegistrationChart() {
-    const ctx = document.getElementById('clientRegistrationChart').getContext('2d');
+    const ctx = document.getElementById('clientAgeChart')?.getContext('2d');
+    if (!ctx) return;
 
     const data = {
       labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -934,7 +899,7 @@ $(document).ready(function() {
       }
     };
 
-    if (window.clientRegistrationChart) {
+    if (window.clientRegistrationChart && typeof window.clientRegistrationChart.destroy === 'function') {
       window.clientRegistrationChart.destroy();
     }
 
@@ -942,158 +907,76 @@ $(document).ready(function() {
 
     // Live update simulation
     setInterval(function() {
-      const data = window.clientRegistrationChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
+      if (window.clientRegistrationChart) {
+        const data = window.clientRegistrationChart.data.datasets[0].data;
+        for (let i = 0; i < data.length; i++) {
+          data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
+        }
+        window.clientRegistrationChart.update();
       }
-      window.clientRegistrationChart.update();
     }, 6800);
   }
 
   // Update case assignment charts
   function updateCaseAssignmentCharts() {
     loadAllCases();
-
-    // Populate case and lawyer dropdowns
-    populateCaseDropdown();
-    populateLawyerDropdown();
-
-    // Create Case Assignment Distribution Chart
-    createCaseAssignmentDistributionChart();
-
-    // Create Case Assignment Timeline Chart
-    createCaseAssignmentTimelineChart();
+    createLawyerCaseLoadChart();
+    createCasesTimelineChart();
   }
 
-  // Populate case dropdown
-  function populateCaseDropdown() {
-    if (!token) {
-      $('#caseId').html('<option value="">Login required</option>');
-      return;
-    }
-
-    $.ajax({
-      url: 'http://localhost:8080/api/v1/dashboard/unassigned-cases',
-      type: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      },
-      success: function(response) {
-        $('#caseId').empty();
-        $('#caseId').append('<option value="">Select a case</option>');
-
-        if (response && response.code === 200 && response.data) {
-          const unassignedCases = response.data;
-          unassignedCases.forEach(function(caseItem) {
-            $('#caseId').append(`<option value="${caseItem.caseId}">${caseItem.caseNumber} - ${caseItem.description.substr(0, 30)}...</option>`);
-          });
-        } else {
-          $('#caseId').append('<option value="">No unassigned cases</option>');
-        }
-      },
-      error: function(xhr) {
-        $('#caseId').html('<option value="">Error loading cases</option>');
-        console.error('Error loading unassigned cases:', xhr);
-      }
-    });
-  }
-
-  // Populate lawyer dropdown
-  function populateLawyerDropdown() {
-    if (!token) {
-      $('#lawyerId').html('<option value="">Login required</option>');
-      return;
-    }
-
-    if (lawyers.length > 0) {
-      $('#lawyerId').empty();
-      $('#lawyerId').append('<option value="">Select a lawyer</option>');
-
-      lawyers.forEach(function(lawyer) {
-        $('#lawyerId').append(`<option value="${lawyer.lawyerId}">${lawyer.lawyer_name} - ${lawyer.specialization}</option>`);
-      });
-    } else {
-      $.ajax({
-        url: 'http://localhost:8080/api/v1/dashboard/lawyers-byAdmin',
-        type: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        },
-        success: function(response) {
-          $('#lawyerId').empty();
-          $('#lawyerId').append('<option value="">Select a lawyer</option>');
-
-          if (response && response.code === 200 && response.data) {
-            lawyers = response.data;
-            lawyers.forEach(function(lawyer) {
-              $('#lawyerId').append(`<option value="${lawyer.lawyerId}">${lawyer.lawyer_name} - ${lawyer.specialization}</option>`);
-            });
-          } else {
-            $('#lawyerId').append('<option value="">No lawyers available</option>');
-          }
-        },
-        error: function(xhr) {
-          $('#lawyerId').html('<option value="">Error loading lawyers</option>');
-          console.error('Error loading lawyers:', xhr);
-        }
-      });
-    }
-  }
-
-  // Create Case Assignment Distribution Chart
-  function createCaseAssignmentDistributionChart() {
-    const ctx = document.getElementById('caseAssignmentDistributionChart').getContext('2d');
+  // Create Lawyer Case Load Chart
+  function createLawyerCaseLoadChart() {
+    const ctx = document.getElementById('lawyerCaseLoadChart')?.getContext('2d');
+    if (!ctx) return;
 
     const data = {
-      labels: ['Assigned', 'Unassigned'],
+      labels: ['Lawyer A', 'Lawyer B', 'Lawyer C', 'Lawyer D', 'Lawyer E'],
       datasets: [{
-        data: [65, 35],
-        backgroundColor: [
-          'rgba(46, 139, 87, 0.7)',
-          'rgba(230, 57, 70, 0.7)'
-        ],
+        label: 'Cases Assigned',
+        data: [5, 8, 3, 6, 4],
+        backgroundColor: 'rgba(67, 97, 238, 0.7)',
         borderWidth: 1
       }]
     };
 
     const config = {
-      type: 'pie',
+      type: 'bar',
       data: data,
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            position: 'bottom',
-            labels: {
-              boxWidth: 10,
-              usePointStyle: true,
-              pointStyle: 'circle'
+            display: false
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              borderDash: [2, 2]
             }
           }
         }
       }
     };
 
-    if (window.caseAssignmentDistributionChart) {
-      window.caseAssignmentDistributionChart.destroy();
+    if (window.lawyerCaseLoadChart && typeof window.lawyerCaseLoadChart.destroy === 'function') {
+      window.lawyerCaseLoadChart.destroy();
     }
 
-    window.caseAssignmentDistributionChart = new Chart(ctx, config);
-
-    // Live update simulation
-    setInterval(function() {
-      const data = window.caseAssignmentDistributionChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(10, data[i] + Math.floor(Math.random() * 5) - 2);
-      }
-      window.caseAssignmentDistributionChart.update();
-    }, 5500);
+    window.lawyerCaseLoadChart = new Chart(ctx, config);
   }
 
-  // Create Case Assignment Timeline Chart
-  function createCaseAssignmentTimelineChart() {
-    const ctx = document.getElementById('caseAssignmentTimelineChart').getContext('2d');
+  // Create Cases Timeline Chart
+  function createCasesTimelineChart() {
+    const ctx = document.getElementById('casesTimelineChart')?.getContext('2d');
+    if (!ctx) return;
 
     const data = {
       labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -1149,59 +1032,79 @@ $(document).ready(function() {
       }
     };
 
-    if (window.caseAssignmentTimelineChart) {
-      window.caseAssignmentTimelineChart.destroy();
+    if (window.casesTimelineChart && typeof window.casesTimelineChart.destroy === 'function') {
+      window.casesTimelineChart.destroy();
     }
 
-    window.caseAssignmentTimelineChart = new Chart(ctx, config);
-
-    // Live update simulation
-    setInterval(function() {
-      const datasets = window.caseAssignmentTimelineChart.data.datasets;
-      for (let i = 0; i < datasets.length; i++) {
-        for (let j = 0; j < datasets[i].data.length; j++) {
-          datasets[i].data[j] = Math.max(1, datasets[i].data[j] + Math.floor(Math.random() * 3) - 1);
-        }
-      }
-      window.caseAssignmentTimelineChart.update();
-    }, 6000);
+    window.casesTimelineChart = new Chart(ctx, config);
   }
 
   // Update cases charts
   function updateCasesCharts() {
-    // Create Case Type Chart
-    createCaseTypeChart();
-
-    // Create Case Duration Chart
-    createCaseDurationChart();
-
-    // Create Case Resolution Rate Chart
-    createCaseResolutionRateChart();
+    createCasesStatusDistributionChart();
+    createCasesTrendChart();
   }
 
-  // Create Case Type Chart
-  function createCaseTypeChart() {
-    const ctx = document.getElementById('caseTypeChart').getContext('2d');
+  // Create Cases Status Distribution Chart
+  function createCasesStatusDistributionChart() {
+    const ctx = document.getElementById('casesStatusDistributionChart')?.getContext('2d');
+    if (!ctx) return;
 
     const data = {
-      labels: ['Criminal', 'Civil', 'Corporate', 'Family', 'Real Estate', 'Immigration'],
+      labels: ['Active', 'Pending', 'Closed'],
       datasets: [{
-        label: 'Number of Cases',
-        data: [25, 35, 18, 22, 15, 10],
-        backgroundColor: [
-          'rgba(67, 97, 238, 0.7)',
-          'rgba(46, 139, 87, 0.7)',
-          'rgba(255, 183, 3, 0.7)',
-          'rgba(76, 201, 240, 0.7)',
-          'rgba(108, 117, 125, 0.7)',
-          'rgba(230, 57, 70, 0.7)'
-        ],
+        data: [35, 25, 40],
+        backgroundColor: ['#4361ee', '#ffb703', '#6c757d'],
         borderWidth: 1
       }]
     };
 
     const config = {
-      type: 'bar',
+      type: 'pie',
+      data: data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              boxWidth: 10,
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
+          }
+        }
+      }
+    };
+
+    if (window.casesStatusDistributionChart && typeof window.casesStatusDistributionChart.destroy === 'function') {
+      window.casesStatusDistributionChart.destroy();
+    }
+
+    window.casesStatusDistributionChart = new Chart(ctx, config);
+  }
+
+  // Create Cases Trend Chart
+  function createCasesTrendChart() {
+    const ctx = document.getElementById('casesTrendChart')?.getContext('2d');
+    if (!ctx) return;
+
+    const data = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      datasets: [{
+        label: 'Cases',
+        data: [10, 15, 12, 18, 20, 22, 16, 14, 25, 20, 22, 28],
+        backgroundColor: 'rgba(67, 97, 238, 0.5)',
+        borderColor: '#4361ee',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4
+      }]
+    };
+
+    const config = {
+      type: 'line',
       data: data,
       options: {
         responsive: true,
@@ -1227,25 +1130,14 @@ $(document).ready(function() {
       }
     };
 
-    if (window.caseTypeChart) {
-      window.caseTypeChart.destroy();
+    if (window.casesTrendChart && typeof window.casesTrendChart.destroy === 'function') {
+      window.casesTrendChart.destroy();
     }
 
-    window.caseTypeChart = new Chart(ctx, config);
-
-    // Live update simulation
-    setInterval(function() {
-      const data = window.caseTypeChart.data.datasets[0].data;
-      for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(1, data[i] + Math.floor(Math.random() * 3) - 1);
-      }
-      window.caseTypeChart.update();
-    }, 7300);
+    window.casesTrendChart = new Chart(ctx, config);
   }
 
   // Initialize on page load
-  $(document).ready(function() {
-    activateSection('dashboard');
-    updateDashboardStats();
-  });
+  activateSection('dashboard');
+  updateDashboardStats();
 });
