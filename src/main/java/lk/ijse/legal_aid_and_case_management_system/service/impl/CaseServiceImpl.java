@@ -192,4 +192,21 @@ public class CaseServiceImpl implements CaseService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CaseDTO> getAssignedCasesForLawyer(Long lawyerId) {
+        Lawyer lawyer = lawyerRepository.findById(lawyerId)
+                .orElseThrow(() -> new RuntimeException("Lawyer not found with ID: " + lawyerId));
+        List<Case> assignedCases = caseRepository.findByLawyerAndStatus(lawyer, CaseStatus.ASSIGNED);
+        return assignedCases.stream()
+                .map(caseEntity -> {
+                    CaseDTO caseDTO = modelMapper.map(caseEntity, CaseDTO.class);
+                    caseDTO.setClientName(caseEntity.getClient().getFull_name());
+                    if (caseEntity.getLawyer() != null) {
+                        caseDTO.setLawyerName(caseEntity.getLawyer().getLawyer_name());
+                    }
+                    return caseDTO;
+                })
+                .collect(Collectors.toList());
+    }
 }

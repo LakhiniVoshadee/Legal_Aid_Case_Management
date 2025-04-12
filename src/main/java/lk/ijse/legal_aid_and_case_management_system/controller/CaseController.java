@@ -2,11 +2,15 @@ package lk.ijse.legal_aid_and_case_management_system.controller;
 
 import lk.ijse.legal_aid_and_case_management_system.dto.CaseDTO;
 import lk.ijse.legal_aid_and_case_management_system.dto.ResponseDTO;
+import lk.ijse.legal_aid_and_case_management_system.entity.Lawyer;
+import lk.ijse.legal_aid_and_case_management_system.repo.LawyerRepository;
 import lk.ijse.legal_aid_and_case_management_system.service.CaseService;
 import lk.ijse.legal_aid_and_case_management_system.util.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +22,12 @@ public class CaseController {
 
     private final CaseService caseService;
     private final JwtUtil jwtUtil;
+    private final LawyerRepository lawyerRepository;
 
-    public CaseController(CaseService caseService, JwtUtil jwtUtil) {
+    public CaseController(CaseService caseService, JwtUtil jwtUtil, LawyerRepository lawyerRepository) {
         this.caseService = caseService;
         this.jwtUtil = jwtUtil;
+        this.lawyerRepository = lawyerRepository;
     }
 
 
@@ -89,6 +95,19 @@ public class CaseController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ResponseDTO(400, "Error assigning lawyer to case: " + e.getMessage(), null));
         }
+    }
+    @GetMapping("/assigned")
+    @PreAuthorize("hasRole('LAWYER')")
+    public ResponseEntity<ResponseDTO> getAssignedCases() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Lawyer lawyer = lawyerRepository.findByUser_Email(email);
+        if (lawyer == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseDTO(404, "Lawyer not found for email: " + email, null));
+        }
+        List<CaseDTO> assignedCases = caseService.getAssignedCasesForLawyer(lawyer.getLawyer_id());
+        return ResponseEntity.ok().body(new ResponseDTO(200, "Assigned cases retrieved successfully", assignedCases));
     }
 }
 
