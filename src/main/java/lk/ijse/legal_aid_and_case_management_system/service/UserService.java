@@ -39,6 +39,10 @@ public interface UserService {
     MessageDTO saveMessage(MessageDTO messageDTO);
 
     UserDetails loadUserByUsername(String email);
+
+    int deleteLawyerByEmailByAdmin(String email);
+
+    int deleteClientProfileByAdmin(String email);
 }
 
 

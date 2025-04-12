@@ -12,10 +12,7 @@ import lk.ijse.legal_aid_and_case_management_system.util.VarList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -84,6 +81,34 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseDTO(VarList.Internal_Server_Error, "Error retrieving cases: " + e.getMessage(), null));
+        }
+    }
+    @DeleteMapping("/lawyers/{email}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseDTO> deleteLawyer(@PathVariable String email) {
+        int result = userService.deleteLawyerByEmailByAdmin(email);
+        if (result == VarList.OK) {
+            return ResponseEntity.ok(new ResponseDTO(200, "Lawyer deleted successfully", null));
+        } else if (result == VarList.Not_Found) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseDTO(404, "Lawyer not found", null));
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ResponseDTO(403, "User is not a lawyer", null));
+        }
+    }
+    @DeleteMapping("/clients/{email}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseDTO> deleteClient(@PathVariable String email) {
+        int result = userService.deleteClientProfileByAdmin(email);
+        if (result == VarList.OK) {
+            return ResponseEntity.ok(new ResponseDTO(200, "Client deleted successfully", null));
+        } else if (result == VarList.Not_Found) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseDTO(404, "Client not found", null));
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ResponseDTO(403, "User is not a client", null));
         }
     }
 
