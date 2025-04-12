@@ -76,13 +76,13 @@ public class CaseController {
                     .body(new ResponseDTO(404, "Case not found: " + e.getMessage(), null));
         }
     }
-    @PutMapping("/assign/{caseId}")
+    @PutMapping("/assign/case-number/{caseNumber}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> assignLawyerToCase(
-            @PathVariable Long caseId,
+    public ResponseEntity<ResponseDTO> assignLawyerToCaseByCaseNumber(
+            @PathVariable String caseNumber,
             @RequestParam Long lawyerId) {
         try {
-            CaseDTO updatedCase = caseService.assignLawyerToCase(caseId, lawyerId);
+            CaseDTO updatedCase = caseService.assignLawyerToCaseByCaseNumber(caseNumber, lawyerId);
             return ResponseEntity.ok()
                     .body(new ResponseDTO(200, "Lawyer assigned to case successfully", updatedCase));
         } catch (Exception e) {

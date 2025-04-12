@@ -243,14 +243,14 @@ $(document).ready(function() {
   }
 
   // Function to assign lawyer to case
-  function assignLawyerToCase(caseId, lawyerId) {
+  function assignLawyerToCase(caseNumber, lawyerId) {
     if (!token) {
       $('#assign-result').removeClass('success').addClass('error').text('Please log in to assign a lawyer.');
       return;
     }
 
     $.ajax({
-      url: `http://localhost:8080/api/v1/case/assign/${caseId}?lawyerId=${lawyerId}`,
+      url: `http://localhost:8080/api/v1/case/assign/case-number/${encodeURIComponent(caseNumber)}?lawyerId=${lawyerId}`,
       type: 'PUT',
       headers: {
         'Authorization': 'Bearer ' + token
@@ -274,6 +274,14 @@ $(document).ready(function() {
       }
     });
   }
+
+// Handle form submission for assigning lawyer to case
+  $('#assign-case-form').submit(function(e) {
+    e.preventDefault();
+    const caseNumber = $('#caseNumber').val();
+    const lawyerId = $('#lawyerId').val();
+    assignLawyerToCase(caseNumber, lawyerId);
+  });
 
   // Handle "View" button clicks for lawyers
   $(document).on('click', '.view-lawyer', function() {

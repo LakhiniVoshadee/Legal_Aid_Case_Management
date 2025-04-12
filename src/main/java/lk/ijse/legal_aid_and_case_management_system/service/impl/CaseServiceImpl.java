@@ -62,12 +62,10 @@ public class CaseServiceImpl implements CaseService {
         Lawyer lawyer = lawyerRepository.findById(lawyerId)
                 .orElseThrow(() -> new RuntimeException("Lawyer not found with ID: " + lawyerId));
 
-        // Validate case status for review
         if (!caseEntity.getStatus().equals(CaseStatus.OPEN) && !caseEntity.getStatus().equals(CaseStatus.ASSIGNED)) {
             throw new RuntimeException("Case cannot be reviewed; it is not open or assigned.");
         }
 
-        // Update case status based on lawyer's decision
         if ("ACCEPTED".equalsIgnoreCase(status)) {
             caseEntity.setStatus(CaseStatus.ASSIGNED);
             caseEntity.setLawyer(lawyer);
@@ -80,7 +78,6 @@ public class CaseServiceImpl implements CaseService {
         caseEntity.setUpdatedAt(LocalDateTime.now());
         Case updatedCase = caseRepository.save(caseEntity);
 
-        // Send email to client about the lawyer's decision
         String clientEmail = caseEntity.getClient().getUser().getEmail();
         String subject = "Case Review Update: " + caseEntity.getCaseNumber();
         String body;
@@ -93,7 +90,7 @@ public class CaseServiceImpl implements CaseService {
                     "<p><strong>Description:</strong> " + caseEntity.getDescription() + "</p>" +
                     "<p><strong>Lawyer Contact:</strong> " + lawyer.getContactNumber() + "</p>" +
                     "<p>You can now proceed with further communication through the Legal Pro dashboard.</p>";
-        } else { // DECLINED
+        } else {
             body = "<h3>Case Declined</h3>" +
                     "<p>Dear " + caseEntity.getClient().getFull_name() + ",</p>" +
                     "<p>We regret to inform you that your case <strong>" + caseEntity.getCaseNumber() +
@@ -105,11 +102,9 @@ public class CaseServiceImpl implements CaseService {
         try {
             emailService.sendEmail(clientEmail, subject, body);
         } catch (RuntimeException e) {
-            // Log the error but don’t fail the operation
             System.err.println("Failed to send email to client " + clientEmail + ": " + e.getMessage());
         }
 
-        // Prepare and return the DTO
         CaseDTO caseDTO = modelMapper.map(updatedCase, CaseDTO.class);
         caseDTO.setClientName(caseEntity.getClient().getFull_name());
         if (caseEntity.getLawyer() != null) {
@@ -147,9 +142,9 @@ public class CaseServiceImpl implements CaseService {
     }
 
     @Override
-    public CaseDTO assignLawyerToCase(Long caseId, Long lawyerId) {
-        Case caseEntity = caseRepository.findById(caseId)
-                .orElseThrow(() -> new RuntimeException("Case not found with ID: " + caseId));
+    public CaseDTO assignLawyerToCaseByCaseNumber(String caseNumber, Long lawyerId) {
+        Case caseEntity = caseRepository.findByCaseNumber(caseNumber)
+                .orElseThrow(() -> new RuntimeException("Case not found with number: " + caseNumber));
 
         Lawyer lawyer = lawyerRepository.findById(lawyerId)
                 .orElseThrow(() -> new RuntimeException("Lawyer not found with ID: " + lawyerId));
