@@ -13,15 +13,8 @@ $(document).ready(function () {
     }
   });
 
-  // Add focus effects to input groups
-  $(".input-group input").focus(function() {
-    $(this).parent().addClass("ring-2 ring-black ring-opacity-20");
-  }).blur(function() {
-    $(this).parent().removeClass("ring-2 ring-black ring-opacity-20");
-  });
-
   // Form submission
-  $("#signInForm").submit(function (e) {
+  $("#loginForm").submit(function (e) {
     e.preventDefault();
 
     const email = $("#email").val().trim();
@@ -47,6 +40,7 @@ $(document).ready(function () {
     }
 
     // Show loading state
+    $(".loader-container").removeClass("hidden");
     const submitBtn = $(this).find("button[type='submit']");
     const originalText = submitBtn.html();
     submitBtn.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Signing in...');
@@ -88,6 +82,7 @@ $(document).ready(function () {
                   showAlert("Unauthorized access!", "danger");
                   submitBtn.html(originalText);
                   submitBtn.prop('disabled', false);
+                  $(".loader-container").addClass("hidden");
                 }
               }, 1500);
             },
@@ -96,12 +91,14 @@ $(document).ready(function () {
               showAlert("Error fetching user role: " + getErrorMessage(xhr), "danger");
               submitBtn.html(originalText);
               submitBtn.prop('disabled', false);
+              $(".loader-container").addClass("hidden");
             },
           });
         } else {
           showAlert(response.message || "Authentication failed", "danger");
           submitBtn.html(originalText);
           submitBtn.prop('disabled', false);
+          $(".loader-container").addClass("hidden");
         }
       },
       error: function (xhr, status, error) {
@@ -109,6 +106,7 @@ $(document).ready(function () {
         showAlert(getErrorMessage(xhr), "danger");
         submitBtn.html(originalText);
         submitBtn.prop('disabled', false);
+        $(".loader-container").addClass("hidden");
       },
     });
   });
@@ -116,19 +114,7 @@ $(document).ready(function () {
   // Remember me functionality
   if (localStorage.getItem("rememberMeEmail")) {
     $("#email").val(localStorage.getItem("rememberMeEmail"));
-    $("#rememberMe").prop("checked", true);
   }
-
-  $("#rememberMe").change(function() {
-    if ($(this).is(":checked")) {
-      const email = $("#email").val().trim();
-      if (email) {
-        localStorage.setItem("rememberMeEmail", email);
-      }
-    } else {
-      localStorage.removeItem("rememberMeEmail");
-    }
-  });
 
   // Email validation on input
   $("#email").on("input", function() {
@@ -141,24 +127,24 @@ $(document).ready(function () {
   });
 });
 
-// Function to show alert messages with Tailwind styling
+// Function to show alert messages
 function showAlert(message, type) {
   let alertContainer = $(".alert-container");
   if (!alertContainer.length) {
     alertContainer = $('<div class="alert-container"></div>');
-    $("#signInForm").prepend(alertContainer);
+    $("#loginForm").prepend(alertContainer);
   }
 
   // Remove any existing alerts
   alertContainer.empty();
 
-  // Create alert with Tailwind-inspired styling
+  // Create alert with styling
   let alertClass = "alert alert-" + type;
   let icon = type === "danger" ? "fa-circle-exclamation" : "fa-circle-check";
 
   let alertHtml = `
-    <div class="${alertClass} flex items-center">
-      <i class="fas ${icon} me-2"></i>
+    <div class="${alertClass}">
+      <i class="fas ${icon}"></i>
       <span>${message}</span>
     </div>
   `;
@@ -195,42 +181,4 @@ function getErrorMessage(xhr) {
       return "Error: " + xhr.status + " - " + xhr.statusText;
     }
   }
-}
-// tailwind.config.js
-module.exports = {
-  content: ["./**/*.html"],
-  theme: {
-    extend: {
-      colors: {
-        lawnet: {
-          dark: '#000000',
-          light: '#333333',
-          gray: '#f5f5f5',
-          hover: '#2a2a2a'
-        }
-      },
-      boxShadow: {
-        'lawnet': '0 10px 30px rgba(0, 0, 0, 0.05)',
-        'lawnet-hover': '0 15px 35px rgba(0, 0, 0, 0.1)'
-      },
-      fontFamily: {
-        sans: ['Nunito', 'sans-serif']
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.5s ease-out',
-        'slide-up': 'slideUp 0.3s ease-out'
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' }
-        },
-        slideUp: {
-          '0%': { transform: 'translateY(10px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' }
-        }
-      }
-    }
-  },
-  plugins: [],
 }

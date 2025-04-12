@@ -3,26 +3,46 @@ document.addEventListener('DOMContentLoaded', function () {
   const nextBtn = document.getElementById('nextBtn');
   const prevBtn = document.getElementById('prevBtn');
   const submitBtn = document.getElementById('submitBtn');
+  const currentStepText = document.getElementById('currentStep');
+  const progressDots = document.querySelectorAll('.progress-dot');
   let currentStep = 1;
 
-
+  // Update the visual representation of form steps
   function updateFormView() {
-    document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+    // Hide all steps
+    document.querySelectorAll('.form-step').forEach(step => {
+      step.classList.remove('active');
+    });
+
+    // Show current step
     document.getElementById(`step${currentStep}`).classList.add('active');
-  }
 
+    // Update progress indicator
+    currentStepText.textContent = currentStep;
 
-  function clearFeedback() {
-    document.querySelectorAll('.form-control').forEach(input => {
-      input.classList.remove('is-invalid');
-      const feedback = input.nextElementSibling;
-      if (feedback && feedback.classList.contains('invalid-feedback')) {
-        feedback.textContent = '';
+    // Update progress dots
+    progressDots.forEach(dot => {
+      const stepNum = parseInt(dot.getAttribute('data-step'));
+      if (stepNum <= currentStep) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
       }
     });
   }
 
+  // Clear validation feedback
+  function clearFeedback() {
+    document.querySelectorAll('.form-control, .form-select').forEach(input => {
+      input.classList.remove('is-invalid');
+    });
 
+    document.querySelectorAll('.invalid-feedback').forEach(feedback => {
+      feedback.textContent = '';
+    });
+  }
+
+  // Validate form step
   function validateStep(step) {
     clearFeedback();
     let valid = true;
@@ -31,7 +51,12 @@ document.addEventListener('DOMContentLoaded', function () {
     inputs.forEach(input => {
       if (input.required && !input.value.trim()) {
         input.classList.add('is-invalid');
-        input.nextElementSibling.textContent = `${input.previousElementSibling.textContent} is required`;
+        const feedbackId = input.id + 'Feedback';
+        const feedbackElement = document.getElementById(feedbackId);
+        if (feedbackElement) {
+          const labelText = input.previousElementSibling ? input.previousElementSibling.textContent : input.name;
+          feedbackElement.textContent = `${labelText} is required`;
+        }
         valid = false;
       }
     });
@@ -39,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (step === 1) {
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
+
       if (password !== confirmPassword) {
         document.getElementById('confirmPassword').classList.add('is-invalid');
         document.getElementById('confirmPasswordFeedback').textContent = 'Passwords do not match';
@@ -49,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return valid;
   }
 
-
+  // Button event listeners
   nextBtn.addEventListener('click', function () {
     if (validateStep(1)) {
       currentStep = 2;
@@ -57,19 +83,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-
   prevBtn.addEventListener('click', function () {
     currentStep = 1;
     updateFormView();
   });
 
-
+  // Form submission handler
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     if (validateStep(2)) {
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Registering...';
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
 
       const formData = {
         email: document.getElementById('email').value,
@@ -122,7 +147,6 @@ document.addEventListener('DOMContentLoaded', function () {
       } catch (err) {
         console.error('Request failed:', err);
 
-
         if (err.name === 'AbortError') {
           alert('Request timed out. Please check if the server is running.');
         } else if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
@@ -132,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Register';
+        submitBtn.innerHTML = 'Sign up';
       }
     }
   });
