@@ -3,6 +3,7 @@ package lk.ijse.legal_aid_and_case_management_system.service.impl;
 import lk.ijse.legal_aid_and_case_management_system.dto.*;
 import lk.ijse.legal_aid_and_case_management_system.entity.*;
 import lk.ijse.legal_aid_and_case_management_system.repo.*;
+import lk.ijse.legal_aid_and_case_management_system.service.EmailService;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
 import lk.ijse.legal_aid_and_case_management_system.util.VarList;
 import org.modelmapper.ModelMapper;
@@ -41,6 +42,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private MessageRepository messageRepository;
+
+    @Autowired
+    private EmailService emailService;
 
 
     @Override
@@ -103,12 +107,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setRole(userDTO.getRole().toUpperCase());
         userRepository.save(user);
 
+        // Prepare email content
+        String emailSubject = "Welcome to Legal Aid and Case Management System";
+        String emailBody;
+
         switch (userDTO.getRole().toUpperCase()) {
             case "ADMIN" -> {
                 Admin admin = new Admin();
                 admin.setUser(user);
                 admin.setAdmin_name(userDTO.getAdmin_name());
                 adminRepository.save(admin);
+                // No email for admin in this case (optional)
             }
             case "CLIENT" -> {
                 Clients client = new Clients();
@@ -121,6 +130,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 client.setGender(userDTO.getGender());
                 client.setNIC(userDTO.getNIC());
                 clientRepository.save(client);
+
+                // Send welcome email to client
+                emailBody = String.format(
+                        "Dear %s,\n\nWelcome to the Legal Aid and Case Management System!\n" +
+                                "Your account has been successfully registered as a Client.\n" +
+                                "Email: %s\nPhone: %s\n\nBest regards,\nThe Legal Aid Team",
+                        userDTO.getFull_name(), userDTO.getEmail(), userDTO.getPhone_number()
+                );
+                emailService.sendEmail(userDTO.getEmail(), emailSubject, emailBody);
             }
             case "LAWYER" -> {
                 Lawyer lawyer = new Lawyer();
@@ -136,6 +154,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 lawyer.setProvince(userDTO.getProvince());
                 lawyer.setDistrict(userDTO.getDistrict());
                 lawyerRepository.save(lawyer);
+
+                // Send welcome email to lawyer
+                emailBody = String.format(
+                        "Dear %s,\n\nWelcome to the Legal Aid and Case Management System!\n" +
+                                "Your account has been successfully registered as a Lawyer.\n" +
+                                "Email: %s\nSpecialization: %s\nContact: %s\n\nBest regards,\nThe Legal Aid Team",
+                        userDTO.getLawyer_name(), userDTO.getEmail(), userDTO.getSpecialization(), userDTO.getContactNumber()
+                );
+                emailService.sendEmail(userDTO.getEmail(), emailSubject, emailBody);
             }
             default -> {
                 return VarList.Not_Acceptable;
