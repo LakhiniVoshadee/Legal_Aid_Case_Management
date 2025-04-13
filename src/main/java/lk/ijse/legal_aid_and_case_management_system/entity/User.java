@@ -23,17 +23,24 @@ public class User implements Serializable {
    // @Enumerated(EnumType.STRING)
    @Column(nullable = false)
     private String role;
+    @Column
+    private String profilePictureUrl;
+
+    @Column
+    private String profilePicturePublicId;
 
 
     public User() {
     }
 
-    public User(UUID uid, String email, String password, String name, String role) {
+    public User(UUID uid, String email, String password, String name, String role, String profilePictureUrl, String profilePicturePublicId) {
         this.uid = uid;
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
+        this.profilePictureUrl = profilePictureUrl;
+        this.profilePicturePublicId = profilePicturePublicId;
     }
 
     public UUID getUid() {
@@ -74,5 +81,21 @@ public class User implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public String getProfilePicturePublicId() {
+        return profilePicturePublicId;
+    }
+
+    public void setProfilePicturePublicId(String profilePicturePublicId) {
+        this.profilePicturePublicId = profilePicturePublicId;
     }
 }

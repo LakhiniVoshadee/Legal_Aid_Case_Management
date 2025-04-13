@@ -3,6 +3,7 @@ package lk.ijse.legal_aid_and_case_management_system.service.impl;
 import lk.ijse.legal_aid_and_case_management_system.dto.*;
 import lk.ijse.legal_aid_and_case_management_system.entity.*;
 import lk.ijse.legal_aid_and_case_management_system.repo.*;
+import lk.ijse.legal_aid_and_case_management_system.service.CloudinaryService;
 import lk.ijse.legal_aid_and_case_management_system.service.EmailService;
 import lk.ijse.legal_aid_and_case_management_system.service.UserService;
 import lk.ijse.legal_aid_and_case_management_system.util.VarList;
@@ -15,10 +16,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +47,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -425,5 +428,40 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userRepository.deleteByEmail(email);
 
         return VarList.OK;
+    }
+    @Override
+    public UserDTO uploadProfilePicture(String email, MultipartFile file) throws IOException {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        // Delete existing profile picture if it exists
+        if (user.getProfilePicturePublicId() != null) {
+            cloudinaryService.deleteImage(user.getProfilePicturePublicId());
+        }
+
+        // Upload new profile picture
+        Map uploadResult = cloudinaryService.uploadImage(file);
+        user.setProfilePictureUrl((String) uploadResult.get("url"));
+        user.setProfilePicturePublicId((String) uploadResult.get("public_id"));
+        userRepository.save(user);
+
+        return modelMapper.map(user, UserDTO.class);
+    }
+
+    @Override
+    public void deleteProfilePicture(String email) throws IOException {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        if (user.getProfilePicturePublicId() != null) {
+            cloudinaryService.deleteImage(user.getProfilePicturePublicId());
+            user.setProfilePictureUrl(null);
+            user.setProfilePicturePublicId(null);
+            userRepository.save(user);
+        }
     }
 }

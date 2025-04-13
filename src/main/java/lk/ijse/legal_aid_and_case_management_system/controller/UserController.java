@@ -11,6 +11,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -201,6 +205,24 @@ public class UserController {
                     .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
         }
     }
+    @PostMapping("/{email}/profile-picture")
+    public ResponseEntity<UserDTO> uploadProfilePicture(@PathVariable String email, @RequestParam("file") MultipartFile file) {
+        try {
+            UserDTO userDTO = userService.uploadProfilePicture(email, file);
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        } catch (IOException | RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
+    @DeleteMapping("/{email}/profile-picture")
+    public ResponseEntity<Void> deleteProfilePicture(@PathVariable String email) {
+        try {
+            userService.deleteProfilePicture(email);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IOException | RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

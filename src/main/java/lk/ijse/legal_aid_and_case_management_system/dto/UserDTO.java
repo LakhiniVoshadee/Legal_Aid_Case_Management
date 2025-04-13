@@ -11,6 +11,8 @@ public class UserDTO {
     private String password;
     private String name;
     private String role; // Changed to UserRole enum
+    private String profilePictureUrl;
+    private String profilePicturePublicId;
     private String admin_name;
 
     //Client
@@ -38,14 +40,20 @@ public class UserDTO {
     public UserDTO() {
     }
 
-
-    public UserDTO(String email, String password, String name, String role, String admin_name, String full_name, String lawyer_name, String address, String specialization, Integer yearsOfExperience, String barAssociationNumber, String contactNumber, String officeLocation, String bio, String province, String district, String phone_number, LocalDate date_of_birth, String preferred_language, String gender, String NIC) {
+    public UserDTO(String email, String password, String name, String role, String profilePictureUrl, String profilePicturePublicId, String admin_name, String full_name, String phone_number, LocalDate date_of_birth, String preferred_language, String gender, String NIC, String lawyer_name, String address, String specialization, Integer yearsOfExperience, String barAssociationNumber, String contactNumber, String officeLocation, String bio, String province, String district) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
+        this.profilePictureUrl = profilePictureUrl;
+        this.profilePicturePublicId = profilePicturePublicId;
         this.admin_name = admin_name;
         this.full_name = full_name;
+        this.phone_number = phone_number;
+        this.date_of_birth = date_of_birth;
+        this.preferred_language = preferred_language;
+        this.gender = gender;
+        this.NIC = NIC;
         this.lawyer_name = lawyer_name;
         this.address = address;
         this.specialization = specialization;
@@ -56,11 +64,6 @@ public class UserDTO {
         this.bio = bio;
         this.province = province;
         this.district = district;
-        this.phone_number = phone_number;
-        this.date_of_birth = date_of_birth;
-        this.preferred_language = preferred_language;
-        this.gender = gender;
-        this.NIC = NIC;
     }
 
     public String getEmail() {
@@ -95,6 +98,22 @@ public class UserDTO {
         this.role = role;
     }
 
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public String getProfilePicturePublicId() {
+        return profilePicturePublicId;
+    }
+
+    public void setProfilePicturePublicId(String profilePicturePublicId) {
+        this.profilePicturePublicId = profilePicturePublicId;
+    }
+
     public String getAdmin_name() {
         return admin_name;
     }
@@ -109,6 +128,46 @@ public class UserDTO {
 
     public void setFull_name(String full_name) {
         this.full_name = full_name;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public LocalDate getDate_of_birth() {
+        return date_of_birth;
+    }
+
+    public void setDate_of_birth(LocalDate date_of_birth) {
+        this.date_of_birth = date_of_birth;
+    }
+
+    public String getPreferred_language() {
+        return preferred_language;
+    }
+
+    public void setPreferred_language(String preferred_language) {
+        this.preferred_language = preferred_language;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getNIC() {
+        return NIC;
+    }
+
+    public void setNIC(String NIC) {
+        this.NIC = NIC;
     }
 
     public String getLawyer_name() {
@@ -189,45 +248,5 @@ public class UserDTO {
 
     public void setDistrict(String district) {
         this.district = district;
-    }
-
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
-
-    public LocalDate getDate_of_birth() {
-        return date_of_birth;
-    }
-
-    public void setDate_of_birth(LocalDate date_of_birth) {
-        this.date_of_birth = date_of_birth;
-    }
-
-    public String getPreferred_language() {
-        return preferred_language;
-    }
-
-    public void setPreferred_language(String preferred_language) {
-        this.preferred_language = preferred_language;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getNIC() {
-        return NIC;
-    }
-
-    public void setNIC(String NIC) {
-        this.NIC = NIC;
     }
 }

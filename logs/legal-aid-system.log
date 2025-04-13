@@ -1,0 +1,15 @@
+2025-04-13 10:08:38 [main] INFO  l.i.l.LegalAidAndCaseManagementSystemApplication - Starting LegalAidAndCaseManagementSystemApplication using Java 23.0.1 with PID 17500 (D:\IJSE docs\AAD\Legal_Aid_And_Case_Management_System\target\classes started by Voshadee in D:\IJSE docs\AAD\Legal_Aid_And_Case_Management_System)
+2025-04-13 10:08:38 [main] INFO  l.i.l.LegalAidAndCaseManagementSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-04-13 10:08:42 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-13 10:08:42 [main] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-04-13 10:08:47 [main] INFO  l.i.l.LegalAidAndCaseManagementSystemApplication - Started LegalAidAndCaseManagementSystemApplication in 9.875 seconds (process running for 11.44)
+2025-04-13 10:13:02 [http-nio-8080-exec-7] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.HttpMediaTypeNotSupportedException: Content-Type is not supported]
+2025-04-13 10:22:07 [main] INFO  l.i.l.LegalAidAndCaseManagementSystemApplication - Starting LegalAidAndCaseManagementSystemApplication using Java 23.0.1 with PID 1940 (D:\IJSE docs\AAD\Legal_Aid_And_Case_Management_System\target\classes started by Voshadee in D:\IJSE docs\AAD\Legal_Aid_And_Case_Management_System)
+2025-04-13 10:22:07 [main] INFO  l.i.l.LegalAidAndCaseManagementSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-04-13 10:22:12 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-13 10:22:12 [main] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-04-13 10:22:21 [main] INFO  l.i.l.LegalAidAndCaseManagementSystemApplication - Started LegalAidAndCaseManagementSystemApplication in 14.976 seconds (process running for 16.758)
+2025-04-13 10:25:36 [http-nio-8080-exec-4] INFO  l.i.l.controller.UserController - Profile picture upload request for user: lakhinivooshadee@gmail.com
+2025-04-13 10:25:36 [http-nio-8080-exec-4] INFO  l.i.l.s.impl.CloudinaryServiceImpl - Uploading profile picture for email: lakhinivooshadee@gmail.com
+2025-04-13 10:25:39 [http-nio-8080-exec-4] INFO  l.i.l.s.impl.CloudinaryServiceImpl - Profile picture uploaded successfully for email: lakhinivooshadee@gmail.com. URL: https://res.cloudinary.com/dswggufkk/image/upload/v1744520139/profile_pictures/lakhinivooshadee%40gmail.com.jpg
+2025-04-13 10:25:39 [http-nio-8080-exec-4] INFO  l.i.l.service.impl.UserServiceImpl - Profile picture updated for user: lakhinivooshadee@gmail.com

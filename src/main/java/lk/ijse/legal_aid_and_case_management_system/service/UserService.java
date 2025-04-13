@@ -2,7 +2,9 @@ package lk.ijse.legal_aid_and_case_management_system.service;
 
 import lk.ijse.legal_aid_and_case_management_system.dto.*;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -43,6 +45,10 @@ public interface UserService {
     int deleteLawyerByEmailByAdmin(String email);
 
     int deleteClientProfileByAdmin(String email);
+
+    UserDTO uploadProfilePicture(String email, MultipartFile file) throws IOException;
+
+    void deleteProfilePicture(String email) throws IOException;
 }
 
 
