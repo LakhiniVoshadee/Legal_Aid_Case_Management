@@ -3,307 +3,402 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LegalPro | Professional Legal Services</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <title>LegalPro - Client Management</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- AOS Animation Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/signUp.css">
-
-
+  <!-- Modal CSS -->
+  <link rel="stylesheet" href="/css/modal.css">
+  <!-- Bootstrap JS (for alerts in login form) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- jQuery (for login form AJAX) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#8b5cf6',
+            secondary: '#6d28d9',
+            dark: '#161a2b',
+            darker: '#0f1219',
+            light: '#b4b7c5',
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
 </head>
+<body class="font-sans bg-dark text-white">
+<!-- Loader for page load -->
+<div class="loader-container fixed inset-0 bg-dark flex justify-center items-center z-50" id="loader">
+  <div class="loader"></div>
+</div>
 
-<body>
+<!-- Loader for Sign In button click -->
+<div id="signinLoader" class="loader-container fixed inset-0 bg-dark flex justify-center items-center z-60 hidden">
+  <div class="wave-loader">
+    <span class="wave-bar"></span>
+    <span class="wave-bar"></span>
+    <span class="wave-bar"></span>
+  </div>
+</div>
 
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg fixed-top">
-  <div class="container">
-    <a class="navbar-brand" href="#">
-      <span class="brand-text">Legal<span class="brand-highlight">Pro</span></span>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mx-auto">
-        <li class="nav-item">
-          <a class="nav-link active" href="#home">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#services">Services</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#about">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#contact">Contact</a>
-        </li>
+<!-- Navbar -->
+<nav class="bg-dark/95 backdrop-blur-sm sticky top-0 z-40 shadow-lg py-4">
+  <div class="container mx-auto px-4 flex justify-between items-center">
+    <div class="flex items-center">
+      <i class="fas fa-balance-scale text-primary text-2xl mr-2"></i>
+      <span class="text-xl font-bold">LegalPro</span>
+    </div>
+    <div class="hidden md:flex items-center">
+      <ul class="flex mr-8">
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
       </ul>
-      <div class="nav-buttons">
-        <a href="signIn.html" class="btn btn-outline-dark">Sign In</a>
-        <a href="signUp.html" class="btn btn-dark">Register</a>
+      <div class="flex gap-3">
+        <button class="btn-outline" data-modal-toggle="loginModal">Sign In</button>
+        <button class="btn-primary">Sign Up</button>
       </div>
+    </div>
+    <!-- Mobile menu button -->
+    <div class="md:hidden">
+      <button id="mobile-menu-button" class="text-white focus:outline-none">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-darker py-4 px-4">
+    <ul class="flex flex-col space-y-3 mb-4">
+      <li><a href="#home" class="mobile-nav-link active">Home</a></li>
+      <li><a href="#about" class="mobile-nav-link">About</a></li>
+      <li><a href="#services" class="mobile-nav-link">Services</a></li>
+      <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+    </ul>
+    <div class="flex flex-col gap-3">
+      <button class="btn-outline w-full" data-modal-toggle="loginModal">Sign In</button>
+      <button class="btn-primary w-full">Sign Up</button>
     </div>
   </div>
 </nav>
 
-<!-- Hero Section -->
-<section id="home" class="hero">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-6">
-        <h1 class="hero-title">Professional Legal Services</h1>
-        <p class="hero-subtitle">Connect with expert lawyers for your legal needs</p>
-        <div class="hero-features">
-          <div class="feature">
-            <i class="bi bi-shield-check"></i>
-            <span>Verified Professionals</span>
-          </div>
-          <div class="feature">
-            <i class="bi bi-clock"></i>
-            <span>24/7 Support</span>
-          </div>
-          <div class="feature">
-            <i class="bi bi-lock"></i>
-            <span>Secure Platform</span>
-          </div>
-        </div>
-        <div class="hero-cta">
-          <a href="/register.html" class="btn btn-dark btn-lg">Get Started</a>
-          <a href="#services" class="btn btn-outline-dark btn-lg">Learn More</a>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="hero-image">
-          <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80" alt="Legal Professional" class="img-fluid">
-        </div>
-      </div>
+<!-- Login Modal -->
+<div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+  <div class="modal-content bg-dark rounded-xl p-6 shadow-lg w-full max-w-md">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-white">Login</h1>
+      <button class="modal-close text-gray-400 hover:text-white" data-modal-toggle="loginModal">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
-  </div>
-</section>
+    <form id="loginForm">
+      <!-- Loader for form submission -->
+      <div id="formLoader" class="loader-container flex justify-center items-center hidden mb-4">
+        <div class="wave-loader">
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+        </div>
+      </div>
+      <!-- Alert Container -->
+      <div class="alert-container mb-4"></div>
 
-<!-- Services Section -->
-<section id="services" class="services">
-  <div class="container">
-    <div class="section-header">
-      <h2>Our Services</h2>
-      <p>Comprehensive legal solutions for every need</p>
-    </div>
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="service-card">
-          <i class="bi bi-people"></i>
-          <h3>Find Lawyers</h3>
-          <p>Connect with qualified legal professionals in various practice areas</p>
-        </div>
+      <div class="form-group mb-4">
+        <label for="email" class="form-label text-gray-300">Email</label>
+        <input type="email" class="form-control w-full" id="email" placeholder="" required>
       </div>
-      <div class="col-md-4">
-        <div class="service-card">
-          <i class="bi bi-calendar-check"></i>
-          <h3>Book Consultations</h3>
-          <p>Schedule meetings with lawyers at your convenience</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="service-card">
-          <i class="bi bi-chat-square-text"></i>
-          <h3>Legal Advice</h3>
-          <p>Get expert legal guidance for your specific situation</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- Statistics Section -->
-<section class="statistics bg-dark text-white">
-  <div class="container">
-    <div class="row text-center">
-      <div class="col-md-4">
-        <div class="stat">
-          <h3 class="counter">500+</h3>
-          <p>Lawyers</p>
+      <div class="form-group mb-2">
+        <label for="password" class="form-label text-gray-300">Password</label>
+        <div class="password-input-container relative">
+          <input type="password" class="form-control w-full" id="password" placeholder="" required>
+          <button class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2" type="button">
+            <i class="fas fa-eye text-gray-400"></i>
+          </button>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="stat">
-          <h3 class="counter">10,000+</h3>
-          <p>Clients Served</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="stat">
-          <h3 class="counter">95%</h3>
-          <p>Success Rate</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- About Section -->
-<section id="about" class="about">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-6">
-        <div class="about-image">
-          <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80" alt="About Us" class="img-fluid">
-        </div>
+      <div class="text-right mb-4">
+        <a href="#" class="forgot-password text-gray-400 hover:text-white text-sm">Forgot Password?</a>
       </div>
-      <div class="col-lg-6">
-        <div class="about-content">
-          <h2>Why Choose LegalPro?</h2>
-          <p>We're dedicated to making legal services accessible and transparent. Our platform connects you with experienced lawyers who can help with your specific legal needs.</p>
-          <div class="features-list">
-            <div class="feature-item">
-              <i class="bi bi-check-circle"></i>
-              <span>Verified Professionals</span>
-            </div>
-            <div class="feature-item">
-              <i class="bi bi-check-circle"></i>
-              <span>Secure Communication</span>
-            </div>
-            <div class="feature-item">
-              <i class="bi bi-check-circle"></i>
-              <span>Transparent Pricing</span>
-            </div>
-            <div class="feature-item">
-              <i class="bi bi-check-circle"></i>
-              <span>24/7 Support</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- Contact Section -->
-<section id="contact" class="contact">
-  <div class="container">
-    <div class="section-header">
-      <h2>Contact Us</h2>
-      <p>Get in touch with our team</p>
-    </div>
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="contact-info">
-          <div class="info-item">
-            <i class="bi bi-geo-alt"></i>
-            <div>
-              <h4>Location:</h4>
-              <p>123 Legal Street, Colombo 01, Sri Lanka</p>
-            </div>
-          </div>
-          <div class="info-item">
-            <i class="bi bi-envelope"></i>
-            <div>
-              <h4>Email:</h4>
-              <p>info@legalpro.com</p>
-            </div>
-          </div>
-          <div class="info-item">
-            <i class="bi bi-phone"></i>
-            <div>
-              <h4>Call:</h4>
-              <p>+94 11 234 5678</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <form class="contact-form">
-          <div class="row g-3">
-            <div class="col-md-6">
-              <input type="text" class="form-control" placeholder="Your Name">
-            </div>
-            <div class="col-md-6">
-              <input type="email" class="form-control" placeholder="Your Email">
-            </div>
-            <div class="col-12">
-              <input type="text" class="form-control" placeholder="Subject">
-            </div>
-            <div class="col-12">
-              <textarea class="form-control" rows="5" placeholder="Message"></textarea>
-            </div>
-            <div class="col-12">
-              <button type="submit" class="btn btn-dark">Send Message</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
+      <button type="submit" class="btn-sign-in w-full bg-primary text-white py-3 rounded-md hover:bg-secondary transition-all">Sign in</button>
 
-<!-- Footer -->
-<footer class="footer bg-dark text-white">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="footer-info">
-          <h3>Legal<span>Pro</span></h3>
-          <p>Connecting legal professionals with clients seeking expertise. Our mission is to make legal services accessible and transparent.</p>
+      <div class="social-login mt-6">
+        <div class="divider flex items-center text-gray-400 mb-4">
+          <span class="flex-1 border-t border-gray-600"></span>
+          <span class="px-4 text-sm">Login with social accounts</span>
+          <span class="flex-1 border-t border-gray-600"></span>
+        </div>
+
+        <div class="social-icons flex justify-center gap-4">
+          <a href="#" class="social-icon w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-white hover:bg-gray-600 transition-all">
+            <i class="fab fa-google"></i>
+          </a>
+          <a href="#" class="social-icon w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-white hover:bg-gray-600 transition-all">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="social-icon w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-white hover:bg-gray-600 transition-all">
+            <i class="fab fa-github"></i>
+          </a>
         </div>
       </div>
-      <div class="col-lg-2">
-        <div class="footer-links">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div>
+
+      <div class="text-center mt-4">
+        <p class="text-gray-400">Don't have an account? <a href="signUp.html" class="sign-up-link text-primary hover:underline">Sign up</a></p>
       </div>
-      <div class="col-lg-3">
-        <div class="footer-links">
-          <h4>Our Services</h4>
-          <ul>
-            <li><a href="#">Find Lawyers</a></li>
-            <li><a href="#">Legal Consultation</a></li>
-            <li><a href="#">Document Review</a></li>
-            <li><a href="#">Legal Resources</a></li>
-          </ul>
+    </form>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main>
+  <!-- Home Section -->
+  <section id="home" class="py-16 md:py-24 min-h-screen flex items-center">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <div data-aos="fade-right" data-aos-duration="1000">
+          <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Modern Legal Solutions For Your Practice</h1>
+          <p class="text-light text-lg mb-8">Streamline your client management and case workflows with our intuitive platform designed for legal professionals.</p>
+          <button class="btn-primary group">
+            Get Started
+            <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+          </button>
         </div>
-      </div>
-      <div class="col-lg-3">
-        <div class="footer-contact">
-          <h4>Contact Us</h4>
-          <p>
-            123 Legal Street <br>
-            Colombo 01<br>
-            Sri Lanka <br>
-            <strong>Phone:</strong> +94 11 234 5678<br>
-            <strong>Email:</strong> info@legalpro.com<br>
-          </p>
+        <div class="relative overflow-hidden rounded-xl shadow-2xl" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+          <img src="images/lawyer-dashboard.jpg" alt="Legal Dashboard Preview" class="w-full transition-transform duration-700 hover:scale-105">
         </div>
       </div>
     </div>
-  </div>
-  <div class="footer-bottom">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="copyright">
-            &copy; 2025 <strong>LegalPro</strong>. All Rights Reserved
-          </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-16 md:py-24 bg-darker">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <h2 class="section-title">About LegalPro</h2>
+        <p class="text-light">Trusted by legal professionals since 2020</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <div class="relative rounded-xl overflow-hidden shadow-2xl" data-aos="fade-right" data-aos-duration="1000">
+          <img src="images/legal-team.jpg" alt="Legal Team" class="w-full transition-transform duration-700 hover:scale-105">
         </div>
-        <div class="col-md-6">
-          <div class="social-links">
-            <a href="#"><i class="bi bi-facebook"></i></a>
-            <a href="#"><i class="bi bi-twitter"></i></a>
-            <a href="#"><i class="bi bi-linkedin"></i></a>
-            <a href="#"><i class="bi bi-instagram"></i></a>
+        <div data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+          <h3 class="text-3xl font-bold mb-6">Why Choose Us</h3>
+          <p class="text-light mb-8">LegalPro was founded by a team of attorneys and tech specialists who understand the unique challenges of legal practice management. Our platform combines legal expertise with cutting-edge technology to deliver an intuitive, secure solution for modern law firms.</p>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="feature-card" data-aos="zoom-in" data-aos-delay="300">
+              <i class="fas fa-shield-alt text-primary text-3xl mb-4"></i>
+              <h4 class="text-lg font-semibold mb-2">Secure & Compliant</h4>
+              <p class="text-light text-sm">Bank-level encryption and compliance with legal data regulations</p>
+            </div>
+            <div class="feature-card" data-aos="zoom-in" data-aos-delay="400">
+              <i class="fas fa-bolt text-primary text-3xl mb-4"></i>
+              <h4 class="text-lg font-semibold mb-2">Efficient Workflow</h4>
+              <p class="text-light text-sm">Streamlined processes that save you valuable time</p>
+            </div>
+            <div class="feature-card" data-aos="zoom-in" data-aos-delay="500">
+              <i class="fas fa-headset text-primary text-3xl mb-4"></i>
+              <h4 class="text-lg font-semibold mb-2">24/7 Support</h4>
+              <p class="text-light text-sm">Dedicated assistance from our legal tech specialists</p>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="py-16 md:py-24">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <h2 class="section-title">Our Services</h2>
+        <p class="text-light">Comprehensive tools for legal professionals</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="service-card group" data-aos="fade-up" data-aos-delay="100">
+          <div class="card-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">Client Management</h3>
+          <p class="text-light mb-4">Organize and manage all your client information in one place with secure storage and easy access.</p>
+          <div class="overflow-hidden rounded-lg mb-4">
+            <img src="images/client-management.jpg" alt="Client Management" class="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-110">
+          </div>
+          <button class="btn-outline w-full group-hover:bg-primary group-hover:text-white transition-all">Learn More</button>
+        </div>
+
+        <div class="service-card group" data-aos="fade-up" data-aos-delay="200">
+          <div class="card-icon">
+            <i class="fas fa-briefcase"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">Case Tracking</h3>
+          <p class="text-light mb-4">Track progress and manage documents for all your active cases with intuitive workflow tools.</p>
+          <div class="overflow-hidden rounded-lg mb-4">
+            <img src="images/case-tracking.jpg" alt="Case Tracking" class="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-110">
+          </div>
+          <button class="btn-outline w-full group-hover:bg-primary group-hover:text-white transition-all">Learn More</button>
+        </div>
+
+        <div class="service-card group" data-aos="fade-up" data-aos-delay="300">
+          <div class="card-icon">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">Appointments</h3>
+          <p class="text-light mb-4">Schedule and manage client meetings and court appearances with automated reminders.</p>
+          <div class="overflow-hidden rounded-lg mb-4">
+            <img src="images/appointments.jpg" alt="Appointments" class="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-110">
+          </div>
+          <button class="btn-outline w-full group-hover:bg-primary group-hover:text-white transition-all">Learn More</button>
+        </div>
+
+        <div class="service-card group" data-aos="fade-up" data-aos-delay="400">
+          <div class="card-icon">
+            <i class="fas fa-file-invoice-dollar"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">Billing & Invoicing</h3>
+          <p class="text-light mb-4">Create, send, and track invoices with integrated time tracking and payment processing.</p>
+          <div class="overflow-hidden rounded-lg mb-4">
+            <img src="images/billing.jpg" alt="Billing and Invoicing" class="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-110">
+          </div>
+          <button class="btn-outline w-full group-hover:bg-primary group-hover:text-white transition-all">Learn More</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-16 md:py-24 bg-darker">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <h2 class="section-title">Contact Us</h2>
+        <p class="text-light">Get in touch with our support team</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div data-aos="fade-right" data-aos-duration="1000">
+          <div class="space-y-6 mb-8">
+            <div class="flex items-start gap-4">
+              <div class="bg-primary/20 p-3 rounded-full text-primary">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-semibold mb-1">Address</h4>
+                <p class="text-light">123 Legal Avenue, Suite 500<br>San Francisco, CA 94108</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="bg-primary/20 p-3 rounded-full text-primary">
+                <i class="fas fa-phone-alt"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-semibold mb-1">Phone</h4>
+                <p class="text-light">+1 (555) 123-4567</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="bg-primary/20 p-3 rounded-full text-primary">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-semibold mb-1">Email</h4>
+                <p class="text-light">support@legalpro.com</p>
+              </div>
+            </div>
+          </div>
+          <div class="rounded-xl overflow-hidden shadow-lg" data-aos="zoom-in" data-aos-delay="200">
+            <img src="images/contact-support.jpg" alt="Contact Support" class="w-full transition-transform duration-700 hover:scale-105">
+          </div>
+        </div>
+        <div data-aos="fade-left" data-aos-duration="1000">
+          <div class="bg-dark rounded-xl p-6 shadow-lg">
+            <h3 class="text-2xl font-semibold mb-6 text-center">Send us a message</h3>
+            <form id="contactForm" class="space-y-4">
+              <div>
+                <input type="text" id="name" placeholder="Your Name" class="form-input" required>
+              </div>
+              <div>
+                <input type="email" id="email" placeholder="Your Email" class="form-input" required>
+              </div>
+              <div>
+                <input type="text" id="subject" placeholder="Subject" class="form-input">
+              </div>
+              <div>
+                <textarea id="message" placeholder="Your Message" rows="5" class="form-input" required></textarea>
+              </div>
+              <button type="submit" class="btn-primary w-full">Send Message</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="bg-darker pt-12 pb-6">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <div>
+        <div class="flex items-center mb-4">
+          <i class="fas fa-balance-scale text-primary text-2xl mr-2"></i>
+          <span class="text-xl font-bold">LegalPro</span>
+        </div>
+        <p class="text-light mb-4">Professional legal management solutions for modern law firms and legal professionals.</p>
+        <div class="flex space-x-3">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+        <ul class="space-y-2">
+          <li><a href="#home" class="text-light hover:text-primary transition-colors">Home</a></li>
+          <li><a href="#about" class="text-light hover:text-primary transition-colors">About</a></li>
+          <li><a href="#services" class="text-light hover:text-primary transition-colors">Services</a></li>
+          <li><a href="#contact" class="text-light hover:text-primary transition-colors">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-lg font-semibold mb-4">Services</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-light hover:text-primary transition-colors">Client Management</a></li>
+          <li><a href="#" class="text-light hover:text-primary transition-colors">Case Tracking</a></li>
+          <li><a href="#" class="text-light hover:text-primary transition-colors">Appointments</a></li>
+          <li><a href="#" class="text-light hover:text-primary transition-colors">Billing & Invoicing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-lg font-semibold mb-4">Legal</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-light hover:text-primary transition-colors">Terms of Service</a></li>
+          <li><a href="#" class="text-light hover:text-primary transition-colors">Privacy Policy</a></li>
+          <li><a href="#" class="text-light hover:text-primary transition-colors">Cookie Policy</a></li>
+          <li><a href="#" class="text-light hover:text-primary transition-colors">Data Protection</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-gray-700 pt-6 text-center">
+      <p class="text-light text-sm">© 2025 LegalPro. All rights reserved.</p>
     </div>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/signIn.js"></script>
 <script src="/js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,196 @@
+/*
+!* bootstrap-custom.css *!
+
+!* Ensure Bootstrap respects custom font and root variables *!
+:root {
+  !*--bs-font-sans-serif: 'Poppins', sans-serif;
+  --bs-primary: #8b5cf6; !* Matches --color-primary *!
+  --bs-secondary: #6d28d9; !* Matches --color-secondary *!
+  --bs-dark: #161a2b; !* Matches --color-dark *!
+  --bs-light: #b4b7c5; !* Matches --color-light *!
+  --bs-darker: #0f1219; !* Matches --color-darker *!*!
+}
+
+!* Navbar Enhancements *!
+nav.bg-dark {
+  background-color: var(--bs-dark) !important;
+}
+.nav-link {
+  !* Preserve existing .nav-link styles from style.css *!
+  !* Add Bootstrap nav-item for spacing *!
+  display: inline-block;
+  margin-right: 1rem;
+}
+.nav-link.active {
+  !* Bootstrap active state *!
+  font-weight: 600;
+  border-bottom: 2px solid var(--bs-primary);
+}
+.mobile-nav-link {
+  !* Add Bootstrap list-group-item for mobile menu *!
+  padding: 0.5rem 0;
+}
+
+!* Button Enhancements *!
+.btn-primary {
+  !* Bootstrap button styles with custom colors *!
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  background-color: var(--bs-secondary);
+  border-color: var(--bs-secondary);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3);
+}
+.btn-outline {
+  !* Bootstrap outline button *!
+  border: 1px solid var(--bs-primary);
+  color: var(--bs-primary);
+  background-color: transparent;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.btn-outline:hover {
+  background-color: var(--bs-primary);
+  color: white;
+  border-color: var(--bs-primary);
+}
+
+!* Card Styles for Features and Services *!
+.feature-card {
+  !* Bootstrap card styles *!
+  background-color: rgba(30, 36, 54, 0.5);
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.feature-card:hover {
+  border-color: var(--bs-primary);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
+}
+.service-card {
+  !* Bootstrap card component *!
+  background-color: rgba(30, 36, 54, 0.5);
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.service-card:hover {
+  border-color: var(--bs-primary);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
+}
+.card-icon {
+  !* Bootstrap badge-like styling *!
+  width: 60px;
+  height: 60px;
+  background-color: rgba(139, 92, 246, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+.service-card:hover .card-icon {
+  background-color: var(--bs-primary);
+}
+.service-card:hover .card-icon i {
+  color: white;
+}
+
+!* Form Enhancements *!
+.form-input {
+  !* Bootstrap form-control *!
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+.form-input:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25);
+}
+.form-input::placeholder {
+  color: rgba(180, 183, 197, 0.7);
+}
+
+!* Contact Info Section *!
+#contact .flex.items-start {
+  !* Bootstrap list-group-item feel *!
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+#contact .bg-primary\/20 {
+  !* Bootstrap badge *!
+  padding: 0.75rem;
+  border-radius: 50%;
+}
+
+!* Footer Enhancements *!
+footer ul {
+  !* Bootstrap nav *!
+  padding-left: 0;
+  list-style: none;
+}
+footer ul li a {
+  !* Bootstrap nav-link *!
+  color: var(--bs-light);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+footer ul li a:hover {
+  color: var(--bs-primary);
+}
+.social-icon {
+  !* Bootstrap btn-outline-secondary vibe *!
+  width: 38px;
+  height: 38px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bs-light);
+}
+.social-icon:hover {
+  background-color: var(--bs-primary);
+  color: white;
+}
+
+!* Loader *!
+.loader-container {
+  !* Bootstrap spinner compatibility *!
+  background-color: var(--bs-dark);
+}
+.loader {
+  !* Bootstrap spinner-border *!
+  border: 5px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--bs-primary);
+  animation: spin 1s linear infinite;
+}
+
+!* Responsive Adjustments *!
+@media (max-width: 768px) {
+  .nav-link {
+    margin-right: 0;
+  }
+  .service-card, .feature-card {
+    margin-bottom: 1.5rem;
+  }
+}
+*/
