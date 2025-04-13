@@ -273,8 +273,6 @@ document.addEventListener("DOMContentLoaded", function () {
     messageInput.value = "";
   });
 
-  // Rest of your original functions remain unchanged below...
-
   function fetchClientProfile() {
     fetch(`http://localhost:8080/api/v1/user/client?email=${email}`, {
       method: "GET",
@@ -735,6 +733,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (charCount > 500) {
         charCountDisplay.classList.add('text-danger');
         charCountDisplay.classList.remove('text-warning');
+        descriptionField.value = descriptionField.value.substring(0, 500);
       } else {
         charCountDisplay.classList.remove('text-warning', 'text-danger');
       }
