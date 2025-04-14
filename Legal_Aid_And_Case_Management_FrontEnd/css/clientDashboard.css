@@ -463,8 +463,96 @@ iframe#google-calendar {
 }
 
 /* Profile Form */
-#profile-form {
+/* Modern Profile Form Styles */
+.modern-profile-form {
   max-width: 100%;
+}
+
+.modern-profile-form .form-label {
+  font-weight: 500;
+  color: #161a2b;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.modern-profile-form .input-group-text {
+  background-color: rgba(22, 26, 43, 0.1);
+  border: none;
+  color: #8b5cf6;
+  font-size: 1.1rem;
+  padding: 0.75rem;
+}
+
+.modern-profile-form .form-control,
+.modern-profile-form .form-select {
+  background-color: rgba(22, 26, 43, 0.05);
+  border: none;
+  color: #161a2b;
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+
+.modern-profile-form .form-control:focus,
+.modern-profile-form .form-select:focus {
+  background-color: rgba(22, 26, 43, 0.1);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+  outline: none;
+}
+
+.modern-profile-form .form-control::placeholder {
+  color: #6c757d;
+  opacity: 0.7;
+}
+
+.modern-profile-form .form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b5cf6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+
+.modern-profile-form .btn {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.modern-profile-form .btn-primary {
+  background: linear-gradient(90deg, #8b5cf6, #6d28d9);
+  border: none;
+}
+
+.modern-profile-form .btn-primary:hover {
+  background: linear-gradient(90deg, #6d28d9, #8b5cf6);
+  transform: translateY(-2px);
+}
+
+.modern-profile-form .btn-outline-light {
+  border-color: rgba(180, 183, 197, 0.5);
+  color: #6c757d;
+}
+
+.modern-profile-form .btn-outline-light:hover {
+  background-color: rgba(180, 183, 197, 0.1);
+  color: #161a2b;
+}
+
+/* Profile Picture Upload Button */
+.rounded-full {
+  border-radius: 50%;
+}
+
+/* Card Gradient Header */
+.bg-gradient-to-r {
+  background: linear-gradient(to right, #8b5cf6, #6d28d9);
+}
+
+/* Profile Picture Hover Effect */
+#profile-pic:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
 }
 
 /* Buttons */

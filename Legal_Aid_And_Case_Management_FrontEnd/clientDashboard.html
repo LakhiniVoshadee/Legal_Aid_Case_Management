@@ -385,62 +385,157 @@
           </div>
         </div>
 
+
         <!-- Profile Section -->
         <div id="profile-section" class="content-section" data-aos="fade-up">
-          <div class="row">
-            <div class="col-md-12 mb-4">
-              <div class="card bg-white shadow-lg rounded-lg">
-                <div class="card-header bg-primary text-white">
-                  <h5 class="mb-0">My Profile</h5>
+          <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+              <div class="card bg-white shadow-lg rounded-lg border-0 overflow-hidden">
+                <div class="card-header bg-gradient-to-r from-primary to-secondary text-white py-4">
+                  <h5 class="mb-0 text-center font-bold tracking-wide">
+                    <i class="bi bi-person-circle me-2"></i>My Profile
+                  </h5>
                 </div>
-                <div class="card-body">
-                  <form id="profile-form">
+                <div class="card-body p-5">
+                  <form id="profile-form" class="modern-profile-form">
+                    <!-- Alert Messages -->
                     <div class="alert alert-success d-none" id="update-success">
-                      <i class="fas fa-check-circle me-2"></i>Profile updated successfully!
+                      <i class="bi bi-check-circle-fill me-2"></i>Profile updated successfully!
                     </div>
                     <div class="alert alert-danger d-none" id="update-error">
-                      <i class="fas fa-circle-exclamation me-2"></i>Error updating profile!
+                      <i class="bi bi-exclamation-triangle-fill me-2"></i>Error updating profile!
                     </div>
-                    <div class="row mb-3">
-                      <div class="col-md-12 text-center">
-                        <img src="/api/placeholder/100/100" class="rounded-circle border-2 border-primary mb-3" alt="Profile Picture" id="profile-pic" style="width: 100px; height: 100px; object-fit: cover;">
-                        <div>
-                          <label for="profile-picture" class="btn btn-primary btn-sm me-2">
-                            <i class="bi bi-upload me-1"></i> Upload Picture
+
+                    <!-- Profile Picture Section -->
+                    <div class="text-center mb-5">
+                      <div class="position-relative d-inline-block">
+                        <img
+                          src="/api/placeholder/100/100"
+                          class="rounded-circle border-4 border-primary shadow-sm mb-3 transition-all duration-300 hover:opacity-90"
+                          alt="Profile Picture"
+                          id="profile-pic"
+                          style="width: 120px; height: 120px; object-fit: cover;"
+                        >
+                        <div class="position-absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4">
+                          <label
+                            for="profile-picture"
+                            class="btn btn-primary btn-sm rounded-full p-2 shadow-md hover:bg-secondary transition-all duration-300 cursor-pointer"
+                            title="Upload new picture"
+                          >
+                            <i class="bi bi-camera-fill text-lg"></i>
                             <input type="file" id="profile-picture" accept="image/*" class="d-none">
                           </label>
-                          <button type="button" class="btn btn-outline-danger btn-sm" id="delete-profile-pic">
-                            <i class="bi bi-trash me-1"></i> Delete Picture
-                          </button>
+                        </div>
+                      </div>
+                      <div class="mt-2">
+                        <button
+                          type="button"
+                          class="btn btn-outline-danger btn-sm rounded-full px-4 py-2 hover:bg-red-50 transition-all duration-300"
+                          id="delete-profile-pic"
+                        >
+                          <i class="bi bi-trash me-1"></i> Delete Picture
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Profile Form Fields -->
+                    <div class="row g-4">
+                      <!-- Full Name -->
+                      <div class="col-md-6">
+                        <label for="lawyer_name" class="form-label text-dark font-medium mb-2">
+                          Full Name
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-person-fill text-primary"></i>
+                  </span>
+                          <input
+                            type="text"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="lawyer_name"
+                            name="lawyer_name"
+                            placeholder="Enter your full name"
+                          >
+                        </div>
+                      </div>
+
+                      <!-- Contact Number -->
+                      <div class="col-md-6">
+                        <label for="contactNumber" class="form-label text-dark font-medium mb-2">
+                          Contact Number
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-telephone-fill text-primary"></i>
+                  </span>
+                          <input
+                            type="text"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="contactNumber"
+                            name="contactNumber"
+                            placeholder="Enter your contact number"
+                          >
+                        </div>
+                      </div>
+
+                      <!-- Address -->
+                      <div class="col-md-12">
+                        <label for="address" class="form-label text-dark font-medium mb-2">
+                          Address
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-geo-alt-fill text-primary"></i>
+                  </span>
+                          <input
+                            type="text"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="address"
+                            name="address"
+                            placeholder="Enter your address"
+                          >
+                        </div>
+                      </div>
+
+                      <!-- Gender -->
+                      <div class="col-md-12">
+                        <label for="gender" class="form-label text-dark font-medium mb-2">
+                          Gender
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-gender-ambiguous text-primary"></i>
+                  </span>
+                          <select
+                            class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="gender"
+                            name="gender"
+                          >
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                            <option value="Prefer Not to Say">Prefer Not to Say</option>
+                          </select>
                         </div>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="lawyer_name" class="form-label text-black font-medium">Full Name</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="lawyer_name" name="lawyer_name">
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="contactNumber" class="form-label text-black font-medium">Contact Number</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="contactNumber" name="contactNumber">
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12 mb-3">
-                        <label for="address" class="form-label text-black font-medium">Address</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="address" name="address">
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12 mb-3">
-                        <label for="gender" class="form-label text-black font-medium">Gender</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="gender" name="gender">
-                      </div>
-                    </div>
-                    <div class="text-end flex justify-end gap-3">
-                      <button type="button" class="btn btn-outline-light hover:bg-light/10 transition-all" id="cancel-btn">Cancel</button>
-                      <button type="submit" class="btn bg-primary text-white hover:bg-secondary transition-all" id="update-profile-btn">
-                        <i class="bi bi-save me-1"></i> Update Profile
+
+                    <!-- Form Actions -->
+                    <div class="mt-5 flex justify-end gap-3">
+                      <button
+                        type="button"
+                        class="btn btn-outline-light rounded-md px-5 py-2 hover:bg-light/20 transition-all duration-300"
+                        id="cancel-btn"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        class="btn bg-primary text-white rounded-md px-5 py-2 hover:bg-secondary transition-all duration-300 shadow-md"
+                        id="update-profile-btn"
+                      >
+                        <i class="bi bi-save me-2"></i> Update Profile
                       </button>
                     </div>
                   </form>
