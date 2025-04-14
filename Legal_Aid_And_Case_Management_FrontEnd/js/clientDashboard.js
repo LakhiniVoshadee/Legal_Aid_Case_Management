@@ -537,43 +537,67 @@ document.addEventListener("DOMContentLoaded", function () {
     const lawyersList = document.getElementById("lawyersList");
     lawyersList.innerHTML = "";
     if (!lawyers.length) {
-      lawyersList.innerHTML = "<p>No lawyers found.</p>";
+      lawyersList.innerHTML =
+        '<p class="text-center text-muted">No lawyers found.</p>';
       return;
     }
     lawyers.forEach(lawyer => {
       const lawyerCard = `
-        <div class="col-md-4 mb-3">
-          <div class="card lawyer-card h-100">
-            <div class="card-body d-flex flex-column">
-              <div class="lawyer-profile-header">
-                <div class="lawyer-avatar">
-                  <i class="fa-solid fa-user-tie"></i>
-                </div>
-                <div>
-                  <h5 class="lawyer-name">${lawyer.lawyer_name || "Unknown"}</h5>
-                  <p class="lawyer-specialization">${lawyer.specialization || "General Practice"}</p>
-                </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card lawyer-card h-100 border-0 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+          <div class="card-body p-4 d-flex flex-column">
+            <div class="lawyer-profile-header d-flex align-items-center gap-3 mb-4">
+              <img
+                src="${
+        lawyer.profilePictureUrl || "/api/placeholder/60/60"
+      }"
+                class="rounded-circle border-2 border-primary shadow-sm"
+                alt="${lawyer.lawyer_name || "Lawyer"}"
+                style="width: 60px; height: 60px; object-fit: cover;"
+              >
+              <div class="flex-grow-1">
+                <h5 class="lawyer-name mb-1 text-dark font-semibold">${
+        lawyer.lawyer_name || "Unknown"
+      }</h5>
+                <p class="lawyer-specialization mb-0 text-primary font-medium text-sm">${
+        lawyer.specialization || "General Practice"
+      }</p>
               </div>
-              <p class="card-text mb-3">
-                <i class="bi bi-text-paragraph me-2"></i>
-                ${truncateBio(lawyer.bio) || "No bio available"}
-              </p>
-              <div class="lawyer-stats">
-                <div class="stat-item">
-                  <div class="stat-value"><i class="bi bi-telephone-fill"></i></div>
-                  <div class="stat-label">${lawyer.contactNumber || "N/A"}</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-value"><i class="bi bi-geo-alt-fill"></i></div>
-                  <div class="stat-label">${lawyer.district}, ${lawyer.province}</div>
-                </div>
-              </div>
-              <button onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '&quot;')})" class="btn view-profile-btn mt-3">
-                <i class="bi bi-eye me-2"></i>View Profile
-              </button>
             </div>
+            <p class="card-text mb-4 text-dark text-sm flex-grow-1">
+              <i class="bi bi-text-paragraph me-2 text-primary"></i>
+              ${truncateBio(lawyer.bio) || "No bio available"}
+            </p>
+            <div class="lawyer-stats d-flex gap-3 mb-4">
+              <div class="stat-item flex-1 text-center">
+                <div class="stat-value mb-1">
+                  <i class="bi bi-telephone-fill text-primary text-lg"></i>
+                </div>
+                <div class="stat-label text-dark text-xs">${
+        lawyer.contactNumber || "N/A"
+      }</div>
+              </div>
+              <div class="stat-item flex-1 text-center">
+                <div class="stat-value mb-1">
+                  <i class="bi bi-geo-alt-fill text-primary text-lg"></i>
+                </div>
+                <div class="stat-label text-dark text-xs">${
+        lawyer.district
+      }, ${lawyer.province}</div>
+              </div>
+            </div>
+            <button
+              onclick="viewFullProfile(${JSON.stringify(lawyer).replace(
+        /"/g,
+        '"'
+      )})"
+              class="btn view-profile-btn bg-primary text-white rounded-md py-2 hover:bg-secondary transition-all duration-300 shadow-md"
+            >
+              <i class="bi bi-eye me-2"></i>View Profile
+            </button>
           </div>
-        </div>`;
+        </div>
+      </div>`;
       lawyersList.innerHTML += lawyerCard;
     });
   }

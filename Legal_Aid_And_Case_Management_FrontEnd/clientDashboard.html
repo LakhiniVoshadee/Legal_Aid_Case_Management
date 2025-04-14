@@ -84,7 +84,8 @@
           </ul>
         </nav>
         <div class="sidebar-footer mt-auto px-3">
-          <button class="btn btn-outline-light btn-sm w-full text-left" id="deactivate-btn" data-bs-toggle="modal" data-bs-target="#deactivateModal">
+          <button class="btn btn-outline-light btn-sm w-full text-left" id="deactivate-btn" data-bs-toggle="modal"
+                  data-bs-target="#deactivateModal">
             <i class="bi bi-shield-exclamation me-2"></i>Deactivate Account
           </button>
           <button class="btn btn-outline-light btn-sm w-full text-left mt-2" id="logout-btn">
@@ -104,7 +105,8 @@
           </div>
           <div class="d-flex align-items-center">
             <div class="dropdown me-3">
-              <button class="btn btn-link text-dark notification-btn position-relative" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <button class="btn btn-link text-dark notification-btn position-relative" type="button"
+                      id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-bell fs-5"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
               </button>
@@ -114,7 +116,8 @@
               </ul>
             </div>
             <div class="user-profile d-flex align-items-center">
-              <img src="/api/placeholder/36/36" class="rounded-circle me-2 border-2 border-primary" alt="Profile" id="header-profile-pic">
+              <img src="/api/placeholder/36/36" class="rounded-circle me-2 border-2 border-primary" alt="Profile"
+                   id="header-profile-pic">
               <div>
                 <span class="d-none d-md-block font-semibold text-dark" id="lawyer-name">John Doe</span>
               </div>
@@ -156,7 +159,10 @@
               <div class="dashboard-card bg-white shadow-lg rounded-lg p-4">
                 <h5 class="card-title text-dark font-semibold">Your Calendar</h5>
                 <div class="card-content">
-                  <iframe id="google-calendar" src="https://calendar.google.com/calendar/embed?height=200&wkst=1&bgcolor=%23ffffff&ctz=UTC" style="border: 0" width="100%" height="200" frameborder="0" scrolling="no" class="rounded-md shadow-sm"></iframe>
+                  <iframe id="google-calendar"
+                          src="https://calendar.google.com/calendar/embed?height=200&wkst=1&bgcolor=%23ffffff&ctz=UTC"
+                          style="border: 0" width="100%" height="200" frameborder="0" scrolling="no"
+                          class="rounded-md shadow-sm"></iframe>
                 </div>
               </div>
             </div>
@@ -172,111 +178,307 @@
         </div>
 
         <!-- Case Section -->
+        <!-- Case Section -->
         <div id="case-section" class="content-section" data-aos="fade-up">
-          <div class="section-header mb-4">
-            <h2 class="text-primary font-bold"><i class="fas fa-briefcase me-2"></i>Submit a Case</h2>
-            <p class="text-black">Please provide all relevant details for faster resolution</p>
+          <div class="section-header mb-5">
+            <h2 class="text-primary font-bold tracking-wide">
+              <i class="fas fa-briefcase me-2"></i>Submit a Case
+            </h2>
+            <p class="text-dark mt-1">Please provide all relevant details for faster resolution</p>
           </div>
-          <div class="card bg-white shadow-lg border-0 rounded-lg">
-            <div class="card-header bg-white border-0 pt-4 px-4">
+          <div class="card bg-white shadow-lg border-0 rounded-xl overflow-hidden">
+            <div class="card-header bg-gradient-to-r from-primary to-secondary border-0 pt-4 px-4">
               <ul class="nav nav-tabs card-header-tabs" id="caseTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active text-primary font-semibold" id="new-case-tab" data-bs-toggle="tab" data-bs-target="#new-case" type="button" role="tab" aria-controls="new-case" aria-selected="true">New Case</button>
+                  <button
+                    class="nav-link active text-white font-semibold px-4 py-2"
+                    id="new-case-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#new-case"
+                    type="button"
+                    role="tab"
+                    aria-controls="new-case"
+                    aria-selected="true"
+                  >
+                    New Case
+                  </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link text-primary font-semibold" id="existing-case-tab" data-bs-toggle="tab" data-bs-target="#existing-case" type="button" role="tab" aria-controls="existing-case" aria-selected="false">Check Status</button>
+                  <button
+                    class="nav-link text-white font-semibold px-4 py-2"
+                    id="existing-case-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#existing-case"
+                    type="button"
+                    role="tab"
+                    aria-controls="existing-case"
+                    aria-selected="false"
+                  >
+                    Check Status
+                  </button>
                 </li>
               </ul>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body p-5">
               <div class="tab-content" id="caseTabContent">
-                <div class="tab-pane fade show active" id="new-case" role="tabpanel" aria-labelledby="new-case-tab">
-                  <form id="case-submit-form" class="needs-validation" novalidate>
-                    <div class="row g-3">
+                <!-- New Case Tab -->
+                <div
+                  class="tab-pane fade show active"
+                  id="new-case"
+                  role="tabpanel"
+                  aria-labelledby="new-case-tab"
+                >
+                  <form id="case-submit-form" class="needs-validation modern-case-form" novalidate>
+                    <div class="row g-4">
+                      <!-- First Name -->
                       <div class="col-md-6">
-                        <label for="firstName" class="form-label text-black font-medium">First Name</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="firstName" name="firstName" required>
-                        <div class="invalid-feedback text-danger">Please enter your first name.</div>
+                        <label for="firstName" class="form-label text-dark font-medium mb-2">
+                          First Name
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-person-fill text-primary"></i>
+                  </span>
+                          <input
+                            type="text"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="firstName"
+                            name="firstName"
+                            placeholder="Enter your first name"
+                            required
+                          >
+                          <div class="invalid-feedback text-danger">
+                            Please enter your first name.
+                          </div>
+                        </div>
                       </div>
+                      <!-- Last Name -->
                       <div class="col-md-6">
-                        <label for="lastName" class="form-label text-black font-medium">Last Name</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="lastName" name="lastName" required>
-                        <div class="invalid-feedback text-danger">Please enter your last name.</div>
+                        <label for="lastName" class="form-label text-dark font-medium mb-2">
+                          Last Name
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-person-fill text-primary"></i>
+                  </span>
+                          <input
+                            type="text"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="lastName"
+                            name="lastName"
+                            placeholder="Enter your last name"
+                            required
+                          >
+                          <div class="invalid-feedback text-danger">
+                            Please enter your last name.
+                          </div>
+                        </div>
                       </div>
+                      <!-- Email -->
                       <div class="col-md-6">
-                        <label for="email" class="form-label text-black font-medium">Email</label>
-                        <input type="email" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="email" name="email" required>
-                        <div class="invalid-feedback text-danger">Please enter a valid email address.</div>
+                        <label for="email" class="form-label text-dark font-medium mb-2">
+                          Email
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-envelope-fill text-primary"></i>
+                  </span>
+                          <input
+                            type="email"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email address"
+                            required
+                          >
+                          <div class="invalid-feedback text-danger">
+                            Please enter a valid email address.
+                          </div>
+                        </div>
                       </div>
+                      <!-- Phone Number -->
                       <div class="col-md-6">
-                        <label for="phone" class="form-label text-black font-medium">Phone Number</label>
-                        <input type="tel" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="phone" name="phone">
+                        <label for="phone" class="form-label text-dark font-medium mb-2">
+                          Phone Number
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-telephone-fill text-primary"></i>
+                  </span>
+                          <input
+                            type="tel"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="phone"
+                            name="phone"
+                            placeholder="Enter your phone number"
+                          >
+                        </div>
                       </div>
+                      <!-- Case Category -->
                       <div class="col-12">
-                        <label for="caseCategory" class="form-label text-black font-medium">Case Category</label>
-                        <select class="form-select bg-dark/10 border-0 text-dark focus:bg-dark/20" id="caseCategory" name="category" required>
-                          <option value="" selected disabled>Select a category</option>
-                          <option value="technical">Technical Issue</option>
-                          <option value="billing">Billing Question</option>
-                          <option value="account">Account Management</option>
-                          <option value="feature">Feature Request</option>
-                          <option value="other">Other</option>
-                        </select>
-                        <div class="invalid-feedback text-danger">Please select a category.</div>
+                        <label for="caseCategory" class="form-label text-dark font-medium mb-2">
+                          Case Category
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-tag-fill text-primary"></i>
+                  </span>
+                          <select
+                            class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="caseCategory"
+                            name="category"
+                            required
+                          >
+                            <option value="" selected disabled>Select a category</option>
+                            <option value="technical">Technical Issue</option>
+                            <option value="billing">Billing Question</option>
+                            <option value="account">Account Management</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="other">Other</option>
+                          </select>
+                          <div class="invalid-feedback text-danger">
+                            Please select a category.
+                          </div>
+                        </div>
                       </div>
+                      <!-- Case Subject -->
                       <div class="col-12">
-                        <label for="caseSubject" class="form-label text-black font-medium">Subject</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="caseSubject" name="subject" required>
-                        <div class="invalid-feedback text-danger">Please enter a subject.</div>
+                        <label for="caseSubject" class="form-label text-dark font-medium mb-2">
+                          Subject
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-fonts text-primary"></i>
+                  </span>
+                          <input
+                            type="text"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="caseSubject"
+                            name="subject"
+                            placeholder="Enter the subject of your case"
+                            required
+                          >
+                          <div class="invalid-feedback text-danger">
+                            Please enter a subject.
+                          </div>
+                        </div>
                       </div>
+                      <!-- Case Description -->
                       <div class="col-12">
-                        <label for="caseDescription" class="form-label text-black font-medium">Case Description</label>
-                        <textarea class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="caseDescription" name="description" rows="4" required></textarea>
-                        <div class="invalid-feedback text-danger">Please provide a description.</div>
-                        <div class="form-text text-black">
+                        <label for="caseDescription" class="form-label text-dark font-medium mb-2">
+                          Case Description
+                        </label>
+                        <textarea
+                          class="form-control bg-dark/5 border-0 rounded-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                          id="caseDescription"
+                          name="description"
+                          rows="5"
+                          placeholder="Describe your case in detail..."
+                          required
+                        ></textarea>
+                        <div class="invalid-feedback text-danger">
+                          Please provide a description.
+                        </div>
+                        <div class="form-text text-dark mt-1">
                           <span id="charCount">0</span>/500 characters
                         </div>
                       </div>
+                      <!-- File Attachment -->
                       <div class="col-12">
-                        <label for="fileAttachment" class="form-label text-black font-medium">Attachments</label>
-                        <input class="form-control bg-dark/10 border-0 text-dark" type="file" id="fileAttachment" multiple>
-                        <div class="form-text text-black">You can upload up to 3 files (max 5MB each)</div>
+                        <label for="fileAttachment" class="form-label text-dark font-medium mb-2">
+                          Attachments
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-paperclip text-primary"></i>
+                  </span>
+                          <input
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm"
+                            type="file"
+                            id="fileAttachment"
+                            multiple
+                          >
+                        </div>
+                        <div class="form-text text-dark mt-1">
+                          You can upload up to 3 files (max 5MB each)
+                        </div>
                       </div>
+                      <!-- Priority Checkbox -->
                       <div class="col-12">
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="priorityCheck">
-                          <label class="form-check-label text-black" for="priorityCheck">
+                          <input
+                            class="form-check-input border-primary focus:ring-primary"
+                            type="checkbox"
+                            id="priorityCheck"
+                          >
+                          <label class="form-check-label text-dark" for="priorityCheck">
                             Mark as high priority
                           </label>
                         </div>
                       </div>
-                      <div class="col-12 mt-4 flex gap-3">
-                        <button type="submit" class="btn bg-primary text-white hover:bg-secondary transition-all" id="submit-case-btn">
+                      <!-- Form Actions -->
+                      <div class="col-12 mt-4 flex gap-3 justify-end">
+                        <button
+                          type="submit"
+                          class="btn bg-primary text-white rounded-md px-5 py-2 hover:bg-secondary transition-all duration-300 shadow-md"
+                          id="submit-case-btn"
+                        >
                           <i class="fas fa-paper-plane me-2"></i>Submit Case
                         </button>
-                        <button type="reset" class="btn btn-outline-light hover:bg-light/10 transition-all">
+                        <button
+                          type="reset"
+                          class="btn btn-outline-light rounded-md px-5 py-2 hover:bg-light/20 transition-all duration-300"
+                        >
                           <i class="fas fa-undo me-2"></i>Reset Form
                         </button>
                       </div>
                     </div>
                   </form>
-                  <div id="case-message" class="mt-4 alert alert-success d-none">
+                  <div id="case-message" class="mt-4 alert alert-success d-none rounded-md shadow-sm">
                     <i class="fas fa-check-circle me-2"></i>
                     <span id="success-message">Your case has been submitted successfully!</span>
-                    <p class="mb-0 mt-2">Case ID: <strong id="case-id">CSE-12345</strong></p>
+                    <p class="mb-0 mt-2">
+                      Case ID: <strong id="case-id">CSE-12345</strong>
+                    </p>
                   </div>
                 </div>
-                <div class="tab-pane fade" id="existing-case" role="tabpanel" aria-labelledby="existing-case-tab">
+                <!-- Check Status Tab -->
+                <div
+                  class="tab-pane fade"
+                  id="existing-case"
+                  role="tabpanel"
+                  aria-labelledby="existing-case-tab"
+                >
                   <div class="p-4 text-center">
-                    <h4 class="text-primary font-bold">Check Your Case Status</h4>
-                    <p class="text-black">Enter your case number to check the current status</p>
+                    <h4 class="text-primary font-bold mb-3 tracking-wide">
+                      Check Your Case Status
+                    </h4>
+                    <p class="text-dark mb-4">
+                      Enter your case number to check the current status
+                    </p>
                     <div class="row justify-content-center">
                       <div class="col-md-8">
-                        <div class="input-group mb-3">
-                          <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="case-number-input" placeholder="Enter Case Number (e.g., CASE-123)" aria-label="Case Number" required>
-                          <button class="btn bg-primary text-white hover:bg-secondary transition-all" type="button" id="check-status-btn">Check Status</button>
+                        <div class="input-group mb-4">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-search text-primary"></i>
+                  </span>
+                          <input
+                            type="text"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="case-number-input"
+                            placeholder="Enter Case Number (e.g., CASE-123)"
+                            aria-label="Case Number"
+                            required
+                          >
                         </div>
-                        <div id="case-status-result" class="mt-3"></div>
+                        <button
+                          class="btn bg-primary text-white rounded-md px-5 py-2 hover:bg-secondary transition-all duration-300 shadow-md"
+                          type="button"
+                          id="check-status-btn"
+                        >
+                          <i class="bi bi-search me-2"></i>Check Status
+                        </button>
+                        <div id="case-status-result" class="mt-4"></div>
                       </div>
                     </div>
                   </div>
@@ -289,18 +491,32 @@
         <!-- Clients Section (Find Lawyers) -->
         <div id="clients-section" class="content-section" data-aos="fade-up">
           <div class="container">
-            <h2 class="text-primary font-bold text-center mb-4">Suggested for You</h2>
+            <h2 class="text-primary font-bold text-center mb-5 tracking-wide">
+              <i class="bi bi-people me-2"></i>Suggested Lawyers for You
+            </h2>
             <!-- Search Bar -->
-            <div class="search-bar-container mb-4 flex items-center gap-3">
-              <input type="text" class="search-bar form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" placeholder="Search lawyers...">
-              <i class="bi bi-search search-icon text-black"></i>
+            <div class="search-bar-container mb-5 flex items-center gap-3 justify-center max-w-md mx-auto">
+              <div class="relative w-full">
+                <input
+                  type="text"
+                  class="search-bar form-control bg-dark/5 border-0 rounded-full text-dark focus:bg-dark/10 shadow-sm pl-12 pr-4 py-3 transition-all duration-300"
+                  placeholder="Search lawyers by name or specialization..."
+                >
+                <i
+                  class="bi bi-search search-icon text-primary absolute left-4 top-1/2 transform -translate-y-1/2 text-lg"></i>
+              </div>
             </div>
             <!-- Filter Section -->
-            <div class="filter-section bg-dark/5 p-4 rounded-lg shadow-sm">
-              <h5 class="text-primary font-semibold mb-3">Find Lawyers</h5>
-              <div class="row">
-                <div class="col-md-5 mb-2">
-                  <select id="provinceSelect" class="form-select bg-dark/10 border-0 text-dark focus:bg-dark/20">
+            <div class="filter-section bg-white p-5 rounded-xl shadow-lg mb-5">
+              <h5 class="text-primary font-semibold mb-4 tracking-wide">
+                <i class="bi bi-filter me-2"></i>Find Lawyers by Location
+              </h5>
+              <div class="row g-3">
+                <div class="col-md-5">
+                  <select
+                    id="provinceSelect"
+                    class="form-select bg-dark/5 border-0 rounded-md text-dark focus:bg-dark/10 shadow-sm py-2"
+                  >
                     <option value="">Select Province</option>
                     <option value="Western">Western</option>
                     <option value="Central">Central</option>
@@ -313,13 +529,21 @@
                     <option value="Sabaragamuwa">Sabaragamuwa</option>
                   </select>
                 </div>
-                <div class="col-md-5 mb-2">
-                  <select id="districtSelect" class="form-select bg-dark/10 border-0 text-dark focus:bg-dark/20">
+                <div class="col-md-5">
+                  <select
+                    id="districtSelect"
+                    class="form-select bg-dark/5 border-0 rounded-md text-dark focus:bg-dark/10 shadow-sm py-2"
+                  >
                     <option value="">Select District</option>
                   </select>
                 </div>
-                <div class="col-md-2 mb-2">
-                  <button id="filterBtn" class="btn bg-primary text-white w-100 hover:bg-secondary transition-all">Filter</button>
+                <div class="col-md-2">
+                  <button
+                    id="filterBtn"
+                    class="btn bg-primary text-white w-100 rounded-md hover:bg-secondary transition-all duration-300 py-2 shadow-md"
+                  >
+                    <i class="bi bi-search me-1"></i> Filter
+                  </button>
                 </div>
               </div>
             </div>
@@ -329,16 +553,19 @@
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
-                <p class="text-black">Loading lawyers...</p>
+                <p class="text-dark mt-2">Loading lawyers...</p>
               </div>
             </div>
             <!-- Error Alert -->
-            <div id="errorAlert" class="alert alert-danger mt-3 d-none" role="alert">
-              Failed to load lawyers. Please try again later.
+            <div
+              id="errorAlert"
+              class="alert alert-danger mt-4 d-none rounded-md shadow-sm"
+              role="alert"
+            >
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>Failed to load lawyers. Please try again later.
             </div>
           </div>
         </div>
-
         <!-- Messages Section -->
         <div id="message-section" class="content-section" data-aos="fade-up">
           <h2 class="text-primary font-bold mb-5 tracking-wide">
@@ -365,7 +592,8 @@
             <!-- Chat Area -->
             <div class="col-md-8 mb-4">
               <div class="card bg-white shadow-lg rounded-xl border-0 overflow-hidden">
-                <div class="card-header bg-gradient-to-r from-primary to-secondary text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                <div
+                  class="card-header bg-gradient-to-r from-primary to-secondary text-white py-3 px-4 d-flex justify-content-between align-items-center">
                   <h5 class="mb-0 font-semibold tracking-wide" id="chat-with">
                     Select a contact to chat
                   </h5>
@@ -582,12 +810,17 @@
         </div>
         <div class="mb-3">
           <label for="deactivate-confirm-email" class="form-label text-black">Confirm your email</label>
-          <input type="email" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="deactivate-confirm-email" placeholder="Enter your email to confirm">
+          <input type="email" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20"
+                 id="deactivate-confirm-email" placeholder="Enter your email to confirm">
         </div>
       </div>
       <div class="modal-footer border-0">
-        <button type="button" class="btn btn-outline-light hover:bg-light/10 transition-all" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn bg-danger text-white hover:bg-red-700 transition-all" id="confirm-deactivate-btn">Deactivate Account</button>
+        <button type="button" class="btn btn-outline-light hover:bg-light/10 transition-all" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button type="button" class="btn bg-danger text-white hover:bg-red-700 transition-all"
+                id="confirm-deactivate-btn">Deactivate Account
+        </button>
       </div>
     </div>
   </div>

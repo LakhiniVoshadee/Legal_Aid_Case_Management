@@ -310,7 +310,7 @@ iframe#google-calendar {
   color: #8b5cf6;
 }
 
-#case-status-result .status-card {
+/*#case-status-result .status-card {
   background-color: #ffffff;
   border-radius: 10px;
   padding: 20px;
@@ -325,9 +325,221 @@ iframe#google-calendar {
 
 #case-status-result .status-card p {
   color: #161a2b;
+}*/
+/* Modern Case Section Styles */
+
+/* Section Header */
+.section-header {
+  border-left: 5px solid #8b5cf6;
+  padding-left: 15px;
+}
+
+/* Card Styling */
+.card.rounded-xl {
+  border-radius: 1rem;
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.nav-tabs .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-tabs .nav-link.active {
+  background-color: #ffffff;
+  color: #8b5cf6;
+}
+
+.nav-tabs .nav-link.active::after {
+  background-color: #8b5cf6;
+}
+
+/* Case Form */
+.modern-case-form {
+  max-width: 100%;
+}
+
+.modern-case-form .form-label {
+  font-weight: 500;
+  color: #161a2b;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.modern-case-form .input-group-text {
+  background-color: rgba(22, 26, 43, 0.1);
+  border: none;
+  color: #8b5cf6;
+  font-size: 1.1rem;
+  padding: 0.75rem;
+}
+
+.modern-case-form .form-control,
+.modern-case-form .form-select,
+.modern-case-form .form-check-input {
+  background-color: rgba(22, 26, 43, 0.05);
+  border: none;
+  color: #161a2b;
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+
+.modern-case-form .form-control:focus,
+.modern-case-form .form-select:focus,
+.modern-case-form .form-check-input:focus {
+  background-color: rgba(22, 26, 43, 0.1);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+  outline: none;
+}
+
+.modern-case-form .form-control::placeholder {
+  color: #6c757d;
+  opacity: 0.7;
+}
+
+.modern-case-form .form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b5cf6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+
+.modern-case-form textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.modern-case-form .form-check-input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.15rem;
+}
+
+.modern-case-form .form-check-input:checked {
+  background-color: #8b5cf6;
+  border-color: #8b5cf6;
+}
+
+.modern-case-form .form-check-label {
+  font-size: 0.95rem;
+  color: #161a2b;
+}
+
+.modern-case-form .btn {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.modern-case-form .btn-primary {
+  background: linear-gradient(90deg, #8b5cf6, #6d28d9);
+  border: none;
+}
+
+.modern-case-form .btn-primary:hover {
+  background: linear-gradient(90deg, #6d28d9, #8b5cf6);
+  transform: translateY(-2px);
+}
+
+.modern-case-form .btn-outline-light {
+  border-color: rgba(180, 183, 197, 0.5);
+  color: #6c757d;
+}
+
+.modern-case-form .btn-outline-light:hover {
+  background-color: rgba(180, 183, 197, 0.1);
+  color: #161a2b;
+}
+
+/* Check Status Section */
+#existing-case .input-group {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+#existing-case .input-group-text {
+  background-color: rgba(22, 26, 43, 0.1);
+  border: none;
+  color: #8b5cf6;
+  font-size: 1.1rem;
+  padding: 0.75rem;
+}
+
+#existing-case .form-control {
+  background-color: rgba(22, 26, 43, 0.05);
+  border: none;
+  color: #161a2b;
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+
+#existing-case .form-control:focus {
+  background-color: rgba(22, 26, 43, 0.1);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+}
+
+#existing-case .btn {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: linear-gradient(90deg, #8b5cf6, #6d28d9);
+  border: none;
+}
+
+#existing-case .btn:hover {
+  background: linear-gradient(90deg, #6d28d9, #8b5cf6);
+  transform: translateY(-2px);
+}
+
+/* Status Card */
+#case-status-result .status-card {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 1.5rem;
+}
+
+#case-status-result .status-card h5 {
+  color: #8b5cf6;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(139, 92, 246, 0.2);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+#case-status-result .status-card p {
+  color: #161a2b;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .modern-case-form .form-control,
+  .modern-case-form .form-select,
+  #existing-case .form-control {
+    padding: 0.5rem 1rem;
+  }
+
+  #existing-case .input-group {
+    max-width: 100%;
+  }
 }
 
 /* Lawyer Cards */
+/*
 .lawyer-card {
   background-color: #ffffff;
   border-radius: 10px;
@@ -414,7 +626,7 @@ iframe#google-calendar {
   transform: translateY(-2px);
 }
 
-/* Filter Section */
+!* Filter Section *!
 .filter-section {
   background-color: rgba(22, 26, 43, 0.05);
   border-radius: 8px;
@@ -426,7 +638,7 @@ iframe#google-calendar {
   background-color: rgba(22, 26, 43, 0.1);
 }
 
-/* Search Bar */
+!* Search Bar *!
 .search-bar-container {
   position: relative;
   max-width: 400px;
@@ -442,6 +654,155 @@ iframe#google-calendar {
   top: 50%;
   transform: translateY(-50%);
   color: #b4b7c5;
+}
+*/
+/* Modern Find Lawyers Section Styles */
+
+/* Search Bar */
+.search-bar-container {
+  max-width: 500px;
+}
+
+.search-bar {
+  padding-left: 3rem;
+  padding-right: 1.5rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.search-bar:focus {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+}
+
+.search-icon {
+  color: #8b5cf6;
+}
+
+/* Filter Section */
+.filter-section {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.filter-section:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.filter-section .form-select {
+  background-color: rgba(22, 26, 43, 0.05);
+  border: none;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.filter-section .form-select:focus {
+  background-color: rgba(22, 26, 43, 0.1);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+}
+
+.filter-section .btn {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+}
+
+.filter-section .btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Lawyer Cards */
+.lawyer-card {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.lawyer-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.lawyer-profile-header img {
+  transition: all 0.3s ease;
+}
+
+.lawyer-profile-header img:hover {
+  transform: scale(1.1);
+}
+
+.lawyer-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #161a2b;
+}
+
+.lawyer-specialization {
+  font-size: 0.9rem;
+  color: #8b5cf6;
+}
+
+.card-text {
+  color: #161a2b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.lawyer-stats {
+  background-color: rgba(139, 92, 246, 0.05);
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.stat-value i {
+  font-size: 1.25rem;
+  color: #8b5cf6;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #161a2b;
+  line-height: 1.2;
+}
+
+.view-profile-btn {
+  background: linear-gradient(90deg, #8b5cf6, #6d28d9);
+  border: none;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+}
+
+.view-profile-btn:hover {
+  background: linear-gradient(90deg, #6d28d9, #8b5cf6);
+  transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .lawyer-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stat-item {
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
 }
 
 /* Chat Area */
