@@ -191,11 +191,28 @@ document.addEventListener("DOMContentLoaded", function () {
     contactList.innerHTML = "";
     lawyers.forEach(lawyer => {
       const li = document.createElement("li");
-      li.className = "list-group-item list-group-item-action";
-      li.textContent = lawyer.lawyer_name || lawyer.email;
+      li.className = "list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 px-4 border-0";
+      li.innerHTML = `
+      <img
+        src="${lawyer.profilePictureUrl || '/api/placeholder/40/40'}"
+        class="rounded-circle border-2 border-primary shadow-sm"
+        alt="${lawyer.lawyer_name || lawyer.email}"
+        style="width: 40px; height: 40px; object-fit: cover;"
+      >
+      <div class="flex-grow-1">
+        <h6 class="mb-0 text-dark font-semibold">${
+        lawyer.lawyer_name || lawyer.email
+      }</h6>
+        <small class="text-muted">${
+        lawyer.specialization || "General Practice"
+      }</small>
+      </div>
+    `;
       li.dataset.email = lawyer.email;
       li.dataset.name = lawyer.lawyer_name || lawyer.email;
-      li.addEventListener("click", () => selectContact(lawyer.email, lawyer.lawyer_name || lawyer.email));
+      li.addEventListener("click", () =>
+        selectContact(lawyer.email, lawyer.lawyer_name || lawyer.email)
+      );
       contactList.appendChild(li);
     });
   }

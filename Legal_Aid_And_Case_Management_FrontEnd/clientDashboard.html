@@ -341,17 +341,19 @@
 
         <!-- Messages Section -->
         <div id="message-section" class="content-section" data-aos="fade-up">
-          <h2 class="text-primary font-bold mb-4">Messages</h2>
+          <h2 class="text-primary font-bold mb-5 tracking-wide">
+            <i class="bi bi-chat-text me-2"></i>Messages
+          </h2>
           <div class="row">
             <!-- Contact List -->
-            <div class="col-md-4">
-              <div class="card bg-white shadow-lg rounded-lg">
-                <div class="card-header bg-primary text-white">
-                  <h5 class="mb-0">Contacts</h5>
+            <div class="col-md-4 mb-4">
+              <div class="card bg-white shadow-lg rounded-xl border-0 overflow-hidden">
+                <div class="card-header bg-gradient-to-r from-primary to-secondary text-white py-3 px-4">
+                  <h5 class="mb-0 font-semibold tracking-wide">Contacts</h5>
                 </div>
                 <div class="card-body p-0">
-                  <ul class="list-group list-group-flush" id="contact-list">
-                    <li class="list-group-item text-center">
+                  <ul class="list-group list-group-flush modern-contact-list" id="contact-list">
+                    <li class="list-group-item text-center py-4">
                       <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Loading...</span>
                       </div>
@@ -361,22 +363,37 @@
               </div>
             </div>
             <!-- Chat Area -->
-            <div class="col-md-8">
-              <div class="card bg-white shadow-lg rounded-lg">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                  <h5 class="mb-0" id="chat-with">Select a contact to chat</h5>
-                  <span id="chat-status" class="badge bg-secondary">Disconnected</span>
+            <div class="col-md-8 mb-4">
+              <div class="card bg-white shadow-lg rounded-xl border-0 overflow-hidden">
+                <div class="card-header bg-gradient-to-r from-primary to-secondary text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                  <h5 class="mb-0 font-semibold tracking-wide" id="chat-with">
+                    Select a contact to chat
+                  </h5>
+                  <span id="chat-status" class="badge bg-success px-3 py-2 rounded-full text-sm font-medium">
+            Disconnected
+          </span>
                 </div>
-                <div class="card-body chat-area" id="chat-messages" style="height: 400px; overflow-y: auto;">
-                  <div class="text-center text-black mt-5">
+                <div class="card-body chat-area p-4" id="chat-messages" style="height: 450px; overflow-y: auto;">
+                  <div class="text-center text-muted mt-5">
                     Select a contact from the left to start chatting
                   </div>
                 </div>
-                <div class="card-footer">
-                  <form id="message-form" class="d-flex">
-                    <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20 me-2" id="message-input" placeholder="Type your message..." required>
-                    <button type="submit" class="btn bg-primary text-white hover:bg-secondary transition-all" id="send-message-btn">
-                      <i class="bi bi-send me-1"></i> Send
+                <div class="card-footer p-3 bg-gray-50">
+                  <form id="message-form" class="d-flex align-items-center gap-3">
+                    <input
+                      type="text"
+                      class="form-control bg-dark/5 border-0 rounded-full text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                      id="message-input"
+                      placeholder="Type your message..."
+                      required
+                    >
+                    <button
+                      type="submit"
+                      class="btn bg-primary text-white rounded-full p-2 hover:bg-secondary transition-all duration-300 shadow-md"
+                      id="send-message-btn"
+                      title="Send Message"
+                    >
+                      <i class="bi bi-send text-lg"></i>
                     </button>
                   </form>
                 </div>
