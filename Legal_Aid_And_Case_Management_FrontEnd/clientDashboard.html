@@ -114,7 +114,7 @@
               </ul>
             </div>
             <div class="user-profile d-flex align-items-center">
-              <img src="/api/placeholder/36/36" class="rounded-circle me-2 border-2 border-primary" alt="Profile">
+              <img src="/api/placeholder/36/36" class="rounded-circle me-2 border-2 border-primary" alt="Profile" id="header-profile-pic">
               <div>
                 <span class="d-none d-md-block font-semibold text-dark" id="lawyer-name">John Doe</span>
               </div>
@@ -167,7 +167,7 @@
         <div id="appointments-section" class="content-section" data-aos="fade-up">
           <h2 class="text-primary font-bold mb-4">Appointments</h2>
           <div class="card bg-white shadow-lg rounded-lg p-4">
-            <p class="text-light">Schedule and manage your appointments here.</p>
+            <p class="text-black">Schedule and manage your appointments here.</p>
           </div>
         </div>
 
@@ -175,7 +175,7 @@
         <div id="case-section" class="content-section" data-aos="fade-up">
           <div class="section-header mb-4">
             <h2 class="text-primary font-bold"><i class="fas fa-briefcase me-2"></i>Submit a Case</h2>
-            <p class="text-light">Please provide all relevant details for faster resolution</p>
+            <p class="text-black">Please provide all relevant details for faster resolution</p>
           </div>
           <div class="card bg-white shadow-lg border-0 rounded-lg">
             <div class="card-header bg-white border-0 pt-4 px-4">
@@ -194,27 +194,27 @@
                   <form id="case-submit-form" class="needs-validation" novalidate>
                     <div class="row g-3">
                       <div class="col-md-6">
-                        <label for="firstName" class="form-label text-light font-medium">First Name</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="firstName" name="firstName" required>
+                        <label for="firstName" class="form-label text-black font-medium">First Name</label>
+                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="firstName" name="firstName" required>
                         <div class="invalid-feedback text-danger">Please enter your first name.</div>
                       </div>
                       <div class="col-md-6">
-                        <label for="lastName" class="form-label text-light font-medium">Last Name</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="lastName" name="lastName" required>
+                        <label for="lastName" class="form-label text-black font-medium">Last Name</label>
+                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="lastName" name="lastName" required>
                         <div class="invalid-feedback text-danger">Please enter your last name.</div>
                       </div>
                       <div class="col-md-6">
-                        <label for="email" class="form-label text-light font-medium">Email</label>
-                        <input type="email" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="email" name="email" required>
+                        <label for="email" class="form-label text-black font-medium">Email</label>
+                        <input type="email" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="email" name="email" required>
                         <div class="invalid-feedback text-danger">Please enter a valid email address.</div>
                       </div>
                       <div class="col-md-6">
-                        <label for="phone" class="form-label text-light font-medium">Phone Number</label>
-                        <input type="tel" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="phone" name="phone">
+                        <label for="phone" class="form-label text-black font-medium">Phone Number</label>
+                        <input type="tel" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="phone" name="phone">
                       </div>
                       <div class="col-12">
-                        <label for="caseCategory" class="form-label text-light font-medium">Case Category</label>
-                        <select class="form-select bg-dark/10 border-0 text-white focus:bg-dark/20" id="caseCategory" name="category" required>
+                        <label for="caseCategory" class="form-label text-black font-medium">Case Category</label>
+                        <select class="form-select bg-dark/10 border-0 text-dark focus:bg-dark/20" id="caseCategory" name="category" required>
                           <option value="" selected disabled>Select a category</option>
                           <option value="technical">Technical Issue</option>
                           <option value="billing">Billing Question</option>
@@ -225,27 +225,27 @@
                         <div class="invalid-feedback text-danger">Please select a category.</div>
                       </div>
                       <div class="col-12">
-                        <label for="caseSubject" class="form-label text-light font-medium">Subject</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="caseSubject" name="subject" required>
+                        <label for="caseSubject" class="form-label text-black font-medium">Subject</label>
+                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="caseSubject" name="subject" required>
                         <div class="invalid-feedback text-danger">Please enter a subject.</div>
                       </div>
                       <div class="col-12">
-                        <label for="caseDescription" class="form-label text-light font-medium">Case Description</label>
-                        <textarea class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="caseDescription" name="description" rows="4" required></textarea>
+                        <label for="caseDescription" class="form-label text-black font-medium">Case Description</label>
+                        <textarea class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="caseDescription" name="description" rows="4" required></textarea>
                         <div class="invalid-feedback text-danger">Please provide a description.</div>
-                        <div class="form-text text-light">
+                        <div class="form-text text-black">
                           <span id="charCount">0</span>/500 characters
                         </div>
                       </div>
                       <div class="col-12">
-                        <label for="fileAttachment" class="form-label text-light font-medium">Attachments</label>
-                        <input class="form-control bg-dark/10 border-0 text-white" type="file" id="fileAttachment" multiple>
-                        <div class="form-text text-light">You can upload up to 3 files (max 5MB each)</div>
+                        <label for="fileAttachment" class="form-label text-black font-medium">Attachments</label>
+                        <input class="form-control bg-dark/10 border-0 text-dark" type="file" id="fileAttachment" multiple>
+                        <div class="form-text text-black">You can upload up to 3 files (max 5MB each)</div>
                       </div>
                       <div class="col-12">
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" id="priorityCheck">
-                          <label class="form-check-label text-light" for="priorityCheck">
+                          <label class="form-check-label text-black" for="priorityCheck">
                             Mark as high priority
                           </label>
                         </div>
@@ -269,11 +269,11 @@
                 <div class="tab-pane fade" id="existing-case" role="tabpanel" aria-labelledby="existing-case-tab">
                   <div class="p-4 text-center">
                     <h4 class="text-primary font-bold">Check Your Case Status</h4>
-                    <p class="text-light">Enter your case number to check the current status</p>
+                    <p class="text-black">Enter your case number to check the current status</p>
                     <div class="row justify-content-center">
                       <div class="col-md-8">
                         <div class="input-group mb-3">
-                          <input type="text" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="case-number-input" placeholder="Enter Case Number (e.g., CASE-123)" aria-label="Case Number" required>
+                          <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="case-number-input" placeholder="Enter Case Number (e.g., CASE-123)" aria-label="Case Number" required>
                           <button class="btn bg-primary text-white hover:bg-secondary transition-all" type="button" id="check-status-btn">Check Status</button>
                         </div>
                         <div id="case-status-result" class="mt-3"></div>
@@ -292,15 +292,15 @@
             <h2 class="text-primary font-bold text-center mb-4">Suggested for You</h2>
             <!-- Search Bar -->
             <div class="search-bar-container mb-4 flex items-center gap-3">
-              <input type="text" class="search-bar form-control bg-dark/10 border-0 text-white focus:bg-dark/20" placeholder="Search lawyers...">
-              <i class="bi bi-search search-icon text-light"></i>
+              <input type="text" class="search-bar form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" placeholder="Search lawyers...">
+              <i class="bi bi-search search-icon text-black"></i>
             </div>
             <!-- Filter Section -->
             <div class="filter-section bg-dark/5 p-4 rounded-lg shadow-sm">
               <h5 class="text-primary font-semibold mb-3">Find Lawyers</h5>
               <div class="row">
                 <div class="col-md-5 mb-2">
-                  <select id="provinceSelect" class="form-select bg-dark/10 border-0 text-white focus:bg-dark/20">
+                  <select id="provinceSelect" class="form-select bg-dark/10 border-0 text-dark focus:bg-dark/20">
                     <option value="">Select Province</option>
                     <option value="Western">Western</option>
                     <option value="Central">Central</option>
@@ -314,7 +314,7 @@
                   </select>
                 </div>
                 <div class="col-md-5 mb-2">
-                  <select id="districtSelect" class="form-select bg-dark/10 border-0 text-white focus:bg-dark/20">
+                  <select id="districtSelect" class="form-select bg-dark/10 border-0 text-dark focus:bg-dark/20">
                     <option value="">Select District</option>
                   </select>
                 </div>
@@ -329,7 +329,7 @@
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
-                <p class="text-light">Loading lawyers...</p>
+                <p class="text-black">Loading lawyers...</p>
               </div>
             </div>
             <!-- Error Alert -->
@@ -368,13 +368,13 @@
                   <span id="chat-status" class="badge bg-secondary">Disconnected</span>
                 </div>
                 <div class="card-body chat-area" id="chat-messages" style="height: 400px; overflow-y: auto;">
-                  <div class="text-center text-light mt-5">
+                  <div class="text-center text-black mt-5">
                     Select a contact from the left to start chatting
                   </div>
                 </div>
                 <div class="card-footer">
                   <form id="message-form" class="d-flex">
-                    <input type="text" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20 me-2" id="message-input" placeholder="Type your message..." required>
+                    <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20 me-2" id="message-input" placeholder="Type your message..." required>
                     <button type="submit" class="btn bg-primary text-white hover:bg-secondary transition-all" id="send-message-btn">
                       <i class="bi bi-send me-1"></i> Send
                     </button>
@@ -401,26 +401,40 @@
                     <div class="alert alert-danger d-none" id="update-error">
                       <i class="fas fa-circle-exclamation me-2"></i>Error updating profile!
                     </div>
+                    <div class="row mb-3">
+                      <div class="col-md-12 text-center">
+                        <img src="/api/placeholder/100/100" class="rounded-circle border-2 border-primary mb-3" alt="Profile Picture" id="profile-pic" style="width: 100px; height: 100px; object-fit: cover;">
+                        <div>
+                          <label for="profile-picture" class="btn btn-primary btn-sm me-2">
+                            <i class="bi bi-upload me-1"></i> Upload Picture
+                            <input type="file" id="profile-picture" accept="image/*" class="d-none">
+                          </label>
+                          <button type="button" class="btn btn-outline-danger btn-sm" id="delete-profile-pic">
+                            <i class="bi bi-trash me-1"></i> Delete Picture
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                     <div class="row">
                       <div class="col-md-6 mb-3">
-                        <label for="lawyer_name" class="form-label text-light font-medium">Full Name</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="lawyer_name" name="lawyer_name">
+                        <label for="lawyer_name" class="form-label text-black font-medium">Full Name</label>
+                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="lawyer_name" name="lawyer_name">
                       </div>
                       <div class="col-md-6 mb-3">
-                        <label for="contactNumber" class="form-label text-light font-medium">Contact Number</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="contactNumber" name="contactNumber">
+                        <label for="contactNumber" class="form-label text-black font-medium">Contact Number</label>
+                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="contactNumber" name="contactNumber">
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-12 mb-3">
-                        <label for="address" class="form-label text-light font-medium">Address</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="address" name="address">
+                        <label for="address" class="form-label text-black font-medium">Address</label>
+                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="address" name="address">
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-12 mb-3">
-                        <label for="gender" class="form-label text-light font-medium">Gender</label>
-                        <input type="text" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="gender" name="gender">
+                        <label for="gender" class="form-label text-black font-medium">Gender</label>
+                        <input type="text" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="gender" name="gender">
                       </div>
                     </div>
                     <div class="text-end flex justify-end gap-3">
@@ -449,14 +463,14 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p class="text-light">Are you sure you want to deactivate your account? This action cannot be undone.</p>
+        <p class="text-black">Are you sure you want to deactivate your account? This action cannot be undone.</p>
         <div class="alert alert-danger">
           <i class="bi bi-exclamation-triangle-fill me-2"></i>
           All your data, including client information and case records, will be permanently removed.
         </div>
         <div class="mb-3">
-          <label for="deactivate-confirm-email" class="form-label text-light">Confirm your email</label>
-          <input type="email" class="form-control bg-dark/10 border-0 text-white focus:bg-dark/20" id="deactivate-confirm-email" placeholder="Enter your email to confirm">
+          <label for="deactivate-confirm-email" class="form-label text-black">Confirm your email</label>
+          <input type="email" class="form-control bg-dark/10 border-0 text-dark focus:bg-dark/20" id="deactivate-confirm-email" placeholder="Enter your email to confirm">
         </div>
       </div>
       <div class="modal-footer border-0">

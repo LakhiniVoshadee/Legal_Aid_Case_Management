@@ -46,6 +46,17 @@ document.addEventListener("DOMContentLoaded", function () {
     updateClientProfile();
   });
 
+  // Profile picture upload
+  const profilePictureInput = document.getElementById("profile-picture");
+  profilePictureInput.addEventListener("change", function () {
+    uploadProfilePicture(this.files[0]);
+  });
+
+  // Profile picture delete
+  document.getElementById("delete-profile-pic").addEventListener("click", function () {
+    deleteProfilePicture();
+  });
+
   // Case submission
   document.getElementById("case-submit-form").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -274,24 +285,25 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function fetchClientProfile() {
-    fetch(`http://localhost:8080/api/v1/user/client?email=${email}`, {
+    $.ajax({
+      url: `http://localhost:8080/api/v1/user/client?email=${email}`,
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.code === 200 && data.data) {
-          populateProfileForm(data.data);
+      },
+      success: function (response) {
+        if (response.code === 200 && response.data) {
+          populateProfileForm(response.data);
+          updateProfilePicture(response.data.profilePictureUrl);
         } else {
-          console.error("Error fetching client profile:", data.message);
+          console.error("Error fetching client profile:", response.message);
         }
-      })
-      .catch(error => {
-        console.error("Error fetching client profile:", error);
-      });
+      },
+      error: function (xhr) {
+        console.error("Error fetching client profile:", xhr);
+      }
+    });
   }
 
   function populateProfileForm(data) {
@@ -299,6 +311,94 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("contactNumber").value = data.phone_number || "";
     document.getElementById("address").value = data.address || "";
     document.getElementById("gender").value = data.gender || "";
+  }
+
+  function updateProfilePicture(url) {
+    const profilePic = document.getElementById("profile-pic");
+    const headerProfilePic = document.getElementById("header-profile-pic");
+    const defaultPic = "/api/placeholder/100/100";
+    const defaultHeaderPic = "/api/placeholder/36/36";
+    profilePic.src = url || defaultPic;
+    headerProfilePic.src = url || defaultHeaderPic;
+  }
+
+  function uploadProfilePicture(file) {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const uploadBtn = document.querySelector('label[for="profile-picture"]');
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
+
+    $.ajax({
+      url: `http://localhost:8080/api/v1/user/${email}/profile-picture`,
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = '<i class="bi bi-upload me-1"></i> Upload Picture';
+        if (response.profilePictureUrl) {
+          updateProfilePicture(response.profilePictureUrl);
+          showAlert("success", "Profile picture uploaded successfully!");
+        } else {
+          showAlert("danger", "Failed to upload profile picture.");
+        }
+      },
+      error: function (xhr) {
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = '<i class="bi bi-upload me-1"></i> Upload Picture';
+        console.error("Error uploading profile picture:", xhr);
+        showAlert("danger", xhr.responseJSON?.message || "Error uploading profile picture.");
+      }
+    });
+  }
+
+  function deleteProfilePicture() {
+    const deleteBtn = document.getElementById("delete-profile-pic");
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
+
+    $.ajax({
+      url: `http://localhost:8080/api/v1/user/${email}/profile-picture`,
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      success: function () {
+        deleteBtn.disabled = false;
+        deleteBtn.innerHTML = '<i class="bi bi-trash me-1"></i> Delete Picture';
+        updateProfilePicture(null);
+        showAlert("success", "Profile picture deleted successfully!");
+      },
+      error: function (xhr) {
+        deleteBtn.disabled = false;
+        deleteBtn.innerHTML = '<i class="bi bi-trash me-1"></i> Delete Picture';
+        console.error("Error deleting profile picture:", xhr);
+        showAlert("danger", xhr.responseJSON?.message || "Error deleting profile picture.");
+      }
+    });
+  }
+
+  function showAlert(type, message) {
+    const alertContainer = document.querySelector(".alert-container");
+    const alert = document.createElement("div");
+    alert.className = `alert alert-${type} d-flex align-items-center`;
+    alert.innerHTML = `
+      <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}-fill me-2"></i>
+      ${message}
+    `;
+    alertContainer.appendChild(alert);
+    setTimeout(() => {
+      alert.remove();
+    }, 3000);
   }
 
   function updateClientProfile() {
@@ -319,16 +419,15 @@ document.addEventListener("DOMContentLoaded", function () {
       gender: document.getElementById('gender').value
     };
 
-    fetch('http://localhost:8080/api/v1/user/update-client', {
+    $.ajax({
+      url: 'http://localhost:8080/api/v1/user/update-client',
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(clientUpdateDTO)
-    })
-      .then(response => response.json())
-      .then(data => {
+      data: JSON.stringify(clientUpdateDTO),
+      success: function (data) {
         updateBtn.disabled = false;
         updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
 
@@ -342,27 +441,27 @@ document.addEventListener("DOMContentLoaded", function () {
           errorAlert.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i> Error: ${data.message || 'Failed to update profile'}`;
           errorAlert.classList.remove('d-none');
         }
-      })
-      .catch(error => {
+      },
+      error: function (xhr) {
         updateBtn.disabled = false;
         updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
-        console.error('Error updating profile:', error);
+        console.error('Error updating profile:', xhr);
         errorAlert.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i> Network error: Unable to update profile. Please try again.';
         errorAlert.classList.remove('d-none');
-      });
+      }
+    });
   }
 
   function deactivateAccount() {
-    fetch("http://localhost:8080/api/v1/user/delete-client-account", {
+    $.ajax({
+      url: "http://localhost:8080/api/v1/user/delete-client-account",
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ email })
-    })
-      .then(response => response.json())
-      .then(data => {
+      data: JSON.stringify({ email }),
+      success: function (data) {
         if (data.code === 200) {
           alert("Account deleted successfully");
           localStorage.clear();
@@ -370,11 +469,12 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           alert(data.message || "Error deleting account");
         }
-      })
-      .catch(error => {
-        console.error("Error deleting account:", error);
+      },
+      error: function (xhr) {
+        console.error("Error deleting account:", xhr);
         alert("Network error. Please try again.");
-      });
+      }
+    });
   }
 
   function fetchLawyers(province = null, district = null) {
@@ -451,7 +551,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   <div class="stat-label">${lawyer.district}, ${lawyer.province}</div>
                 </div>
               </div>
-              <button onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '"')})" class="btn view-profile-btn mt-3">
+              <button onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '&quot;')})" class="btn view-profile-btn mt-3">
                 <i class="bi bi-eye me-2"></i>View Profile
               </button>
             </div>
@@ -473,9 +573,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Case Submission Function
   function submitCase() {
+    const form = document.getElementById("case-submit-form");
     const description = document.getElementById("caseDescription").value;
     const submitBtn = document.getElementById("submit-case-btn");
     const messageDiv = document.getElementById("case-message");
+
+    // Validate form
+    if (!form.checkValidity()) {
+      form.classList.add("was-validated");
+      return;
+    }
 
     // Generate a simple unique case number
     const caseNumber = `CASE-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -503,25 +610,26 @@ document.addEventListener("DOMContentLoaded", function () {
         if (response.code === 200) {
           const submittedCaseNumber = response.data.caseNumber;
           messageDiv.innerHTML = `
-          <div class="alert alert-success">
-            <i class="fas fa-check-circle me-2"></i> Case submitted successfully!
-            Case Number: <strong id="case-number-display">${submittedCaseNumber}</strong>
-            <button class="btn btn-sm btn-outline-primary ms-2" onclick="navigator.clipboard.writeText('${submittedCaseNumber}').then(() => alert('Case number copied to clipboard!'))">
-              <i class="bi bi-clipboard me-1"></i> Copy
-            </button>
-          </div>`;
-          document.getElementById("case-submit-form").reset();
+            <div class="alert alert-success">
+              <i class="fas fa-check-circle me-2"></i> Case submitted successfully!
+              Case Number: <strong id="case-number-display">${submittedCaseNumber}</strong>
+              <button class="btn btn-sm btn-outline-primary ms-2" onclick="navigator.clipboard.writeText('${submittedCaseNumber}').then(() => alert('Case number copied to clipboard!'))">
+                <i class="bi bi-clipboard me-1"></i> Copy
+              </button>
+            </div>`;
+          form.reset();
+          form.classList.remove("was-validated");
         } else {
           messageDiv.innerHTML = `<div class="alert alert-danger">Error: ${response.message || 'Unknown error occurred'}</div>`;
         }
-        messageDiv.classList.remove("d-none"); // Ensure message is visible
+        messageDiv.classList.remove("d-none");
       },
       error: function (xhr, status, error) {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Case';
         const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Unknown error occurred';
         messageDiv.innerHTML = `<div class="alert alert-danger">Error submitting case: ${errorMsg}</div>`;
-        messageDiv.classList.remove("d-none"); // Ensure error message is visible
+        messageDiv.classList.remove("d-none");
       }
     });
   }
@@ -579,39 +687,24 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Search Bar Functionality
-  const searchBar = document.createElement('input');
-  searchBar.type = 'text';
-  searchBar.placeholder = 'Search lawyers...';
-  searchBar.classList.add('form-control', 'search-bar');
+  const searchBar = document.querySelector(".search-bar");
+  if (searchBar) {
+    searchBar.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      const lawyerCards = document.querySelectorAll('#lawyersList .card');
 
-  const searchContainer = document.createElement('div');
-  searchContainer.classList.add('search-bar-container');
-  searchContainer.appendChild(searchBar);
+      lawyerCards.forEach(card => {
+        const lawyerName = card.querySelector('.lawyer-name').textContent.toLowerCase();
+        const lawyerSpecialization = card.querySelector('.lawyer-specialization').textContent.toLowerCase();
 
-  const searchIcon = document.createElement('i');
-  searchIcon.classList.add('bi', 'bi-search', 'search-icon');
-  searchContainer.appendChild(searchIcon);
-
-  const filterSection = document.querySelector('.filter-section');
-  if (filterSection) {
-    filterSection.parentNode.insertBefore(searchContainer, filterSection);
-  }
-
-  searchBar.addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const lawyerCards = document.querySelectorAll('#lawyersList .card');
-
-    lawyerCards.forEach(card => {
-      const lawyerName = card.querySelector('.lawyer-name').textContent.toLowerCase();
-      const lawyerSpecialization = card.querySelector('.lawyer-specialization').textContent.toLowerCase();
-
-      if (lawyerName.includes(searchTerm) || lawyerSpecialization.includes(searchTerm)) {
-        card.style.display = 'block';
-      } else {
-        card.style.display = 'none';
-      }
+        if (lawyerName.includes(searchTerm) || lawyerSpecialization.includes(searchTerm)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
     });
-  });
+  }
 
   // Dashboard Functions
   function updateLiveTime() {
@@ -648,26 +741,26 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch('http://localhost:8080/api/v1/user/total-lawyers-count', {
+    $.ajax({
+      url: 'http://localhost:8080/api/v1/user/total-lawyers-count',
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
+      },
+      success: function (data) {
         if (data.code === 200) {
           animateCountUp(totalLawyersElement, 0, data.data || 0, 1000);
         } else {
           totalLawyersElement.textContent = 'Error';
           console.error('Failed to fetch lawyers count:', data.message);
         }
-      })
-      .catch(error => {
+      },
+      error: function (xhr) {
         totalLawyersElement.textContent = 'Error';
-        console.error('Error fetching lawyers count:', error);
-      });
+        console.error('Error fetching lawyers count:', xhr);
+      }
+    });
   }
 
   function animateCountUp(element, start, end, duration) {
@@ -719,117 +812,33 @@ document.addEventListener("DOMContentLoaded", function () {
   const caseMessage = document.getElementById("case-message");
   const successMessage = document.getElementById("success-message");
   const caseIdDisplay = document.getElementById("case-id");
-  const submitButton = document.getElementById("submit-case-btn");
-  const priorityCheck = document.getElementById("priorityCheck");
 
-  if (descriptionField && charCountDisplay) {
-    descriptionField.addEventListener('input', function() {
-      const charCount = this.value.length;
-      charCountDisplay.textContent = charCount;
-
-      if (charCount > 450) {
-        charCountDisplay.classList.add('text-warning');
-        charCountDisplay.classList.remove('text-danger');
-      } else if (charCount > 500) {
-        charCountDisplay.classList.add('text-danger');
-        charCountDisplay.classList.remove('text-warning');
-        descriptionField.value = descriptionField.value.substring(0, 500);
-      } else {
-        charCountDisplay.classList.remove('text-warning', 'text-danger');
-      }
-    });
-  }
-
-  if (form) {
-    form.addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      if (!form.checkValidity()) {
-        event.stopPropagation();
-        form.classList.add('was-validated');
-        shakeInvalidFields();
-        return;
-      }
-
-      submitCase();
-    });
-  }
-
-  const fileInput = document.getElementById('fileAttachment');
-  if (fileInput) {
-    fileInput.addEventListener('change', function() {
-      const files = this.files;
-      let valid = true;
-
-      if (files.length > 3) {
-        alert('You can only upload up to 3 files.');
-        valid = false;
-      }
-
-      for (let i = 0; i < files.length; i++) {
-        if (files[i].size > 5 * 1024 * 1024) {
-          alert('File ' + files[i].name + ' exceeds the 5MB size limit.');
-          valid = false;
-          break;
-        }
-      }
-
-      if (!valid) {
-        this.value = '';
-      }
-    });
-  }
-
-  const categorySelect = document.getElementById('caseCategory');
-  if (categorySelect) {
-    categorySelect.addEventListener('change', function() {
-      const selectedCategory = this.value;
-
-      if (selectedCategory === 'billing') {
-        const tooltip = document.createElement('div');
-        tooltip.className = 'alert alert-info mt-2';
-        tooltip.innerHTML = '<i class="fas fa-info-circle me-2"></i>For billing questions, please include your account or invoice number for faster assistance.';
-
-        const existingTooltip = this.parentNode.querySelector('.alert');
-        if (existingTooltip) {
-          existingTooltip.remove();
-        }
-
-        this.parentNode.appendChild(tooltip);
-
-        setTimeout(() => {
-          tooltip.remove();
-        }, 5000);
-      }
-    });
-  }
-
-  function shakeInvalidFields() {
-    const invalidFields = form.querySelectorAll(':invalid');
-
-    invalidFields.forEach(field => {
-      field.classList.add('shake-animation');
-
-      setTimeout(() => {
-        field.classList.remove('shake-animation');
-      }, 500);
-
-      if (field === invalidFields[0]) {
-        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    });
-  }
-
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-      20%, 40%, 60%, 80% { transform: translateX(5px); }
+  // Character count for case description
+  function updateCharCount() {
+    const maxLength = 500;
+    const currentLength = descriptionField.value.length;
+    charCountDisplay.textContent = `${currentLength}/${maxLength}`;
+    if (currentLength > maxLength) {
+      charCountDisplay.classList.add('text-danger');
+      descriptionField.classList.add('is-invalid');
+      descriptionField.setCustomValidity("Description exceeds maximum length.");
+    } else {
+      charCountDisplay.classList.remove('text-danger');
+      descriptionField.classList.remove('is-invalid');
+      descriptionField.setCustomValidity("");
     }
-    .shake-animation {
-      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-    }
-  `;
-  document.head.appendChild(style);
+  }
+
+  // Initialize character count
+  updateCharCount();
+
+  // Update character count on input
+  descriptionField.addEventListener('input', updateCharCount);
+
+  // Reset form and messages
+  form.addEventListener('reset', function () {
+    caseMessage.classList.add('d-none');
+    updateCharCount();
+    form.classList.remove('was-validated');
+  });
 });

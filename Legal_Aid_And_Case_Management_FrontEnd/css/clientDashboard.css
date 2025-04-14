@@ -234,11 +234,34 @@ iframe#google-calendar {
   background-color: #8b5cf6;
 }
 
+/* Profile Picture */
+#profile-pic {
+  transition: opacity 0.3s ease;
+}
+
+#profile-pic:hover {
+  opacity: 0.8;
+}
+
+#profile-picture {
+  display: none;
+}
+
+.btn-outline-danger {
+  transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Form Controls - Fix text visibility */
 .form-control,
 .form-select {
   background-color: rgba(22, 26, 43, 0.1);
   border: none;
-  color: #ffffff;
+  color: #161a2b;
   padding: 0.75rem 1rem;
   border-radius: 5px;
   transition: all 0.3s ease;
@@ -247,13 +270,44 @@ iframe#google-calendar {
 .form-control:focus,
 .form-select:focus {
   background-color: rgba(22, 26, 43, 0.2);
+  color: #161a2b;
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
   outline: none;
 }
 
+/* Form input placeholder color */
+.form-control::placeholder,
+.form-select::placeholder {
+  color: #6c757d;
+  opacity: 0.7;
+}
+
+/* Override bootstrap text-dark class on form inputs */
+.form-control.text-dark,
+.form-select.text-dark {
+  color: #161a2b !important;
+}
+
+/* Form labels */
 .form-label {
   font-weight: 500;
-  color: #b4b7c5;
+  color: #161a2b;
+}
+
+/* Fix text visibility in dark sections */
+#case-section .form-label,
+#profile-section .form-label {
+  color: #161a2b;
+}
+
+/* Nav tabs for better visibility */
+.nav-tabs .nav-link {
+  color: #6c757d;
+}
+
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link.active {
+  color: #8b5cf6;
 }
 
 #case-status-result .status-card {
@@ -469,4 +523,11 @@ iframe#google-calendar {
 
 .shake-animation {
   animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Header Profile Picture Size Adjustment */
+.user-profile img {
+  width: 48px; /* Adjusted size */
+  height: 48px;
+  object-fit: cover; /* Ensure proper scaling */
 }
