@@ -76,22 +76,4 @@ public class ClientController {
             return new ResponseEntity<>(new ResponseDTO(500, e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-  /*  @GetMapping("/messages")
-    @PreAuthorize("hasAnyRole('CLIENT', 'LAWYER')")
-    public ResponseEntity<ResponseDTO> getMessages(
-            @RequestParam String senderEmail,
-            @RequestParam String recipientEmail,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        try {
-            if (!userDetails.getUsername().equals(senderEmail)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(new ResponseDTO(VarList.Forbidden, "Unauthorized access", null));
-            }
-            List<MessageDTO> messages = userService.getMessages(senderEmail, recipientEmail);
-            return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Success", messages));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
-        }
-    }*/
 }

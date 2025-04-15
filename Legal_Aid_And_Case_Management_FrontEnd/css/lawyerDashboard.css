@@ -361,3 +361,37 @@ body {
 #assigned-case-list .card:hover {
   transform: translateY(-5px);
 }
+/* Client List */
+#client-list .card {
+  transition: transform 0.2s ease-in-out;
+  border: none;
+}
+
+#client-list .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+#client-list .card-body {
+  padding: 1.5rem;
+}
+
+#client-list .card-title {
+  font-size: 1.25rem;
+  color: #161a2b;
+  margin-bottom: 1rem;
+}
+
+#client-list .card-text {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-bottom: 0.75rem;
+}
+
+#client-list .card-text strong {
+  color: #161a2b;
+}
+
+#client-message .alert {
+  font-size: 0.9rem;
+}

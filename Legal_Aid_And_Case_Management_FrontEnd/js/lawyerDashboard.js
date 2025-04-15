@@ -27,17 +27,17 @@ document.addEventListener("DOMContentLoaded", function () {
       sectionTitle.textContent = this.textContent.trim();
 
       if (targetSectionId === "case-section") {
-        // Fetch open cases by default when case section is loaded
         fetchOpenCases();
-        // Reset to open cases tab
         document.getElementById("open-cases-tab").click();
       } else if (targetSectionId === "profile-section") {
         fetchLawyerProfile();
+      } else if (targetSectionId === "clients-section") { // Updated to match HTML
+        fetchClients();
       }
     });
   });
 
-  // Tab event listeners
+  // Tab event listeners for case section
   document.getElementById("open-cases-tab").addEventListener("click", fetchOpenCases);
   document.getElementById("assigned-cases-tab").addEventListener("click", fetchAssignedCases);
 
@@ -169,7 +169,6 @@ document.addEventListener("DOMContentLoaded", function () {
             profilePic.src = "/api/placeholder/100/100";
             deletePicBtn.classList.add("d-none");
           }
-          // Update header profile picture
           document.getElementById("header-profile-pic").src =
             data.data.profilePictureUrl || "/api/placeholder/36/36";
         }
@@ -254,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
         console.error("Error updating profile:", error);
         errorAlert.textContent = "Network error. Please try again.";
-        errorAlert.classList.remove("d-none");
+        errorAlert.classList.add("d-none");
       });
   }
 
@@ -287,7 +286,7 @@ document.addEventListener("DOMContentLoaded", function () {
         deletePicBtn.classList.remove("d-none");
         uploadSuccess.classList.remove("d-none");
         setTimeout(() => uploadSuccess.classList.add("d-none"), 3000);
-        profilePicInput.value = ""; // Clear input
+        profilePicInput.value = "";
       })
       .catch((error) => {
         console.error("Error uploading profile picture:", error);
@@ -365,7 +364,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Fetch open cases
   function fetchOpenCases() {
     const caseList = document.getElementById("case-list");
     const caseMessage = document.getElementById("case-message");
@@ -384,7 +382,7 @@ document.addEventListener("DOMContentLoaded", function () {
           displayCases(response.data, "case-list");
           if (caseReviewForm) populateCaseSelect(response.data);
         } else {
-          caseList.innerHTML = '<p>No open cases found.</p>';
+          caseList.innerHTML = '<p class="text-muted">No open cases found.</p>';
           caseMessage.innerHTML = "";
           if (caseReviewForm)
             document.getElementById("case-id-select").innerHTML =
@@ -402,7 +400,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Fetch assigned cases
   function fetchAssignedCases() {
     const assignedCaseList = document.getElementById("assigned-case-list");
     const assignedCaseMessage = document.getElementById("assigned-case-message");
@@ -421,7 +418,7 @@ document.addEventListener("DOMContentLoaded", function () {
           displayAssignedCases(response.data, "assigned-case-list");
           assignedCaseMessage.innerHTML = "";
         } else {
-          assignedCaseList.innerHTML = '<p>No assigned cases found.</p>';
+          assignedCaseList.innerHTML = '<p class="text-muted">No assigned cases found.</p>';
           assignedCaseMessage.innerHTML = "";
         }
       },
@@ -434,12 +431,42 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Display cases (for both open and assigned)
+  function fetchClients() {
+    const clientList = document.getElementById("client-list");
+    const clientMessage = document.getElementById("client-message");
+    clientList.innerHTML =
+      '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>Loading clients...</p></div>';
+
+    $.ajax({
+      url: "http://localhost:8080/api/v1/lawyer/clients",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      success: function (response) {
+        if (response.code === 200 && response.data && response.data.length > 0) {
+          displayClients(response.data);
+          clientMessage.innerHTML = "";
+        } else {
+          clientList.innerHTML = '<p class="text-muted">No clients found for assigned cases.</p>';
+          clientMessage.innerHTML = "";
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching clients:", error);
+        clientList.innerHTML =
+          '<div class="alert alert-danger">Failed to load clients. Please try again later.</div>';
+        clientMessage.innerHTML = "";
+      },
+    });
+  }
+
   function displayCases(cases, listId) {
     const caseList = document.getElementById(listId);
     caseList.innerHTML = "";
     if (!cases.length) {
-      caseList.innerHTML = '<p>No cases found.</p>';
+      caseList.innerHTML = '<p class="text-muted">No cases found.</p>';
       return;
     }
 
@@ -464,7 +491,6 @@ document.addEventListener("DOMContentLoaded", function () {
       caseList.innerHTML += caseCard;
     });
 
-    // Attach event listeners to the buttons
     document.querySelectorAll(`#${listId} .accept-btn`).forEach((btn) => {
       btn.addEventListener("click", function () {
         const caseId = this.getAttribute("data-case-id");
@@ -480,12 +506,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Display assigned cases (read-only view)
   function displayAssignedCases(cases, listId) {
     const assignedCaseList = document.getElementById(listId);
     assignedCaseList.innerHTML = "";
     if (!cases.length) {
-      assignedCaseList.innerHTML = '<p>No assigned cases found.</p>';
+      assignedCaseList.innerHTML = '<p class="text-muted">No assigned cases found.</p>';
       return;
     }
 
@@ -505,12 +530,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Review case
+  function displayClients(clients) {
+    const clientList = document.getElementById("client-list");
+    clientList.innerHTML = "";
+    clients.forEach((client) => {
+      const clientCard = `
+        <div class="col-md-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">${client.full_name || "Unknown"}</h5>
+              <p class="card-text"><strong>Email:</strong> ${client.email || "N/A"}</p>
+              <p class="card-text"><strong>Phone:</strong> ${client.phone_number || "N/A"}</p>
+              <p class="card-text"><strong>Address:</strong> ${client.address || "N/A"}</p>
+              <p class="card-text"><strong>Language:</strong> ${client.preferred_language || "N/A"}</p>
+              <p class="card-text"><strong>Gender:</strong> ${client.gender || "N/A"}</p>
+            </div>
+          </div>
+        </div>`;
+      clientList.innerHTML += clientCard;
+    });
+  }
+
   function reviewCase(caseId, status) {
     const messageDiv = document.getElementById("case-message");
     const reviewMessage = document.getElementById("review-message");
 
-    // Fetch lawyer profile to get lawyerId
     $.ajax({
       url: "http://localhost:8080/api/v1/user/lawyer?email=" + email,
       method: "GET",
@@ -520,7 +564,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       success: function (profileResponse) {
         if (profileResponse.code === 200 && profileResponse.data) {
-          const lawyerId = profileResponse.data.lawyer_id; // Assuming lawyer_id is returned
+          const lawyerId = profileResponse.data.lawyer_id;
 
           $.ajax({
             url: `http://localhost:8080/api/v1/case/review/${caseId}?status=${status}&lawyerId=${lawyerId}`,
@@ -535,8 +579,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (reviewMessage) {
                   reviewMessage.innerHTML = `<div class="alert alert-success">Case ${status.toLowerCase()} successfully!</div>`;
                 }
-                fetchOpenCases(); // Refresh open case list
-                fetchAssignedCases(); // Refresh assigned case list
+                fetchOpenCases();
+                fetchAssignedCases();
+                fetchClients(); // Refresh clients after case status change
               } else {
                 messageDiv.innerHTML = `<div class="alert alert-danger">${response.message}</div>`;
                 if (reviewMessage) {
@@ -575,7 +620,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Populate case select (only for open cases)
   function populateCaseSelect(cases) {
     const caseIdSelect = document.getElementById("case-id-select");
     caseIdSelect.innerHTML = '<option value="">Select a case</option>';
@@ -587,7 +631,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Fetch case details
   function fetchCaseDetails(caseId) {
     $.ajax({
       url: "http://localhost:8080/api/v1/case/open-cases",
