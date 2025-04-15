@@ -12,51 +12,58 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("lawyer-name").textContent = email;
   }
 
-  const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
-  const contentSections = document.querySelectorAll('.content-section');
-  const sectionTitle = document.getElementById('section-title');
+  const navLinks = document.querySelectorAll(".sidebar-nav .nav-link");
+  const contentSections = document.querySelectorAll(".content-section");
+  const sectionTitle = document.getElementById("section-title");
 
-  navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
       e.preventDefault();
-      navLinks.forEach(navLink => navLink.classList.remove('active'));
-      this.classList.add('active');
-      const targetSectionId = this.getAttribute('data-section');
-      contentSections.forEach(section => section.classList.remove('active'));
-      document.getElementById(targetSectionId).classList.add('active');
+      navLinks.forEach((navLink) => navLink.classList.remove("active"));
+      this.classList.add("active");
+      const targetSectionId = this.getAttribute("data-section");
+      contentSections.forEach((section) => section.classList.remove("active"));
+      document.getElementById(targetSectionId).classList.add("active");
       sectionTitle.textContent = this.textContent.trim();
 
       if (targetSectionId === "case-section") {
+        // Fetch open cases by default when case section is loaded
         fetchOpenCases();
+        // Reset to open cases tab
+        document.getElementById("open-cases-tab").click();
       } else if (targetSectionId === "profile-section") {
         fetchLawyerProfile();
       }
     });
   });
 
+  // Tab event listeners
+  document.getElementById("open-cases-tab").addEventListener("click", fetchOpenCases);
+  document.getElementById("assigned-cases-tab").addEventListener("click", fetchAssignedCases);
+
   fetchLawyerProfile();
 
   const districtsByProvince = {
-    "Western": ["Colombo", "Gampaha", "Kalutara"],
-    "Central": ["Kandy", "Matale", "Nuwara Eliya"],
-    "Southern": ["Galle", "Matara", "Hambantota"],
-    "Northern": ["Jaffna", "Kilinochchi", "Mannar", "Mullaitivu", "Vavuniya"],
-    "Eastern": ["Batticaloa", "Ampara", "Trincomalee"],
+    Western: ["Colombo", "Gampaha", "Kalutara"],
+    Central: ["Kandy", "Matale", "Nuwara Eliya"],
+    Southern: ["Galle", "Matara", "Hambantota"],
+    Northern: ["Jaffna", "Kilinochchi", "Mannar", "Mullaitivu", "Vavuniya"],
+    Eastern: ["Batticaloa", "Ampara", "Trincomalee"],
     "North Western": ["Kurunegala", "Puttalam"],
     "North Central": ["Anuradhapura", "Polonnaruwa"],
-    "Uva": ["Badulla", "Monaragala"],
-    "Sabaragamuwa": ["Ratnapura", "Kegalle"]
+    Uva: ["Badulla", "Monaragala"],
+    Sabaragamuwa: ["Ratnapura", "Kegalle"],
   };
 
-  const provinceSelect = document.getElementById('province');
-  const districtSelect = document.getElementById('district');
+  const provinceSelect = document.getElementById("province");
+  const districtSelect = document.getElementById("district");
 
-  provinceSelect.addEventListener('change', function() {
+  provinceSelect.addEventListener("change", function () {
     const selectedProvince = this.value;
     districtSelect.innerHTML = '<option value="">Select District</option>';
     if (selectedProvince && districtsByProvince[selectedProvince]) {
-      districtsByProvince[selectedProvince].forEach(district => {
-        const option = document.createElement('option');
+      districtsByProvince[selectedProvince].forEach((district) => {
+        const option = document.createElement("option");
         option.value = district;
         option.textContent = district;
         districtSelect.appendChild(option);
@@ -64,76 +71,76 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  const profileForm = document.getElementById('profile-form');
-  profileForm.addEventListener('submit', function(e) {
+  const profileForm = document.getElementById("profile-form");
+  profileForm.addEventListener("submit", function (e) {
     e.preventDefault();
     updateLawyerProfile();
   });
 
-  document.getElementById('logout-btn').addEventListener('click', function() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('email');
-    window.location.href = 'login.html';
+  document.getElementById("logout-btn").addEventListener("click", function () {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    window.location.href = "login.html";
   });
 
-  document.getElementById('confirm-deactivate-btn').addEventListener('click', function() {
-    const confirmEmail = document.getElementById('deactivate-confirm-email').value;
+  document.getElementById("confirm-deactivate-btn").addEventListener("click", function () {
+    const confirmEmail = document.getElementById("deactivate-confirm-email").value;
     if (confirmEmail === email) {
       deactivateAccount();
     } else {
-      alert('Email does not match your account email.');
+      alert("Email does not match your account email.");
     }
   });
 
   // Profile Picture Handling
-  const profilePicInput = document.getElementById('profile-pic-input');
-  const profilePic = document.getElementById('profile-pic');
-  const deletePicBtn = document.getElementById('delete-pic-btn');
-  const uploadSuccess = document.getElementById('upload-success');
-  const uploadError = document.getElementById('upload-error');
+  const profilePicInput = document.getElementById("profile-pic-input");
+  const profilePic = document.getElementById("profile-pic");
+  const deletePicBtn = document.getElementById("delete-pic-btn");
+  const uploadSuccess = document.getElementById("upload-success");
+  const uploadError = document.getElementById("upload-error");
 
-  profilePicInput.addEventListener('change', function() {
+  profilePicInput.addEventListener("change", function () {
     if (this.files && this.files[0]) {
       const file = this.files[0];
-      if (!file.type.startsWith('image/')) {
-        uploadError.textContent = 'Please upload an image file (JPG, PNG, JPEG).';
-        uploadError.classList.remove('d-none');
-        setTimeout(() => uploadError.classList.add('d-none'), 3000);
+      if (!file.type.startsWith("image/")) {
+        uploadError.textContent = "Please upload an image file (JPG, PNG, JPEG).";
+        uploadError.classList.remove("d-none");
+        setTimeout(() => uploadError.classList.add("d-none"), 3000);
         return;
       }
       if (file.size > 5 * 1024 * 1024) {
-        uploadError.textContent = 'File size must be less than 5MB.';
-        uploadError.classList.remove('d-none');
-        setTimeout(() => uploadError.classList.add('d-none'), 3000);
+        uploadError.textContent = "File size must be less than 5MB.";
+        uploadError.classList.remove("d-none");
+        setTimeout(() => uploadError.classList.add("d-none"), 3000);
         return;
       }
       uploadProfilePicture(file);
     }
   });
 
-  deletePicBtn.addEventListener('click', function() {
+  deletePicBtn.addEventListener("click", function () {
     deleteProfilePicture();
   });
 
   // Case Review Form Handling
-  const caseReviewForm = document.getElementById('case-review-form');
+  const caseReviewForm = document.getElementById("case-review-form");
   if (caseReviewForm) {
-    const caseIdSelect = document.getElementById('case-id-select');
-    const caseDetails = document.getElementById('case-details');
-    const clientName = document.getElementById('client-name');
-    const reviewMessage = document.getElementById('review-message');
+    const caseIdSelect = document.getElementById("case-id-select");
+    const caseDetails = document.getElementById("case-details");
+    const clientName = document.getElementById("client-name");
+    const reviewMessage = document.getElementById("review-message");
 
-    caseIdSelect.addEventListener('change', function() {
+    caseIdSelect.addEventListener("change", function () {
       const selectedCaseId = this.value;
       if (selectedCaseId) {
         fetchCaseDetails(selectedCaseId);
       } else {
-        caseDetails.value = '';
-        clientName.value = '';
+        caseDetails.value = "";
+        clientName.value = "";
       }
     });
 
-    caseReviewForm.addEventListener('submit', function(e) {
+    caseReviewForm.addEventListener("submit", function (e) {
       e.preventDefault();
       const caseId = caseIdSelect.value;
       const action = e.submitter.dataset.action;
@@ -144,254 +151,299 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function fetchLawyerProfile() {
-    fetch('http://localhost:8080/api/v1/user/lawyer?email=' + email, {
-      method: 'GET',
+    fetch("http://localhost:8080/api/v1/user/lawyer?email=" + email, {
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.code === 200 && data.data) {
           populateProfileForm(data.data);
           if (data.data.profilePictureUrl) {
             profilePic.src = data.data.profilePictureUrl;
-            deletePicBtn.classList.remove('d-none');
+            deletePicBtn.classList.remove("d-none");
           } else {
-            profilePic.src = '/api/placeholder/100/100';
-            deletePicBtn.classList.add('d-none');
+            profilePic.src = "/api/placeholder/100/100";
+            deletePicBtn.classList.add("d-none");
           }
           // Update header profile picture
-          document.getElementById('header-profile-pic').src = data.data.profilePictureUrl || '/api/placeholder/36/36';
+          document.getElementById("header-profile-pic").src =
+            data.data.profilePictureUrl || "/api/placeholder/36/36";
         }
       })
-      .catch(error => {
-        console.error('Error fetching profile:', error);
+      .catch((error) => {
+        console.error("Error fetching profile:", error);
       });
   }
 
   function populateProfileForm(data) {
     if (!data) return;
-    document.getElementById('lawyer_name').value = data.lawyer_name || '';
-    document.getElementById('contactNumber').value = data.contactNumber || '';
-    document.getElementById('address').value = data.address || '';
-    document.getElementById('specialization').value = data.specialization || '';
-    document.getElementById('yearsOfExperience').value = data.yearsOfExperience || '';
-    document.getElementById('barAssociationNumber').value = data.barAssociationNumber || '';
-    document.getElementById('officeLocation').value = data.officeLocation || '';
-    document.getElementById('bio').value = data.bio || '';
-    document.getElementById('province').value = data.province || '';
+    document.getElementById("lawyer_name").value = data.lawyer_name || "";
+    document.getElementById("contactNumber").value = data.contactNumber || "";
+    document.getElementById("address").value = data.address || "";
+    document.getElementById("specialization").value = data.specialization || "";
+    document.getElementById("yearsOfExperience").value = data.yearsOfExperience || "";
+    document.getElementById("barAssociationNumber").value = data.barAssociationNumber || "";
+    document.getElementById("officeLocation").value = data.officeLocation || "";
+    document.getElementById("bio").value = data.bio || "";
+    document.getElementById("province").value = data.province || "";
 
     if (data.province) {
-      const event = new Event('change');
+      const event = new Event("change");
       provinceSelect.dispatchEvent(event);
       setTimeout(() => {
-        document.getElementById('district').value = data.district || '';
+        document.getElementById("district").value = data.district || "";
       }, 100);
     }
   }
 
   function updateLawyerProfile() {
-    const updateBtn = document.getElementById('update-profile-btn');
-    const successAlert = document.getElementById('update-success');
-    const errorAlert = document.getElementById('update-error');
+    const updateBtn = document.getElementById("update-profile-btn");
+    const successAlert = document.getElementById("update-success");
+    const errorAlert = document.getElementById("update-error");
 
-    successAlert.classList.add('d-none');
-    errorAlert.classList.add('d-none');
+    successAlert.classList.add("d-none");
+    errorAlert.classList.add("d-none");
 
     updateBtn.disabled = true;
-    updateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
+    updateBtn.innerHTML =
+      '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
 
     const lawyerUpdateDTO = {
-      lawyer_name: document.getElementById('lawyer_name').value,
-      contactNumber: document.getElementById('contactNumber').value,
-      address: document.getElementById('address').value,
-      specialization: document.getElementById('specialization').value,
-      yearsOfExperience: document.getElementById('yearsOfExperience').value ?
-        parseInt(document.getElementById('yearsOfExperience').value) : null,
-      barAssociationNumber: document.getElementById('barAssociationNumber').value,
-      officeLocation: document.getElementById('officeLocation').value,
-      bio: document.getElementById('bio').value,
-      province: document.getElementById('province').value,
-      district: document.getElementById('district').value
+      lawyer_name: document.getElementById("lawyer_name").value,
+      contactNumber: document.getElementById("contactNumber").value,
+      address: document.getElementById("address").value,
+      specialization: document.getElementById("specialization").value,
+      yearsOfExperience: document.getElementById("yearsOfExperience").value
+        ? parseInt(document.getElementById("yearsOfExperience").value)
+        : null,
+      barAssociationNumber: document.getElementById("barAssociationNumber").value,
+      officeLocation: document.getElementById("officeLocation").value,
+      bio: document.getElementById("bio").value,
+      province: document.getElementById("province").value,
+      district: document.getElementById("district").value,
     };
 
-    fetch('http://localhost:8080/api/v1/user/update-lawyer', {
-      method: 'PUT',
+    fetch("http://localhost:8080/api/v1/user/update-lawyer", {
+      method: "PUT",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(lawyerUpdateDTO)
+      body: JSON.stringify(lawyerUpdateDTO),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         updateBtn.disabled = false;
         updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
         if (data.code === 200) {
-          successAlert.classList.remove('d-none');
+          successAlert.classList.remove("d-none");
           setTimeout(() => {
-            successAlert.classList.add('d-none');
+            successAlert.classList.add("d-none");
           }, 3000);
         } else {
-          errorAlert.textContent = data.message || 'Error updating profile!';
-          errorAlert.classList.remove('d-none');
+          errorAlert.textContent = data.message || "Error updating profile!";
+          errorAlert.classList.remove("d-none");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         updateBtn.disabled = false;
         updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
-        console.error('Error updating profile:', error);
-        errorAlert.textContent = 'Network error. Please try again.';
-        errorAlert.classList.remove('d-none');
+        console.error("Error updating profile:", error);
+        errorAlert.textContent = "Network error. Please try again.";
+        errorAlert.classList.remove("d-none");
       });
   }
 
   function uploadProfilePicture(file) {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
 
-    const uploadSuccess = document.getElementById('upload-success');
-    const uploadError = document.getElementById('upload-error');
+    const uploadSuccess = document.getElementById("upload-success");
+    const uploadError = document.getElementById("upload-error");
 
-    uploadSuccess.classList.add('d-none');
-    uploadError.classList.add('d-none');
+    uploadSuccess.classList.add("d-none");
+    uploadError.classList.add("d-none");
 
     fetch(`http://localhost:8080/api/v1/user/${email}/profile-picture`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      body: formData
+      body: formData,
     })
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to upload profile picture');
+          throw new Error("Failed to upload profile picture");
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         profilePic.src = data.profilePictureUrl;
-        document.getElementById('header-profile-pic').src = data.profilePictureUrl;
-        deletePicBtn.classList.remove('d-none');
-        uploadSuccess.classList.remove('d-none');
-        setTimeout(() => uploadSuccess.classList.add('d-none'), 3000);
-        profilePicInput.value = ''; // Clear input
+        document.getElementById("header-profile-pic").src = data.profilePictureUrl;
+        deletePicBtn.classList.remove("d-none");
+        uploadSuccess.classList.remove("d-none");
+        setTimeout(() => uploadSuccess.classList.add("d-none"), 3000);
+        profilePicInput.value = ""; // Clear input
       })
-      .catch(error => {
-        console.error('Error uploading profile picture:', error);
-        uploadError.textContent = 'Error uploading profile picture. Please try again.';
-        uploadError.classList.remove('d-none');
-        setTimeout(() => uploadError.classList.add('d-none'), 3000);
+      .catch((error) => {
+        console.error("Error uploading profile picture:", error);
+        uploadError.textContent = "Error uploading profile picture. Please try again.";
+        uploadError.classList.remove("d-none");
+        setTimeout(() => uploadError.classList.add("d-none"), 3000);
       });
   }
 
   function deleteProfilePicture() {
-    const uploadSuccess = document.getElementById('upload-success');
-    const uploadError = document.getElementById('upload-error');
+    const uploadSuccess = document.getElementById("upload-success");
+    const uploadError = document.getElementById("upload-error");
 
-    uploadSuccess.classList.add('d-none');
-    uploadError.classList.add('d-none');
+    uploadSuccess.classList.add("d-none");
+    uploadError.classList.add("d-none");
 
     fetch(`http://localhost:8080/api/v1/user/${email}/profile-picture`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     })
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to delete profile picture');
+          throw new Error("Failed to delete profile picture");
         }
-        profilePic.src = '/api/placeholder/100/100';
-        document.getElementById('header-profile-pic').src = '/api/placeholder/36/36';
-        deletePicBtn.classList.add('d-none');
-        uploadSuccess.textContent = 'Profile picture deleted successfully!';
-        uploadSuccess.classList.remove('d-none');
-        setTimeout(() => uploadSuccess.classList.add('d-none'), 3000);
+        profilePic.src = "/api/placeholder/100/100";
+        document.getElementById("header-profile-pic").src = "/api/placeholder/36/36";
+        deletePicBtn.classList.add("d-none");
+        uploadSuccess.textContent = "Profile picture deleted successfully!";
+        uploadSuccess.classList.remove("d-none");
+        setTimeout(() => uploadSuccess.classList.add("d-none"), 3000);
       })
-      .catch(error => {
-        console.error('Error deleting profile picture:', error);
-        uploadError.textContent = 'Error deleting profile picture. Please try again.';
-        uploadError.classList.remove('d-none');
-        setTimeout(() => uploadError.classList.add('d-none'), 3000);
+      .catch((error) => {
+        console.error("Error deleting profile picture:", error);
+        uploadError.textContent = "Error deleting profile picture. Please try again.";
+        uploadError.classList.remove("d-none");
+        setTimeout(() => uploadError.classList.add("d-none"), 3000);
       });
   }
 
   function deactivateAccount() {
-    const deactivateBtn = document.getElementById('confirm-deactivate-btn');
+    const deactivateBtn = document.getElementById("confirm-deactivate-btn");
     deactivateBtn.disabled = true;
-    deactivateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+    deactivateBtn.innerHTML =
+      '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
 
-    fetch('http://localhost:8080/api/v1/user/delete-account', {
-      method: 'POST',
+    fetch("http://localhost:8080/api/v1/user/delete-account", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email: email })
+      body: JSON.stringify({ email: email }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         deactivateBtn.disabled = false;
-        deactivateBtn.innerHTML = 'Deactivate Account';
+        deactivateBtn.innerHTML = "Deactivate Account";
         if (data.code === 200) {
-          alert('Account deleted successfully');
-          localStorage.removeItem('token');
-          localStorage.removeItem('email');
-          window.location.href = 'login.html';
+          alert("Account deleted successfully");
+          localStorage.removeItem("token");
+          localStorage.removeItem("email");
+          window.location.href = "login.html";
         } else {
-          alert(data.message || 'Error deleting account');
+          alert(data.message || "Error deleting account");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         deactivateBtn.disabled = false;
-        deactivateBtn.innerHTML = 'Deactivate Account';
-        console.error('Error deleting account:', error);
-        alert('Network error. Please try again.');
+        deactivateBtn.innerHTML = "Deactivate Account";
+        console.error("Error deleting account:", error);
+        alert("Network error. Please try again.");
       });
   }
 
   // Fetch open cases
   function fetchOpenCases() {
-    const caseList = document.getElementById('case-list');
-    caseList.innerHTML = '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>Loading cases...</p></div>';
+    const caseList = document.getElementById("case-list");
+    const caseMessage = document.getElementById("case-message");
+    caseList.innerHTML =
+      '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>Loading cases...</p></div>';
 
     $.ajax({
-      url: 'http://localhost:8080/api/v1/case/open-cases',
-      method: 'GET',
+      url: "http://localhost:8080/api/v1/case/open-cases",
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-      success: function(response) {
+      success: function (response) {
         if (response.code === 200 && response.data) {
-          displayCases(response.data);
-          if (caseReviewForm) populateCaseSelect(response.data); // Populate dropdown if form exists
+          displayCases(response.data, "case-list");
+          if (caseReviewForm) populateCaseSelect(response.data);
         } else {
           caseList.innerHTML = '<p>No open cases found.</p>';
-          if (caseReviewForm) document.getElementById('case-id-select').innerHTML = '<option value="">No open cases available</option>';
+          caseMessage.innerHTML = "";
+          if (caseReviewForm)
+            document.getElementById("case-id-select").innerHTML =
+              '<option value="">No open cases available</option>';
         }
       },
-      error: function(xhr, status, error) {
-        console.error('Error fetching cases:', error);
+      error: function (xhr, status, error) {
+        console.error("Error fetching open cases:", error);
         caseList.innerHTML = '<div class="alert alert-danger">Failed to load cases. Please try again later.</div>';
-        if (caseReviewForm) document.getElementById('case-id-select').innerHTML = '<option value="">Error loading cases</option>';
-      }
+        caseMessage.innerHTML = "";
+        if (caseReviewForm)
+          document.getElementById("case-id-select").innerHTML =
+            '<option value="">Error loading cases</option>';
+      },
     });
   }
 
-  function displayCases(cases) {
-    const caseList = document.getElementById('case-list');
-    caseList.innerHTML = '';
+  // Fetch assigned cases
+  function fetchAssignedCases() {
+    const assignedCaseList = document.getElementById("assigned-case-list");
+    const assignedCaseMessage = document.getElementById("assigned-case-message");
+    assignedCaseList.innerHTML =
+      '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>Loading assigned cases...</p></div>';
+
+    $.ajax({
+      url: "http://localhost:8080/api/v1/case/assigned",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      success: function (response) {
+        if (response.code === 200 && response.data) {
+          displayAssignedCases(response.data, "assigned-case-list");
+          assignedCaseMessage.innerHTML = "";
+        } else {
+          assignedCaseList.innerHTML = '<p>No assigned cases found.</p>';
+          assignedCaseMessage.innerHTML = "";
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching assigned cases:", error);
+        assignedCaseList.innerHTML =
+          '<div class="alert alert-danger">Failed to load assigned cases. Please try again later.</div>';
+        assignedCaseMessage.innerHTML = "";
+      },
+    });
+  }
+
+  // Display cases (for both open and assigned)
+  function displayCases(cases, listId) {
+    const caseList = document.getElementById(listId);
+    caseList.innerHTML = "";
     if (!cases.length) {
-      caseList.innerHTML = '<p>No open cases found.</p>';
+      caseList.innerHTML = '<p>No cases found.</p>';
       return;
     }
 
-    cases.forEach(caseItem => {
+    cases.forEach((caseItem) => {
       const caseCard = `
         <div class="col-md-4 mb-3">
           <div class="card h-100">
@@ -400,8 +452,12 @@ document.addEventListener("DOMContentLoaded", function () {
               <p class="card-text">${caseItem.description}</p>
               <p><strong>Client:</strong> ${caseItem.clientName}</p>
               <p><strong>Status:</strong> ${caseItem.status}</p>
-              <button class="btn btn-success me-2 accept-btn" data-case-id="${caseItem.caseId}">Accept</button>
-              <button class="btn btn-danger decline-btn" data-case-id="${caseItem.caseId}">Decline</button>
+              <button class="btn btn-success me-2 accept-btn" data-case-id="${caseItem.caseId}" style="display: ${
+        caseItem.status === "OPEN" ? "inline-block" : "none"
+      };">Accept</button>
+              <button class="btn btn-danger decline-btn" data-case-id="${caseItem.caseId}" style="display: ${
+        caseItem.status === "OPEN" ? "inline-block" : "none"
+      };">Decline</button>
             </div>
           </div>
         </div>`;
@@ -409,80 +465,151 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Attach event listeners to the buttons
-    document.querySelectorAll('.accept-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const caseId = this.getAttribute('data-case-id');
-        reviewCase(caseId, 'ACCEPTED');
+    document.querySelectorAll(`#${listId} .accept-btn`).forEach((btn) => {
+      btn.addEventListener("click", function () {
+        const caseId = this.getAttribute("data-case-id");
+        reviewCase(caseId, "ACCEPTED");
       });
     });
 
-    document.querySelectorAll('.decline-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const caseId = this.getAttribute('data-case-id');
-        reviewCase(caseId, 'DECLINED');
+    document.querySelectorAll(`#${listId} .decline-btn`).forEach((btn) => {
+      btn.addEventListener("click", function () {
+        const caseId = this.getAttribute("data-case-id");
+        reviewCase(caseId, "DECLINED");
       });
     });
   }
 
-  function reviewCase(caseId, status) {
-    const messageDiv = document.getElementById('case-message');
-    const lawyerId = 1; // Replace with actual lawyer ID from authentication
+  // Display assigned cases (read-only view)
+  function displayAssignedCases(cases, listId) {
+    const assignedCaseList = document.getElementById(listId);
+    assignedCaseList.innerHTML = "";
+    if (!cases.length) {
+      assignedCaseList.innerHTML = '<p>No assigned cases found.</p>';
+      return;
+    }
 
+    cases.forEach((caseItem) => {
+      const caseCard = `
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Case #${caseItem.caseNumber}</h5>
+              <p class="card-text">${caseItem.description}</p>
+              <p><strong>Client:</strong> ${caseItem.clientName}</p>
+              <p><strong>Status:</strong> ${caseItem.status}</p>
+            </div>
+          </div>
+        </div>`;
+      assignedCaseList.innerHTML += caseCard;
+    });
+  }
+
+  // Review case
+  function reviewCase(caseId, status) {
+    const messageDiv = document.getElementById("case-message");
+    const reviewMessage = document.getElementById("review-message");
+
+    // Fetch lawyer profile to get lawyerId
     $.ajax({
-      url: `http://localhost:8080/api/v1/case/review/${caseId}?status=${status}&lawyerId=${lawyerId}`,
-      method: 'PUT',
+      url: "http://localhost:8080/api/v1/user/lawyer?email=" + email,
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-      success: function(response) {
-        if (response.code === 200) {
-          messageDiv.innerHTML = `<div class="alert alert-success">Case ${status.toLowerCase()} successfully!</div>`;
-          fetchOpenCases(); // Refresh the case list
+      success: function (profileResponse) {
+        if (profileResponse.code === 200 && profileResponse.data) {
+          const lawyerId = profileResponse.data.lawyer_id; // Assuming lawyer_id is returned
+
+          $.ajax({
+            url: `http://localhost:8080/api/v1/case/review/${caseId}?status=${status}&lawyerId=${lawyerId}`,
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            success: function (response) {
+              if (response.code === 200) {
+                messageDiv.innerHTML = `<div class="alert alert-success">Case ${status.toLowerCase()} successfully!</div>`;
+                if (reviewMessage) {
+                  reviewMessage.innerHTML = `<div class="alert alert-success">Case ${status.toLowerCase()} successfully!</div>`;
+                }
+                fetchOpenCases(); // Refresh open case list
+                fetchAssignedCases(); // Refresh assigned case list
+              } else {
+                messageDiv.innerHTML = `<div class="alert alert-danger">${response.message}</div>`;
+                if (reviewMessage) {
+                  reviewMessage.innerHTML = `<div class="alert alert-danger">${response.message}</div>`;
+                }
+              }
+            },
+            error: function (xhr, status, error) {
+              console.error("Error reviewing case:", error);
+              messageDiv.innerHTML =
+                '<div class="alert alert-danger">Error reviewing case. Please try again.</div>';
+              if (reviewMessage) {
+                reviewMessage.innerHTML =
+                  '<div class="alert alert-danger">Error reviewing case. Please try again.</div>';
+              }
+            },
+          });
         } else {
-          messageDiv.innerHTML = `<div class="alert alert-danger">${response.message}</div>`;
+          messageDiv.innerHTML =
+            '<div class="alert alert-danger">Failed to fetch lawyer profile.</div>';
+          if (reviewMessage) {
+            reviewMessage.innerHTML =
+              '<div class="alert alert-danger">Failed to fetch lawyer profile.</div>';
+          }
         }
       },
-      error: function(xhr, status, error) {
-        console.error('Error reviewing case:', error);
-        messageDiv.innerHTML = '<div class="alert alert-danger">Error reviewing case. Please try again.</div>';
-      }
+      error: function (xhr, status, error) {
+        console.error("Error fetching lawyer profile:", error);
+        messageDiv.innerHTML =
+          '<div class="alert alert-danger">Error fetching lawyer profile. Please try again.</div>';
+        if (reviewMessage) {
+          reviewMessage.innerHTML =
+            '<div class="alert alert-danger">Error fetching lawyer profile. Please try again.</div>';
+        }
+      },
     });
   }
 
-  // Additional functions for Case Review Form (if present)
+  // Populate case select (only for open cases)
   function populateCaseSelect(cases) {
-    const caseIdSelect = document.getElementById('case-id-select');
+    const caseIdSelect = document.getElementById("case-id-select");
     caseIdSelect.innerHTML = '<option value="">Select a case</option>';
-    cases.forEach(caseItem => {
-      const option = document.createElement('option');
+    cases.forEach((caseItem) => {
+      const option = document.createElement("option");
       option.value = caseItem.caseId;
       option.textContent = `Case #${caseItem.caseNumber} - ${caseItem.clientName}`;
       caseIdSelect.appendChild(option);
     });
   }
 
+  // Fetch case details
   function fetchCaseDetails(caseId) {
     $.ajax({
-      url: 'http://localhost:8080/api/v1/case/open-cases',
-      method: 'GET',
+      url: "http://localhost:8080/api/v1/case/open-cases",
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-      success: function(response) {
+      success: function (response) {
         if (response.code === 200 && response.data) {
-          const caseItem = response.data.find(c => c.caseId == caseId);
+          const caseItem = response.data.find((c) => c.caseId == caseId);
           if (caseItem) {
-            document.getElementById('case-details').value = caseItem.description;
-            document.getElementById('client-name').value = caseItem.clientName;
+            document.getElementById("case-details").value = caseItem.description;
+            document.getElementById("client-name").value = caseItem.clientName;
           }
         }
       },
-      error: function(xhr, status, error) {
-        console.error('Error fetching case details:', error);
-        document.getElementById('review-message').innerHTML = '<div class="alert alert-danger">Error loading case details.</div>';
-      }
+      error: function (xhr, status, error) {
+        console.error("Error fetching case details:", error);
+        document.getElementById("review-message").innerHTML =
+          '<div class="alert alert-danger">Error loading case details.</div>';
+      },
     });
   }
 });

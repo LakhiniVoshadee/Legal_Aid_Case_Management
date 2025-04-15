@@ -201,22 +201,47 @@
           </div>
         </div>
 
-        <!-- Case Section -->
+        <<!-- Case Section -->
         <div id="case-section" class="content-section" data-aos="fade-up">
           <div class="section-header mb-5">
             <h2 class="text-primary font-bold tracking-wide">
               <i class="bi bi-briefcase me-2"></i>Case Review
             </h2>
-            <p class="text-dark mt-1">Review and manage open cases</p>
+            <p class="text-dark mt-1">Review and manage open and assigned cases</p>
           </div>
-          <!-- Case List -->
-          <div class="card bg-white shadow-lg rounded-xl border-0 overflow-hidden mb-4">
-            <div class="card-header bg-gradient-to-r from-primary to-secondary text-white py-3 px-4">
-              <h5 class="mb-0 font-semibold tracking-wide">Open Cases</h5>
+          <!-- Tabs for Open and Assigned Cases -->
+          <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+              <a class="nav-link active" id="open-cases-tab" data-bs-toggle="tab" href="#open-cases">Open Cases</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="assigned-cases-tab" data-bs-toggle="tab" href="#assigned-cases">Assigned Cases</a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <!-- Open Cases Tab -->
+            <div class="tab-pane fade show active" id="open-cases">
+              <div class="card bg-white shadow-lg rounded-xl border-0 overflow-hidden mb-4">
+                <div class="card-header bg-gradient-to-r from-primary to-secondary text-white py-3 px-4">
+                  <h5 class="mb-0 font-semibold tracking-wide">Open Cases</h5>
+                </div>
+                <div class="card-body p-4">
+                  <div id="case-list" class="row"></div>
+                  <div id="case-message" class="mt-3"></div>
+                </div>
+              </div>
             </div>
-            <div class="card-body p-4">
-              <div id="case-list" class="row"></div>
-              <div id="case-message" class="mt-3"></div>
+            <!-- Assigned Cases Tab -->
+            <div class="tab-pane fade" id="assigned-cases">
+              <div class="card bg-white shadow-lg rounded-xl border-0 overflow-hidden mb-4">
+                <div class="card-header bg-gradient-to-r from-primary to-secondary text-white py-3 px-4">
+                  <h5 class="mb-0 font-semibold tracking-wide">Assigned Cases</h5>
+                </div>
+                <div class="card-body p-4">
+                  <div id="assigned-case-list" class="row"></div>
+                  <div id="assigned-case-message" class="mt-3"></div>
+                </div>
+              </div>
             </div>
           </div>
           <!-- Case Review Form -->
@@ -232,9 +257,9 @@
                     Select Case
                   </label>
                   <div class="input-group">
-                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                      <i class="bi bi-briefcase-fill text-primary"></i>
-                    </span>
+            <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+              <i class="bi bi-briefcase-fill text-primary"></i>
+            </span>
                     <select
                       class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
                       id="case-id-select"
@@ -266,9 +291,9 @@
                     Client Name
                   </label>
                   <div class="input-group">
-                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                      <i class="bi bi-person-fill text-primary"></i>
-                    </span>
+            <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+              <i class="bi bi-person-fill text-primary"></i>
+            </span>
                     <input
                       type="text"
                       class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
