@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   const email = localStorage.getItem("email");
   const token = localStorage.getItem("token");
+  let webSocket = null;
+  let currentRecipientEmail = null;
 
   if (!token || !email) {
     window.location.href = "login.html";
@@ -31,8 +33,11 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("open-cases-tab").click();
       } else if (targetSectionId === "profile-section") {
         fetchLawyerProfile();
-      } else if (targetSectionId === "clients-section") { // Updated to match HTML
+      } else if (targetSectionId === "clients-section") {
         fetchClients();
+      } else if (targetSectionId === "messages-section") {
+        initializeWebSocket();
+        fetchContacts();
       }
     });
   });
@@ -40,6 +45,31 @@ document.addEventListener("DOMContentLoaded", function () {
   // Tab event listeners for case section
   document.getElementById("open-cases-tab").addEventListener("click", fetchOpenCases);
   document.getElementById("assigned-cases-tab").addEventListener("click", fetchAssignedCases);
+
+  // Chat form submission
+  const chatForm = document.getElementById("chat-form");
+  if (chatForm) {
+    chatForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const chatInput = document.getElementById("chat-input");
+      const content = chatInput.value.trim();
+      if (content && currentRecipientEmail && webSocket) {
+        const message = {
+          senderEmail: email,
+          recipientEmail: currentRecipientEmail,
+          content: content,
+          timestamp: new Date().toISOString()
+        };
+        try {
+          webSocket.send(JSON.stringify(message));
+          displayMessage(message, true);
+          chatInput.value = "";
+        } catch (error) {
+          showChatError("Failed to send message. Please try again.");
+        }
+      }
+    });
+  }
 
   fetchLawyerProfile();
 
@@ -78,6 +108,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.getElementById("logout-btn").addEventListener("click", function () {
+    if (webSocket) {
+      webSocket.close();
+    }
     localStorage.removeItem("token");
     localStorage.removeItem("email");
     window.location.href = "login.html";
@@ -148,6 +181,153 @@ document.addEventListener("DOMContentLoaded", function () {
         reviewCase(caseId, action);
       }
     });
+  }
+
+  function initializeWebSocket() {
+    if (webSocket && webSocket.readyState === WebSocket.OPEN) {
+      return;
+    }
+
+    webSocket = new WebSocket(`ws://localhost:8080/ws?token=${token}`);
+
+    webSocket.onopen = function () {
+      console.log("WebSocket connected");
+      document.getElementById("chat-error").classList.add("d-none");
+    };
+
+    webSocket.onmessage = function (event) {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.senderEmail === currentRecipientEmail || message.senderEmail === email) {
+          displayMessage(message, message.senderEmail === email);
+        }
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+      }
+    };
+
+    webSocket.onerror = function (error) {
+      console.error("WebSocket error:", error);
+      showChatError("Failed to connect to chat server. Please try again later.");
+    };
+
+    webSocket.onclose = function (event) {
+      console.log("WebSocket closed:", event);
+      showChatError("Chat connection closed. Reconnecting...");
+      setTimeout(initializeWebSocket, 5000);
+    };
+  }
+
+  function fetchContacts() {
+    const contactList = document.getElementById("contact-list");
+    contactList.innerHTML =
+      '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>Loading contacts...</p></div>';
+
+    $.ajax({
+      url: "http://localhost:8080/api/v1/lawyer/clients",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      success: function (response) {
+        if (response.code === 200 && response.data && response.data.length > 0) {
+          displayContacts(response.data);
+        } else {
+          contactList.innerHTML = '<p class="text-muted">No clients found.</p>';
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching contacts:", error);
+        contactList.innerHTML = '<div class="alert alert-danger">Failed to load contacts. Please try again later.</div>';
+      },
+    });
+  }
+
+  function displayContacts(clients) {
+    const contactList = document.getElementById("contact-list");
+    contactList.innerHTML = "";
+    clients.forEach((client) => {
+      const contactItem = `
+        <a href="#" class="list-group-item list-group-item-action" data-email="${client.email}">
+          <div class="d-flex align-items-center">
+            <img src="/api/placeholder/40/40" class="rounded-circle me-2" alt="${client.full_name}">
+            <div>
+              <strong>${client.full_name || "Unknown"}</strong>
+              <p class="mb-0 text-muted small">${client.email}</p>
+            </div>
+          </div>
+        </a>`;
+      contactList.innerHTML += contactItem;
+    });
+
+    document.querySelectorAll("#contact-list .list-group-item").forEach((item) => {
+      item.addEventListener("click", function (e) {
+        e.preventDefault();
+        document.querySelectorAll("#contact-list .list-group-item").forEach((i) => i.classList.remove("active"));
+        this.classList.add("active");
+        currentRecipientEmail = this.getAttribute("data-email");
+        document.getElementById("chat-contact-name").textContent = this.querySelector("strong").textContent;
+        document.getElementById("chat-contact-pic").src = this.querySelector("img").src;
+        document.getElementById("no-chat-selected").classList.add("d-none");
+        document.getElementById("chat-area").classList.remove("d-none");
+        document.getElementById("chat-messages").innerHTML = "";
+        document.getElementById("chat-error").classList.add("d-none");
+        fetchMessages();
+      });
+    });
+  }
+
+  function fetchMessages() {
+    if (!currentRecipientEmail) return;
+
+    $.ajax({
+      url: `http://localhost:8080/api/v1/user/messages?senderEmail=${email}&recipientEmail=${currentRecipientEmail}`,
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      success: function (response) {
+        if (response.code === 200 && response.data) {
+          document.getElementById("chat-messages").innerHTML = "";
+          response.data.forEach((message) => {
+            displayMessage(message, message.senderEmail === email);
+          });
+          scrollChatToBottom();
+        } else {
+          showChatError("No messages found.");
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching messages:", error);
+        showChatError("Failed to load messages. Please try again.");
+      },
+    });
+  }
+
+  function displayMessage(message, isSent) {
+    const chatMessages = document.getElementById("chat-messages");
+    const timestamp = new Date(message.timestamp).toLocaleString();
+    const messageHtml = `
+      <div class="message ${isSent ? "sent" : "received"}">
+        <p class="mb-1">${message.content}</p>
+        <small>${timestamp}</small>
+      </div>`;
+    chatMessages.innerHTML += messageHtml;
+    scrollChatToBottom();
+  }
+
+  function scrollChatToBottom() {
+    const chatMessages = document.getElementById("chat-messages");
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function showChatError(message) {
+    const chatError = document.getElementById("chat-error");
+    chatError.textContent = message;
+    chatError.classList.remove("d-none");
+    setTimeout(() => chatError.classList.add("d-none"), 5000);
   }
 
   function fetchLawyerProfile() {
@@ -348,6 +528,9 @@ document.addEventListener("DOMContentLoaded", function () {
         deactivateBtn.disabled = false;
         deactivateBtn.innerHTML = "Deactivate Account";
         if (data.code === 200) {
+          if (webSocket) {
+            webSocket.close();
+          }
           alert("Account deleted successfully");
           localStorage.removeItem("token");
           localStorage.removeItem("email");
@@ -447,17 +630,26 @@ document.addEventListener("DOMContentLoaded", function () {
       success: function (response) {
         if (response.code === 200 && response.data && response.data.length > 0) {
           displayClients(response.data);
+          document.getElementById("total-clients").textContent = response.data.length;
           clientMessage.innerHTML = "";
         } else {
-          clientList.innerHTML = '<p class="text-muted">No clients found for assigned cases.</p>';
+          clientList.innerHTML = '<p class="text-muted">No clients found.</p>';
+          document.getElementById("total-clients").textContent = "0";
           clientMessage.innerHTML = "";
         }
       },
       error: function (xhr, status, error) {
         console.error("Error fetching clients:", error);
-        clientList.innerHTML =
-          '<div class="alert alert-danger">Failed to load clients. Please try again later.</div>';
-        clientMessage.innerHTML = "";
+        if (xhr.status === 403) {
+          alert("Session expired or unauthorized. Please log in again.");
+          localStorage.removeItem("token");
+          localStorage.removeItem("email");
+          window.location.href = "login.html";
+        } else {
+          clientList.innerHTML =
+            '<div class="alert alert-danger">Failed to load clients. Please try again later.</div>';
+          clientMessage.innerHTML = "";
+        }
       },
     });
   }
@@ -581,7 +773,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 fetchOpenCases();
                 fetchAssignedCases();
-                fetchClients(); // Refresh clients after case status change
+                fetchClients();
+                fetchContacts(); // Refresh contacts after case status change
               } else {
                 messageDiv.innerHTML = `<div class="alert alert-danger">${response.message}</div>`;
                 if (reviewMessage) {

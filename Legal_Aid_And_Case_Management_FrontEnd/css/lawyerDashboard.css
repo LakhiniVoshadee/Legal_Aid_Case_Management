@@ -395,3 +395,62 @@ body {
 #client-message .alert {
   font-size: 0.9rem;
 }
+
+/* Messages Section */
+#contact-list .list-group-item {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem;
+}
+
+#contact-list .list-group-item:hover {
+  background-color: #f3f4f6;
+}
+
+#contact-list .list-group-item.active {
+  background-color: #e0e7ff;
+  color: #1e3a8a;
+  font-weight: 500;
+}
+
+#chat-messages {
+  background-color: #f9fafb;
+}
+
+#chat-messages .message {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  max-width: 70%;
+}
+
+#chat-messages .message.sent {
+  background-color: #3b82f6;
+  color: #fff;
+  margin-left: auto;
+}
+
+#chat-messages .message.received {
+  background-color: #e5e7eb;
+  color: #1f2937;
+  margin-right: auto;
+}
+
+#chat-messages .message small {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+#chat-form .form-control {
+  border-radius: 0.375rem 0 0 0.375rem;
+}
+
+#chat-form .btn {
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+#chat-error {
+  font-size: 0.9rem;
+}

@@ -161,26 +161,35 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function fetchContacts() {
+    const contactList = document.getElementById("contact-list");
+    contactList.innerHTML =
+      '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>Loading contacts...</p></div>';
+
     $.ajax({
-      url: "http://localhost:8080/api/v1/user/lawyers",
+      url: "http://localhost:8080/api/v1/lawyer/clients",
       method: "GET",
-      headers: { "Authorization": `Bearer ${token}` },
-      success: (response) => {
-        if (response.code === 200 && response.data.length > 0) {
-          populateContactList(response.data);
-          // Auto-select first contact
-          const firstContact = response.data[0];
-          selectContact(firstContact.email, firstContact.lawyer_name || firstContact.email);
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      success: function (response) {
+        if (response.code === 200 && response.data && response.data.length > 0) {
+          displayContacts(response.data);
         } else {
-          document.getElementById("contact-list").innerHTML =
-            '<li class="list-group-item">No contacts available</li>';
+          contactList.innerHTML = '<p class="text-muted">No clients found.</p>';
         }
       },
-      error: (xhr) => {
-        console.error("Error fetching contacts:", xhr);
-        document.getElementById("contact-list").innerHTML =
-          '<li class="list-group-item text-danger">Error loading contacts</li>';
-      }
+      error: function (xhr, status, error) {
+        console.error("Error fetching contacts:", error);
+        if (xhr.status === 403) {
+          alert("Session expired or unauthorized. Please log in again.");
+          localStorage.removeItem("token");
+          localStorage.removeItem("email");
+          window.location.href = "login.html";
+        } else {
+          contactList.innerHTML = '<div class="alert alert-danger">Failed to load contacts. Please try again later.</div>';
+        }
+      },
     });
   }
 

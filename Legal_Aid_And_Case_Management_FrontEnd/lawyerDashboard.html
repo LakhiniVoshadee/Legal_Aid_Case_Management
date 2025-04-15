@@ -72,6 +72,11 @@
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="#messages-section" data-section="messages-section">
+                <i class="bi bi-chat-left-text me-2"></i> Messages
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="#profile-section" data-section="profile-section">
                 <i class="bi bi-person-circle me-2"></i> Profile
               </a>
@@ -183,7 +188,7 @@
           </div>
         </div>
 
-        <!-- Client Section -->
+        <!-- Clients Section -->
         <div id="clients-section" class="content-section" data-aos="fade-up">
           <div class="section-header mb-5">
             <h2 class="text-primary font-bold tracking-wide">
@@ -202,7 +207,7 @@
           </div>
         </div>
 
-        <<!-- Case Section -->
+        <!-- Case Section -->
         <div id="case-section" class="content-section" data-aos="fade-up">
           <div class="section-header mb-5">
             <h2 class="text-primary font-bold tracking-wide">
@@ -258,9 +263,9 @@
                     Select Case
                   </label>
                   <div class="input-group">
-            <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-              <i class="bi bi-briefcase-fill text-primary"></i>
-            </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-briefcase-fill text-primary"></i>
+                    </span>
                     <select
                       class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
                       id="case-id-select"
@@ -292,9 +297,9 @@
                     Client Name
                   </label>
                   <div class="input-group">
-            <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-              <i class="bi bi-person-fill text-primary"></i>
-            </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-person-fill text-primary"></i>
+                    </span>
                     <input
                       type="text"
                       class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -328,7 +333,60 @@
           </div>
         </div>
 
-        <!-- Profile Section -->
+        <!-- Messages Section -->
+        <div id="messages-section" class="content-section" data-aos="fade-up">
+          <div class="section-header mb-5">
+            <h2 class="text-primary font-bold tracking-wide">
+              <i class="bi bi-chat-left-text me-2"></i>Messages
+            </h2>
+            <p class="text-dark mt-1">Communicate with your clients</p>
+          </div>
+          <div class="card bg-white shadow-lg rounded-xl border-0 overflow-hidden">
+            <div class="card-header bg-gradient-to-r from-primary to-secondary text-white py-3 px-4">
+              <h5 class="mb-0 font-semibold tracking-wide">Chat</h5>
+            </div>
+            <div class="card-body p-4">
+              <div class="row">
+                <!-- Contact List -->
+                <div class="col-md-4 border-end">
+                  <h6 class="font-semibold mb-3">Contacts</h6>
+                  <div id="contact-list" class="list-group overflow-auto" style="max-height: 500px;">
+                    <div class="text-center">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      <p>Loading contacts...</p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Chat Area -->
+                <div class="col-md-8">
+                  <div id="chat-area" class="d-none">
+                    <div class="d-flex align-items-center mb-3">
+                      <img src="/api/placeholder/40/40" class="rounded-circle me-2" id="chat-contact-pic" alt="Contact">
+                      <h6 class="font-semibold mb-0" id="chat-contact-name">Select a contact</h6>
+                    </div>
+                    <div id="chat-messages" class="border rounded p-3 mb-3 overflow-auto" style="height: 400px;">
+                    </div>
+                    <form id="chat-form">
+                      <div class="input-group">
+                        <input type="text" class="form-control" id="chat-input" placeholder="Type your message..." required>
+                        <button type="submit" class="btn btn-primary">
+                          <i class="bi bi-send"></i>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                  <div id="no-chat-selected" class="text-center">
+                    <p class="text-muted">Select a contact to start chatting</p>
+                  </div>
+                  <div id="chat-error" class="alert alert-danger d-none mt-3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Profile Section -->
         <div id="profile-section" class="content-section" data-aos="fade-up">
           <div class="section-header mb-5">
@@ -404,9 +462,9 @@
                         Full Name
                       </label>
                       <div class="input-group">
-                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                  <i class="bi bi-person-fill text-primary"></i>
-                </span>
+                        <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                          <i class="bi bi-person-fill text-primary"></i>
+                        </span>
                         <input
                           type="text"
                           class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -422,9 +480,9 @@
                         Contact Number
                       </label>
                       <div class="input-group">
-                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                  <i class="bi bi-telephone-fill text-primary"></i>
-                </span>
+                        <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                          <i class="bi bi-telephone-fill text-primary"></i>
+                        </span>
                         <input
                           type="text"
                           class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -440,9 +498,9 @@
                         Address
                       </label>
                       <div class="input-group">
-                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                  <i class="bi bi-geo-alt-fill text-primary"></i>
-                </span>
+                        <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                          <i class="bi bi-geo-alt-fill text-primary"></i>
+                        </span>
                         <input
                           type="text"
                           class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -458,9 +516,9 @@
                         Province
                       </label>
                       <div class="input-group">
-                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                  <i class="bi bi-map-fill text-primary"></i>
-                </span>
+                        <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                          <i class="bi bi-map-fill text-primary"></i>
+                        </span>
                         <select
                           class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
                           id="province"
@@ -485,9 +543,9 @@
                         District
                       </label>
                       <div class="input-group">
-                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                  <i class="bi bi-geo-fill text-primary"></i>
-                </span>
+                        <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                          <i class="bi bi-geo-fill text-primary"></i>
+                        </span>
                         <select
                           class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
                           id="district"
@@ -506,9 +564,9 @@
                         Specialization
                       </label>
                       <div class="input-group">
-                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                  <i class="bi bi-star-fill text-primary"></i>
-                </span>
+                        <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                          <i class="bi bi-star-fill text-primary"></i>
+                        </span>
                         <select
                           class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
                           id="specialization"
@@ -534,9 +592,9 @@
                         Years of Experience
                       </label>
                       <div class="input-group">
-                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                  <i class="bi bi-hourglass-split text-primary"></i>
-                </span>
+                        <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                          <i class="bi bi-hourglass-split text-primary"></i>
+                        </span>
                         <input
                           type="number"
                           class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -553,9 +611,9 @@
                         Bar Association Number
                       </label>
                       <div class="input-group">
-                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                  <i class="bi bi-card-text text-primary"></i>
-                </span>
+                        <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                          <i class="bi bi-card-text text-primary"></i>
+                        </span>
                         <input
                           type="text"
                           class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -571,9 +629,9 @@
                         Office Location
                       </label>
                       <div class="input-group">
-                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                  <i class="bi bi-building text-primary"></i>
-                </span>
+                        <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                          <i class="bi bi-building text-primary"></i>
+                        </span>
                         <input
                           type="text"
                           class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
