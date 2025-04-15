@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (targetSectionId === "case-section") {
         fetchOpenCases();
+      } else if (targetSectionId === "profile-section") {
+        fetchLawyerProfile();
       }
     });
   });
@@ -83,7 +85,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Case Review Form Handling (if applicable)
+  // Profile Picture Handling
+  const profilePicInput = document.getElementById('profile-pic-input');
+  const profilePic = document.getElementById('profile-pic');
+  const deletePicBtn = document.getElementById('delete-pic-btn');
+  const uploadSuccess = document.getElementById('upload-success');
+  const uploadError = document.getElementById('upload-error');
+
+  profilePicInput.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+      const file = this.files[0];
+      if (!file.type.startsWith('image/')) {
+        uploadError.textContent = 'Please upload an image file (JPG, PNG, JPEG).';
+        uploadError.classList.remove('d-none');
+        setTimeout(() => uploadError.classList.add('d-none'), 3000);
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        uploadError.textContent = 'File size must be less than 5MB.';
+        uploadError.classList.remove('d-none');
+        setTimeout(() => uploadError.classList.add('d-none'), 3000);
+        return;
+      }
+      uploadProfilePicture(file);
+    }
+  });
+
+  deletePicBtn.addEventListener('click', function() {
+    deleteProfilePicture();
+  });
+
+  // Case Review Form Handling
   const caseReviewForm = document.getElementById('case-review-form');
   if (caseReviewForm) {
     const caseIdSelect = document.getElementById('case-id-select');
@@ -123,6 +155,15 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(data => {
         if (data.code === 200 && data.data) {
           populateProfileForm(data.data);
+          if (data.data.profilePictureUrl) {
+            profilePic.src = data.data.profilePictureUrl;
+            deletePicBtn.classList.remove('d-none');
+          } else {
+            profilePic.src = '/api/placeholder/100/100';
+            deletePicBtn.classList.add('d-none');
+          }
+          // Update header profile picture
+          document.getElementById('header-profile-pic').src = data.data.profilePictureUrl || '/api/placeholder/36/36';
         }
       })
       .catch(error => {
@@ -204,6 +245,78 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error('Error updating profile:', error);
         errorAlert.textContent = 'Network error. Please try again.';
         errorAlert.classList.remove('d-none');
+      });
+  }
+
+  function uploadProfilePicture(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const uploadSuccess = document.getElementById('upload-success');
+    const uploadError = document.getElementById('upload-error');
+
+    uploadSuccess.classList.add('d-none');
+    uploadError.classList.add('d-none');
+
+    fetch(`http://localhost:8080/api/v1/user/${email}/profile-picture`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to upload profile picture');
+        }
+        return response.json();
+      })
+      .then(data => {
+        profilePic.src = data.profilePictureUrl;
+        document.getElementById('header-profile-pic').src = data.profilePictureUrl;
+        deletePicBtn.classList.remove('d-none');
+        uploadSuccess.classList.remove('d-none');
+        setTimeout(() => uploadSuccess.classList.add('d-none'), 3000);
+        profilePicInput.value = ''; // Clear input
+      })
+      .catch(error => {
+        console.error('Error uploading profile picture:', error);
+        uploadError.textContent = 'Error uploading profile picture. Please try again.';
+        uploadError.classList.remove('d-none');
+        setTimeout(() => uploadError.classList.add('d-none'), 3000);
+      });
+  }
+
+  function deleteProfilePicture() {
+    const uploadSuccess = document.getElementById('upload-success');
+    const uploadError = document.getElementById('upload-error');
+
+    uploadSuccess.classList.add('d-none');
+    uploadError.classList.add('d-none');
+
+    fetch(`http://localhost:8080/api/v1/user/${email}/profile-picture`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to delete profile picture');
+        }
+        profilePic.src = '/api/placeholder/100/100';
+        document.getElementById('header-profile-pic').src = '/api/placeholder/36/36';
+        deletePicBtn.classList.add('d-none');
+        uploadSuccess.textContent = 'Profile picture deleted successfully!';
+        uploadSuccess.classList.remove('d-none');
+        setTimeout(() => uploadSuccess.classList.add('d-none'), 3000);
+      })
+      .catch(error => {
+        console.error('Error deleting profile picture:', error);
+        uploadError.textContent = 'Error deleting profile picture. Please try again.';
+        uploadError.classList.remove('d-none');
+        setTimeout(() => uploadError.classList.add('d-none'), 3000);
       });
   }
 
