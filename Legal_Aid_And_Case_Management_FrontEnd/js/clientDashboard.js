@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Load user data
   const email = localStorage.getItem("email");
   const token = localStorage.getItem("token");
+  let socket = null;
+  let selectedContact = null;
 
   if (!token || !email) {
     window.location.href = "login.html";
@@ -31,11 +33,14 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchLawyers();
       } else if (targetSectionId === "message-section") {
         initializeMessaging();
-      } else if (typeof socket !== 'undefined' && socket && socket.readyState === WebSocket.OPEN) {
+      } else if (socket && socket.readyState === WebSocket.OPEN) {
         socket.close();
       }
     });
   });
+
+  // Initialize dashboard
+  safeInitialize();
 
   // Fetch and populate client profile
   fetchClientProfile();
@@ -106,6 +111,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Logout functionality
   document.getElementById("logout-btn").addEventListener("click", function () {
+    if (socket) {
+      socket.close();
+    }
     localStorage.removeItem("token");
     localStorage.removeItem("email");
     window.location.href = "login.html";
@@ -122,9 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Messaging Functions
-  let socket = null;
-  let selectedContact = null;
-
   function initializeMessaging() {
     if (socket && socket.readyState === WebSocket.OPEN) {
       return; // Prevent multiple connections
@@ -140,8 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      if (selectedContact &&
-        (message.senderEmail === selectedContact || message.recipientEmail === selectedContact)) {
+      if (selectedContact && (message.senderEmail === selectedContact || message.recipientEmail === selectedContact)) {
         displayMessage(message);
       }
     };
@@ -150,11 +154,11 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("chat-status").textContent = "Disconnected";
       document.getElementById("chat-status").classList.replace("bg-success", "bg-secondary");
       socket = null;
+      setTimeout(initializeMessaging, 5000); // Attempt to reconnect
     };
 
     socket.onerror = (error) => {
       console.error("WebSocket error:", error);
-      document.getElementById("chat-status").textContent = "Error";
       document.getElementById("chat-messages").innerHTML =
         '<div class="alert alert-danger">Failed to connect to messaging service. Please refresh.</div>';
     };
@@ -163,60 +167,73 @@ document.addEventListener("DOMContentLoaded", function () {
   function fetchContacts() {
     const contactList = document.getElementById("contact-list");
     contactList.innerHTML =
-      '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>Loading contacts...</p></div>';
+      '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>Loading lawyers...</p></div>';
 
     $.ajax({
-      url: "http://localhost:8080/api/v1/lawyer/clients",
+      url: "http://localhost:8080/api/v1/user/lawyers",
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       success: function (response) {
-        if (response.code === 200 && response.data && response.data.length > 0) {
-          displayContacts(response.data);
+        contactList.innerHTML = "";
+        if (response && response.code === 200 && Array.isArray(response.data) && response.data.length > 0) {
+          // Filter valid lawyers with email and lawyer_name
+          const validLawyers = response.data.filter(lawyer =>
+            lawyer &&
+            typeof lawyer.email === 'string' && lawyer.email.trim() !== '' &&
+            (lawyer.lawyer_name || lawyer.email)
+          );
+          if (validLawyers.length > 0) {
+            populateContactList(validLawyers);
+          } else {
+            contactList.innerHTML = '<p class="text-muted">No lawyers available to contact.</p>';
+          }
         } else {
-          contactList.innerHTML = '<p class="text-muted">No clients found.</p>';
+          contactList.innerHTML = '<p class="text-muted">No lawyers found.</p>';
+          console.warn("Invalid response structure:", response);
         }
       },
       error: function (xhr, status, error) {
-        console.error("Error fetching contacts:", error);
-        if (xhr.status === 403) {
-          alert("Session expired or unauthorized. Please log in again.");
-          localStorage.removeItem("token");
-          localStorage.removeItem("email");
-          window.location.href = "login.html";
-        } else {
-          contactList.innerHTML = '<div class="alert alert-danger">Failed to load contacts. Please try again later.</div>';
-        }
-      },
+        contactList.innerHTML = `
+          <div class="alert alert-warning">
+            Failed to load lawyers: ${xhr.status} ${xhr.statusText}.
+            <button class="btn btn-link p-0 m-0 align-baseline" onclick="fetchContacts()">Retry</button>
+          </div>`;
+        console.error("Error fetching lawyers:", {
+          status: xhr.status,
+          statusText: xhr.statusText,
+          response: xhr.responseJSON || xhr.responseText,
+          error: error
+        });
+      }
     });
   }
 
   function populateContactList(lawyers) {
     const contactList = document.getElementById("contact-list");
-    if (!contactList) return;
+    if (!contactList) {
+      console.error("Contact list element not found");
+      return;
+    }
 
     contactList.innerHTML = "";
     lawyers.forEach(lawyer => {
       const li = document.createElement("li");
       li.className = "list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 px-4 border-0";
       li.innerHTML = `
-      <img
-        src="${lawyer.profilePictureUrl || '/api/placeholder/40/40'}"
-        class="rounded-circle border-2 border-primary shadow-sm"
-        alt="${lawyer.lawyer_name || lawyer.email}"
-        style="width: 40px; height: 40px; object-fit: cover;"
-      >
-      <div class="flex-grow-1">
-        <h6 class="mb-0 text-dark font-semibold">${
-        lawyer.lawyer_name || lawyer.email
-      }</h6>
-        <small class="text-muted">${
-        lawyer.specialization || "General Practice"
-      }</small>
-      </div>
-    `;
+        <img
+          src="${lawyer.profilePictureUrl || 'https://via.placeholder.com/40'}"
+          class="rounded-circle border-2 border-primary shadow-sm"
+          alt="${lawyer.lawyer_name || lawyer.email}"
+          style="width: 40px; height: 40px; object-fit: cover;"
+        >
+        <div class="flex-grow-1">
+          <h6 class="mb-0 text-dark font-semibold">${lawyer.lawyer_name || lawyer.email}</h6>
+          <small class="text-muted">${lawyer.specialization || "General Practice"}</small>
+        </div>
+      `;
       li.dataset.email = lawyer.email;
       li.dataset.name = lawyer.lawyer_name || lawyer.email;
       li.addEventListener("click", () =>
@@ -249,7 +266,7 @@ document.addEventListener("DOMContentLoaded", function () {
       success: (response) => {
         const chatMessages = document.getElementById("chat-messages");
         chatMessages.innerHTML = "";
-        if (response.code === 200 && response.data.length > 0) {
+        if (response.code === 200 && response.data && response.data.length > 0) {
           response.data.forEach(displayMessage);
         } else {
           chatMessages.innerHTML = '<div class="text-center text-muted mt-5">No messages yet</div>';
@@ -284,7 +301,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
     if (!selectedContact) {
-      // Auto-select first contact if available
       const firstContact = document.querySelector("#contact-list .list-group-item");
       if (firstContact) {
         selectContact(firstContact.dataset.email, firstContact.dataset.name);
@@ -306,10 +322,11 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     socket.send(JSON.stringify(message));
-    displayMessage(message); // Display sent message immediately
+    displayMessage(message);
     messageInput.value = "";
   });
 
+  // Profile Functions
   function fetchClientProfile() {
     $.ajax({
       url: `http://localhost:8080/api/v1/user/client?email=${email}`,
@@ -342,8 +359,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateProfilePicture(url) {
     const profilePic = document.getElementById("profile-pic");
     const headerProfilePic = document.getElementById("header-profile-pic");
-    const defaultPic = "/api/placeholder/100/100";
-    const defaultHeaderPic = "/api/placeholder/36/36";
+    const defaultPic = "https://via.placeholder.com/100";
+    const defaultHeaderPic = "https://via.placeholder.com/36";
     profilePic.src = url || defaultPic;
     headerProfilePic.src = url || defaultHeaderPic;
   }
@@ -369,7 +386,7 @@ document.addEventListener("DOMContentLoaded", function () {
       contentType: false,
       success: function (response) {
         uploadBtn.disabled = false;
-        uploadBtn.innerHTML = '<i class="bi bi-upload me-1"></i> Upload Picture';
+        uploadBtn.innerHTML = '<i class="bi bi-camera-fill text-lg"></i>';
         if (response.profilePictureUrl) {
           updateProfilePicture(response.profilePictureUrl);
           showAlert("success", "Profile picture uploaded successfully!");
@@ -379,7 +396,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       error: function (xhr) {
         uploadBtn.disabled = false;
-        uploadBtn.innerHTML = '<i class="bi bi-upload me-1"></i> Upload Picture';
+        uploadBtn.innerHTML = '<i class="bi bi-camera-fill text-lg"></i>';
         console.error("Error uploading profile picture:", xhr);
         showAlert("danger", xhr.responseJSON?.message || "Error uploading profile picture.");
       }
@@ -455,7 +472,7 @@ document.addEventListener("DOMContentLoaded", function () {
       data: JSON.stringify(clientUpdateDTO),
       success: function (data) {
         updateBtn.disabled = false;
-        updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
+        updateBtn.innerHTML = '<i class="bi bi-save me-2"></i> Update Profile';
 
         if (data.code === 200) {
           successAlert.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Your profile has been updated successfully!';
@@ -470,7 +487,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       error: function (xhr) {
         updateBtn.disabled = false;
-        updateBtn.innerHTML = '<i class="bi bi-save me-1"></i> Update Profile';
+        updateBtn.innerHTML = '<i class="bi bi-save me-2"></i> Update Profile';
         console.error('Error updating profile:', xhr);
         errorAlert.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i> Network error: Unable to update profile. Please try again.';
         errorAlert.classList.remove('d-none');
@@ -479,6 +496,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function deactivateAccount() {
+    const deactivateBtn = document.getElementById("confirm-deactivate-btn");
+    deactivateBtn.disabled = true;
+    deactivateBtn.innerHTML =
+      '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+
     $.ajax({
       url: "http://localhost:8080/api/v1/user/delete-client-account",
       method: "POST",
@@ -488,7 +510,12 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       data: JSON.stringify({ email }),
       success: function (data) {
+        deactivateBtn.disabled = false;
+        deactivateBtn.innerHTML = "Deactivate Account";
         if (data.code === 200) {
+          if (socket) {
+            socket.close();
+          }
           alert("Account deleted successfully");
           localStorage.clear();
           window.location.href = "login.html";
@@ -497,12 +524,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       },
       error: function (xhr) {
+        deactivateBtn.disabled = false;
+        deactivateBtn.innerHTML = "Deactivate Account";
         console.error("Error deleting account:", xhr);
         alert("Network error. Please try again.");
       }
     });
   }
 
+  // Lawyer Search Functions
   function fetchLawyers(province = null, district = null) {
     const lawyersList = document.getElementById("lawyersList");
     const errorAlert = document.getElementById("errorAlert");
@@ -557,20 +587,14 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="card-body p-4 d-flex flex-column">
             <div class="lawyer-profile-header d-flex align-items-center gap-3 mb-4">
               <img
-                src="${
-        lawyer.profilePictureUrl || "/api/placeholder/60/60"
-      }"
+                src="${lawyer.profilePictureUrl || "https://via.placeholder.com/60"}"
                 class="rounded-circle border-2 border-primary shadow-sm"
                 alt="${lawyer.lawyer_name || "Lawyer"}"
                 style="width: 60px; height: 60px; object-fit: cover;"
               >
               <div class="flex-grow-1">
-                <h5 class="lawyer-name mb-1 text-dark font-semibold">${
-        lawyer.lawyer_name || "Unknown"
-      }</h5>
-                <p class="lawyer-specialization mb-0 text-primary font-medium text-sm">${
-        lawyer.specialization || "General Practice"
-      }</p>
+                <h5 class="lawyer-name mb-1 text-dark font-semibold">${lawyer.lawyer_name || "Unknown"}</h5>
+                <p class="lawyer-specialization mb-0 text-primary font-medium text-sm">${lawyer.specialization || "General Practice"}</p>
               </div>
             </div>
             <p class="card-text mb-4 text-dark text-sm flex-grow-1">
@@ -582,24 +606,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="stat-value mb-1">
                   <i class="bi bi-telephone-fill text-primary text-lg"></i>
                 </div>
-                <div class="stat-label text-dark text-xs">${
-        lawyer.contactNumber || "N/A"
-      }</div>
+                <div class="stat-label text-dark text-xs">${lawyer.contactNumber || "N/A"}</div>
               </div>
               <div class="stat-item flex-1 text-center">
                 <div class="stat-value mb-1">
                   <i class="bi bi-geo-alt-fill text-primary text-lg"></i>
                 </div>
-                <div class="stat-label text-dark text-xs">${
-        lawyer.district
-      }, ${lawyer.province}</div>
+                <div class="stat-label text-dark text-xs">${lawyer.district || "N/A"}, ${lawyer.province || "N/A"}</div>
               </div>
             </div>
             <button
-              onclick="viewFullProfile(${JSON.stringify(lawyer).replace(
-        /"/g,
-        '"'
-      )})"
+              onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '&quot;')})"
               class="btn view-profile-btn bg-primary text-white rounded-md py-2 hover:bg-secondary transition-all duration-300 shadow-md"
             >
               <i class="bi bi-eye me-2"></i>View Profile
@@ -616,25 +633,23 @@ document.addEventListener("DOMContentLoaded", function () {
     return bio.length > maxLength ? bio.substring(0, maxLength) + '...' : bio;
   }
 
-  function viewFullProfile(lawyer) {
+  window.viewFullProfile = function(lawyer) {
     const lawyerProfileURL = `lawyerProfiles.html?email=${encodeURIComponent(lawyer.email)}`;
     window.location.href = lawyerProfileURL;
-  }
+  };
 
-  // Case Submission Function
+  // Case Functions
   function submitCase() {
     const form = document.getElementById("case-submit-form");
     const description = document.getElementById("caseDescription").value;
     const submitBtn = document.getElementById("submit-case-btn");
     const messageDiv = document.getElementById("case-message");
 
-    // Validate form
     if (!form.checkValidity()) {
       form.classList.add("was-validated");
       return;
     }
 
-    // Generate a simple unique case number
     const caseNumber = `CASE-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
     const caseData = {
@@ -684,7 +699,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Check Case Status Function
   function checkCaseStatus() {
     const caseNumber = document.getElementById("case-number-input").value.trim();
     const resultDiv = document.getElementById("case-status-result");
@@ -708,12 +722,12 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       success: function (response) {
         checkBtn.disabled = false;
-        checkBtn.innerHTML = 'Check Status';
+        checkBtn.innerHTML = '<i class="bi bi-search me-2"></i>Check Status';
         if (response.code === 200 && response.data) {
           const caseData = response.data;
           resultDiv.innerHTML = `
-            <div class="status-card">
-              <h5>Case Status: ${caseData.status}</h5>
+            <div class="status-card bg-white shadow-lg rounded-lg p-4">
+              <h5 class="text-primary font-semibold">Case Status: ${caseData.status}</h5>
               <p><strong>Case Number:</strong> ${caseData.caseNumber}</p>
               <p><strong>Description:</strong> ${caseData.description}</p>
               <p><strong>Client:</strong> ${caseData.clientName || 'N/A'}</p>
@@ -728,7 +742,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       error: function (xhr) {
         checkBtn.disabled = false;
-        checkBtn.innerHTML = 'Check Status';
+        checkBtn.innerHTML = '<i class="bi bi-search me-2"></i>Check Status';
         const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Error checking case status.';
         resultDiv.innerHTML = `<div class="alert alert-danger">${errorMsg}</div>`;
         console.error('Error checking case status:', xhr);
@@ -744,8 +758,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const lawyerCards = document.querySelectorAll('#lawyersList .card');
 
       lawyerCards.forEach(card => {
-        const lawyerName = card.querySelector('.lawyer-name').textContent.toLowerCase();
-        const lawyerSpecialization = card.querySelector('.lawyer-specialization').textContent.toLowerCase();
+        const lawyerName = card.querySelector('.lawyer-name')?.textContent.toLowerCase() || '';
+        const lawyerSpecialization = card.querySelector('.lawyer-specialization')?.textContent.toLowerCase() || '';
 
         if (lawyerName.includes(searchTerm) || lawyerSpecialization.includes(searchTerm)) {
           card.style.display = 'block';
@@ -828,7 +842,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function refreshGoogleCalendar() {
     const calendarIframe = document.getElementById('google-calendar');
-    calendarIframe.src = calendarIframe.src;
+    if (calendarIframe) {
+      calendarIframe.src = calendarIframe.src;
+    }
   }
 
   function initializeDashboard() {
@@ -853,17 +869,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  safeInitialize();
-
   // Case Submission Form Enhancements
   const form = document.getElementById('case-submit-form');
   const descriptionField = document.getElementById('caseDescription');
   const charCountDisplay = document.getElementById('charCount');
   const caseMessage = document.getElementById("case-message");
-  const successMessage = document.getElementById("success-message");
-  const caseIdDisplay = document.getElementById("case-id");
 
-  // Character count for case description
   function updateCharCount() {
     const maxLength = 500;
     const currentLength = descriptionField.value.length;
@@ -879,13 +890,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Initialize character count
   updateCharCount();
-
-  // Update character count on input
   descriptionField.addEventListener('input', updateCharCount);
 
-  // Reset form and messages
   form.addEventListener('reset', function () {
     caseMessage.classList.add('d-none');
     updateCharCount();
