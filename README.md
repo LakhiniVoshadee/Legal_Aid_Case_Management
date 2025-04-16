@@ -1,6 +1,7 @@
 Legal Management System
-Project Description
-The Legal Management System is a web-based application designed to streamline legal operations for clients, lawyers, and administrators. It provides user authentication, case management, communication tools, secure legal document handling, and AI-powered legal guidance. Key features include role-based access, case status tracking, in-app messaging, virtual consultations, and document verification using OCR technology.
+Project Description:
+
+The Legal Management System is a web-based application designed to streamline legal operations for clients, lawyers, and administrators. It provides user authentication, case management, communication tools, secure legal document handling, and AI-powered legal guidance. Key features include role-based access, case status tracking, in-app messaging, virtual consultations.
 Screenshots
 Below are some key features of the application:
 
@@ -60,15 +61,6 @@ Emails:
 ![WhatsApp Image 2025-04-16 at 22 31 10](https://github.com/user-attachments/assets/cbdd1aeb-cf32-4f7a-bdcc-e90a67e5af5d)
 
 
-
-
-Dashboard: Shows user-specific data (cases, messages, appointments).
-
-Case Submission Form: Allows clients to submit new cases.
-
-Document Upload Page: Interface for uploading and verifying legal documents.
-
-
 Setup Instructions
 Prerequisites
 
@@ -80,11 +72,11 @@ OpenAI API key for AI-powered legal guidance
 
 Backend Setup (Spring Boot)
 
-Clone the repository:git clone https://github.com/yourusername/legal-management-system.git
+Clone the repository:git clone https://github.com/LakhiniVoshadee/Legal_Aid_Case_Management.git
 cd legal-management-system/backend
 
 
-Configure the database in application.properties:spring.datasource.url=jdbc:mysql://localhost:3306/legal_db
+Configure the database in application.properties:spring.datasource.url=jdbc:mysql://localhost:3306/legalAidCaseManagement
 spring.datasource.username=yourusername
 spring.datasource.password=yourpassword
 
@@ -115,7 +107,7 @@ The frontend will run on http://localhost:3000.
 
 Database Setup
 
-Create a MySQL database:CREATE DATABASE legal_db;
+Create a MySQL database:CREATE DATABASE legalAidCaseManagement;
 
 
 The Spring Boot application will automatically create the required tables on startup (if JPA is configured with spring.jpa.hibernate.ddl-auto=update).
