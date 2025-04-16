@@ -53,6 +53,9 @@ Client Profile:
 
 ![Screenshot 2025-04-16 215554](https://github.com/user-attachments/assets/60e4678b-4f5e-4e5a-bfa2-e60f1933054f)
 
+![Screenshot 2025-04-16 224543](https://github.com/user-attachments/assets/d3f65cd3-73a7-4cf6-9045-5ccf3592f8a5)
+
+
 Emails:
 ![WhatsApp Image 2025-04-16 at 22 31 09](https://github.com/user-attachments/assets/44f329af-6dce-441d-b323-e08022dd5185)
 
@@ -72,12 +75,12 @@ OpenAI API key for AI-powered legal guidance
 
 Backend Setup (Spring Boot)
 
-Clone the repository:git clone https://github.com/LakhiniVoshadee/Legal_Aid_Case_Management.git
+Clone the repository:   git clone https://github.com/LakhiniVoshadee/Legal_Aid_Case_Management.git
 
 cd legal-management-system/backend
 
 
-Configure the database in application.properties:spring.datasource.url=jdbc:mysql://localhost:3306/legalAidCaseManagement
+Configure the database in application.properties:spring.datasource.url=jdbc:  mysql://localhost:3306/legalAidCaseManagement
 
 spring.datasource.username=yourusername
 
@@ -89,7 +92,7 @@ Add API keys in application.properties:zoom.api.key=your-zoom-api-key
 openai.api.key=your-openai-api-key
 
 
-Build and run the backend:mvn clean install
+Build and run the backend:   mvn clean install
 
 mvn spring-boot:run
 
@@ -97,22 +100,22 @@ The backend will run on http://localhost:8080.
 
 Frontend Setup (React)
 
-Navigate to the frontend directory:cd legal-management-system/frontend
+Navigate to the frontend directory:  cd legal-management-system/frontend
 
 
-Install dependencies:npm install
+Install dependencies: npm install
 
 
 Configure environment variables in .env:REACT_APP_API_URL=http://localhost:8080/api
 
 
-Start the frontend:npm start
+Start the frontend:  npm start
 
 The frontend will run on http://localhost:3000.
 
 Database Setup
 
-Create a MySQL database:CREATE DATABASE legalAidCaseManagement;
+Create a MySQL database:   CREATE DATABASE legalAidCaseManagement;
 
 
 The Spring Boot application will automatically create the required tables on startup (if JPA is configured with spring.jpa.hibernate.ddl-auto=update).
