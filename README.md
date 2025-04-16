@@ -39,6 +39,22 @@ Lawyer Profile:
 
 ![Screenshot 2025-04-16 221919](https://github.com/user-attachments/assets/1188cf35-99a6-4fd7-9668-40a15b193d5c)
 
+Client Profile:
+![Screenshot 2025-04-16 222252](https://github.com/user-attachments/assets/33e1a554-81e1-4c25-83b1-c11dcf0abe12)
+
+![Screenshot 2025-04-16 222329](https://github.com/user-attachments/assets/c19c44d7-c6b7-4121-87cf-c905efee3200)
+
+![Screenshot 2025-04-16 222536](https://github.com/user-attachments/assets/a753dbbf-d2ee-4a9b-bb35-87d989b18573)
+
+![Screenshot 2025-04-16 222611](https://github.com/user-attachments/assets/9794dad4-d556-461e-876b-a10d9b243976)
+
+![Screenshot 2025-04-16 222729](https://github.com/user-attachments/assets/3768124f-3c6f-4cc9-bbc5-05862b4050c8)
+
+![Screenshot 2025-04-16 215554](https://github.com/user-attachments/assets/60e4678b-4f5e-4e5a-bfa2-e60f1933054f)
+
+Emails:
+
+
 
 
 Dashboard: Shows user-specific data (cases, messages, appointments).
