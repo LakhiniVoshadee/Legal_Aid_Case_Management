@@ -73,19 +73,24 @@ OpenAI API key for AI-powered legal guidance
 Backend Setup (Spring Boot)
 
 Clone the repository:git clone https://github.com/LakhiniVoshadee/Legal_Aid_Case_Management.git
+
 cd legal-management-system/backend
 
 
 Configure the database in application.properties:spring.datasource.url=jdbc:mysql://localhost:3306/legalAidCaseManagement
+
 spring.datasource.username=yourusername
+
 spring.datasource.password=yourpassword
 
 
 Add API keys in application.properties:zoom.api.key=your-zoom-api-key
+
 openai.api.key=your-openai-api-key
 
 
 Build and run the backend:mvn clean install
+
 mvn spring-boot:run
 
 The backend will run on http://localhost:8080.
