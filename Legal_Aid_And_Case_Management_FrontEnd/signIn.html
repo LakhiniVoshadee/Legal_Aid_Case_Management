@@ -12,6 +12,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/signIn.css">
+  <!-- Google Identity Services Library -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-gray-100">
 <!-- Loader (hidden by default) -->
@@ -59,9 +61,19 @@
       </div>
 
       <div class="social-icons">
-        <a href="#" class="social-icon">
-          <i class="fab fa-google"></i>
-        </a>
+        <!-- Google Sign-In Button -->
+        <div id="google-signin-button"
+             data-client_id="YOUR_GOOGLE_CLIENT_ID"
+             data-callback="handleGoogleSignIn"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin"
+             data-type="icon"
+             data-shape="circle"
+             data-theme="filled_blue"
+             data-size="large">
+        </div>
+        <!-- Other Social Icons (unchanged) -->
         <a href="#" class="social-icon">
           <i class="fab fa-twitter"></i>
         </a>

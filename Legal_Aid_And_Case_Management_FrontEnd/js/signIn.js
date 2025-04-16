@@ -182,3 +182,69 @@ function getErrorMessage(xhr) {
     }
   }
 }
+
+// Google Sign-In Callback Function
+function handleGoogleSignIn(response) {
+  // Log the ID token to the console for Postman testing
+  console.log("Google ID Token:", response.credential);
+
+  // Show the ID token on the page for easy copying
+  showAlert("Google ID Token (copy from console): " + response.credential, "success");
+
+  // Show loading state
+  $(".loader-container").removeClass("hidden");
+
+  // Send the ID token to the backend
+  $.ajax({
+    url: "http://localhost:8080/api/v1/auth/google",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify({ idToken: response.credential }),
+    success: function (response) {
+      if (response.status === 200) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("email", response.data.email);
+
+        showAlert("Google Sign-In successful! Redirecting...", "success");
+
+        // Fetch user role (same as email/password login)
+        $.ajax({
+          url: "http://localhost:8080/api/v1/auth/userRole",
+          type: "GET",
+          headers: {
+            Authorization: "Bearer " + response.data.token,
+          },
+          success: function (roleResponse) {
+            const userRole = roleResponse.role;
+
+            setTimeout(function() {
+              if (userRole === "ADMIN") {
+                window.location.href = "adminDashboard.html";
+              } else if (userRole === "LAWYER") {
+                window.location.href = "lawyerDashboard.html";
+              } else if (userRole === "CLIENT") {
+                window.location.href = "clientDashboard.html";
+              } else {
+                showAlert("Unauthorized access!", "danger");
+                $(".loader-container").addClass("hidden");
+              }
+            }, 1500);
+          },
+          error: function (xhr, status, error) {
+            console.error("Role error:", error);
+            showAlert("Error fetching user role: " + getErrorMessage(xhr), "danger");
+            $(".loader-container").addClass("hidden");
+          },
+        });
+      } else {
+        showAlert(response.message || "Google Sign-In failed", "danger");
+        $(".loader-container").addClass("hidden");
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("Google Sign-In error:", error);
+      showAlert(getErrorMessage(xhr), "danger");
+      $(".loader-container").addClass("hidden");
+    },
+  });
+}
