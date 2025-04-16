@@ -53,6 +53,11 @@ Client Profile:
 ![Screenshot 2025-04-16 215554](https://github.com/user-attachments/assets/60e4678b-4f5e-4e5a-bfa2-e60f1933054f)
 
 Emails:
+![WhatsApp Image 2025-04-16 at 22 31 09](https://github.com/user-attachments/assets/44f329af-6dce-441d-b323-e08022dd5185)
+
+![WhatsApp Image 2025-04-16 at 22 31 09 (1)](https://github.com/user-attachments/assets/0c5f5e3a-f82c-49b9-9ab5-0c92c931168d)
+
+![WhatsApp Image 2025-04-16 at 22 31 10](https://github.com/user-attachments/assets/cbdd1aeb-cf32-4f7a-bdcc-e90a67e5af5d)
 
 
 
