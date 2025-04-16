@@ -30,11 +30,14 @@ Admin Profile:
 
 ![Screenshot 2025-04-16 190418](https://github.com/user-attachments/assets/32a4ac2d-26fe-494a-bc04-ebead118be4d)
 
-Lawyer Dashboard:
+Lawyer Profile:
+![Screenshot 2025-04-16 221448](https://github.com/user-attachments/assets/23d8c3f7-5694-4d31-bb85-2c731a29379b)
 
+![Screenshot 2025-04-16 221504](https://github.com/user-attachments/assets/bcbc2aeb-4769-4351-ab30-2926f5968239)
 
+![Screenshot 2025-04-16 221759](https://github.com/user-attachments/assets/049eb28d-2803-4f84-be56-7ee8b5c0086e)
 
-
+![Screenshot 2025-04-16 221919](https://github.com/user-attachments/assets/1188cf35-99a6-4fd7-9668-40a15b193d5c)
 
 
 
