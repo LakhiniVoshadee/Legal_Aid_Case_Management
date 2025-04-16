@@ -40,6 +40,9 @@
         <a href="#all-cases" id="all-cases-nav-link"><i class="fas fa-briefcase"></i> All Cases</a>
       </li>
       <li>
+        <a href="#profile" id="profile-nav-link"><i class="fas fa-user"></i> Profile</a>
+      </li>
+      <li>
         <a href="#"><i class="fas fa-cog"></i> Settings</a>
       </li>
       <li>
@@ -68,8 +71,8 @@
             </ul>
           </div>
           <div class="user">
-            <img src="https://via.placeholder.com/36" alt="User" class="user-img">
-            <span>Admin</span>
+            <img src="https://via.placeholder.com/36" alt="User" class="user-img" id="navbar-profile-pic">
+            <span id="navbar-admin-name">Admin</span>
           </div>
         </div>
       </div>
@@ -227,10 +230,10 @@
           <div class="col-md-4">
             <div class="card chart-card">
               <div class="card-header">
-                <h5>Lawyers by Specialization</h5> <!-- Updated from "Lawyers by Location" -->
+                <h5>Lawyers by Specialization</h5>
               </div>
               <div class="card-body">
-                <canvas id="lawyerSpecializationChart" height="250"></canvas> <!-- Updated ID -->
+                <canvas id="lawyerSpecializationChart" height="250"></canvas>
               </div>
             </div>
           </div>
@@ -495,6 +498,42 @@
             <div id="cases-loading" class="text-center">
               <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div id="profile-content" class="content-section">
+      <div class="container-fluid px-4">
+        <h1 class="dashboard-title mb-4">Admin Profile</h1>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Update Profile</h5>
+              </div>
+              <div class="card-body">
+                <form id="admin-profile-form" class="space-y-4">
+                  <div class="mb-3">
+                    <label for="adminName" class="form-label">Admin Name</label>
+                    <input type="text" id="adminName" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="profilePicture" class="form-label">Profile Picture</label>
+                    <input type="file" id="profilePicture" class="form-control" accept="image/*">
+                  </div>
+                  <div class="mb-3">
+                    <img id="profilePicturePreview" src="https://via.placeholder.com/150" alt="Profile Picture" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover; display: none;">
+                  </div>
+                  <button type="button" id="deleteProfilePicture" class="btn btn-danger btn-sm mb-3" style="display: none;">
+                    <i class="fas fa-trash-alt me-1"></i> Delete Picture
+                  </button>
+                  <button type="submit" class="btn btn-primary w-100">Update Profile</button>
+                </form>
+                <div id="profile-result" class="mt-4 text-center"></div>
               </div>
             </div>
           </div>

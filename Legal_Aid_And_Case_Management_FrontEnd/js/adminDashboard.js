@@ -3,6 +3,7 @@ $(document).ready(function() {
   let lawyers = [];
   let clients = [];
   let cases = [];
+  let adminEmail = localStorage.getItem('adminEmail') || 'admin@example.com'; // Placeholder; ideally fetched from backend
 
   // Set current date
   const currentDate = new Date();
@@ -47,6 +48,12 @@ $(document).ready(function() {
     loadAllCases();
   });
 
+  $('#profile-nav-link').click(function(e) {
+    e.preventDefault();
+    activateSection('profile');
+    loadAdminProfile();
+  });
+
   function activateSection(section) {
     $('.content-section').removeClass('active');
     $(`#${section}-content`).addClass('active');
@@ -55,6 +62,175 @@ $(document).ready(function() {
     $('#sidebar ul li').removeClass('active');
     $(`#sidebar ul li a[href="#${section}"]`).parent().addClass('active');
   }
+
+  // Function to load admin profile
+  function loadAdminProfile() {
+    if (!token) {
+      $('#profile-result').removeClass('success').addClass('error').text('Please log in to view profile.');
+      return;
+    }
+
+    $('#profile-result').text('');
+    $('#adminName').val('');
+    $('#profilePicturePreview').hide();
+    $('#deleteProfilePicture').hide();
+
+    // Placeholder: Fetch admin details (since no endpoint is provided, assume data is fetched)
+    $.ajax({
+      url: 'http://localhost:8080/api/v1/user/search/' + adminEmail, // Hypothetical endpoint
+      type: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
+      success: function(response) {
+        if (response && response.code === 200 && response.data) {
+          $('#adminName').val(response.data.admin_name || 'Admin');
+          $('#navbar-admin-name').text(response.data.admin_name || 'Admin');
+          if (response.data.profilePictureUrl) {
+            $('#profilePicturePreview').attr('src', response.data.profilePictureUrl).show();
+            $('#deleteProfilePicture').show();
+            $('#navbar-profile-pic').attr('src', response.data.profilePictureUrl);
+          } else {
+            $('#profilePicturePreview').attr('src', 'https://via.placeholder.com/150').hide();
+            $('#navbar-profile-pic').attr('src', 'https://via.placeholder.com/36');
+          }
+        } else {
+          $('#profile-result').removeClass('success').addClass('error').text('Unable to load profile.');
+        }
+      },
+      error: function(xhr) {
+        $('#profile-result').removeClass('success').addClass('error').text('Error loading profile.');
+        console.error('Error loading admin profile:', xhr);
+      }
+    });
+  }
+
+  // Function to update admin profile
+  function updateAdminProfile(adminName) {
+    if (!token) {
+      $('#profile-result').removeClass('success').addClass('error').text('Please log in to update profile.');
+      return;
+    }
+
+    $.ajax({
+      url: 'http://localhost:8080/api/v1/user/update-admin',
+      type: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify({ admin_name: adminName }),
+      success: function(response) {
+        if (response && response.code === 200) {
+          $('#profile-result').removeClass('error').addClass('success').text(response.message);
+          $('#navbar-admin-name').text(adminName);
+        } else {
+          $('#profile-result').removeClass('success').addClass('error').text('Unexpected response from server.');
+        }
+      },
+      error: function(xhr) {
+        const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Error updating profile.';
+        $('#profile-result').removeClass('success').addClass('error').text(errorMsg);
+        console.error('Error updating admin profile:', xhr);
+      }
+    });
+  }
+
+  // Function to upload profile picture
+  function uploadProfilePicture(file) {
+    if (!token) {
+      $('#profile-result').removeClass('success').addClass('error').text('Please log in to upload picture.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    $.ajax({
+      url: `http://localhost:8080/api/v1/user/${adminEmail}/profile-picture`,
+      type: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        if (response && response.profilePictureUrl) {
+          $('#profilePicturePreview').attr('src', response.profilePictureUrl).show();
+          $('#navbar-profile-pic').attr('src', response.profilePictureUrl);
+          $('#deleteProfilePicture').show();
+          $('#profile-result').removeClass('error').addClass('success').text('Profile picture updated successfully.');
+        } else {
+          $('#profile-result').removeClass('success').addClass('error').text('Unexpected response from server.');
+        }
+      },
+      error: function(xhr) {
+        const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Error uploading picture.';
+        $('#profile-result').removeClass('success').addClass('error').text(errorMsg);
+        console.error('Error uploading profile picture:', xhr);
+      }
+    });
+  }
+
+  // Function to delete profile picture
+  function deleteProfilePicture() {
+    if (!token) {
+      $('#profile-result').removeClass('success').addClass('error').text('Please log in to delete picture.');
+      return;
+    }
+
+    $.ajax({
+      url: `http://localhost:8080/api/v1/user/${adminEmail}/profile-picture`,
+      type: 'DELETE',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
+      success: function() {
+        $('#profilePicturePreview').attr('src', 'https://via.placeholder.com/150').hide();
+        $('#navbar-profile-pic').attr('src', 'https://via.placeholder.com/36');
+        $('#deleteProfilePicture').hide();
+        $('#profile-result').removeClass('error').addClass('success').text('Profile picture deleted successfully.');
+      },
+      error: function(xhr) {
+        const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Error deleting picture.';
+        $('#profile-result').removeClass('success').addClass('error').text(errorMsg);
+        console.error('Error deleting profile picture:', xhr);
+      }
+    });
+  }
+
+  // Handle profile form submission
+  $('#admin-profile-form').submit(function(e) {
+    e.preventDefault();
+    const adminName = $('#adminName').val();
+    const file = $('#profilePicture')[0].files[0];
+
+    updateAdminProfile(adminName);
+
+    if (file) {
+      uploadProfilePicture(file);
+    }
+  });
+
+  // Handle delete profile picture button
+  $('#deleteProfilePicture').click(function() {
+    if (confirm('Are you sure you want to delete your profile picture?')) {
+      deleteProfilePicture();
+    }
+  });
+
+  // Preview profile picture on file select
+  $('#profilePicture').change(function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        $('#profilePicturePreview').attr('src', e.target.result).show();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 
   // Function to load lawyers
   function loadLawyers() {
@@ -91,6 +267,9 @@ $(document).ready(function() {
                 <td>
                   <button class="btn btn-sm btn-outline-dark view-lawyer" data-lawyer='${JSON.stringify(lawyer)}'>
                     View
+                  </button>
+                  <button class="btn btn-sm btn-outline-dark delete-lawyer" data-email="${lawyer.email || ''}">
+                    Delete
                   </button>
                 </td>
               </tr>
@@ -148,6 +327,9 @@ $(document).ready(function() {
                 <td>
                   <button class="btn btn-sm btn-outline-dark view-client" data-client='${JSON.stringify(client)}'>
                     View
+                  </button>
+                  <button class="btn btn-sm btn-outline-dark delete-client" data-email="${client.email || ''}">
+                    Delete
                   </button>
                 </td>
               </tr>
@@ -272,6 +454,68 @@ $(document).ready(function() {
     });
   }
 
+  // Function to delete lawyer account
+  function deleteLawyerAccount(email) {
+    if (!token) {
+      alert('Please log in to delete accounts.');
+      return;
+    }
+
+    $.ajax({
+      url: 'http://localhost:8080/api/v1/user/delete-lawyer-account',
+      type: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify({ email: email }),
+      success: function(response) {
+        if (response && response.code === 200) {
+          alert(response.message);
+          loadLawyers(); // Refresh the table
+        } else {
+          alert('Unexpected response from server.');
+        }
+      },
+      error: function(xhr) {
+        const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Error deleting lawyer account.';
+        alert(errorMsg);
+        console.error('Error deleting lawyer:', xhr);
+      }
+    });
+  }
+
+  // Function to delete client account
+  function deleteClientAccount(email) {
+    if (!token) {
+      alert('Please log in to delete accounts.');
+      return;
+    }
+
+    $.ajax({
+      url: 'http://localhost:8080/api/v1/user/delete-client-account',
+      type: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify({ email: email }),
+      success: function(response) {
+        if (response && response.code === 200) {
+          alert(response.message);
+          loadClients(); // Refresh the table
+        } else {
+          alert('Unexpected response from server.');
+        }
+      },
+      error: function(xhr) {
+        const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Error deleting client account.';
+        alert(errorMsg);
+        console.error('Error deleting client:', xhr);
+      }
+    });
+  }
+
   // Handle form submission for assigning lawyer to case
   $('#assign-case-form').submit(function(e) {
     e.preventDefault();
@@ -286,10 +530,26 @@ $(document).ready(function() {
     alert('Lawyer Details:\nName: ' + lawyer.lawyer_name + '\nSpecialization: ' + lawyer.specialization);
   });
 
+  // Handle "Delete" button clicks for lawyers
+  $(document).on('click', '.delete-lawyer', function() {
+    const email = $(this).data('email');
+    if (confirm('Are you sure you want to delete this lawyer account?')) {
+      deleteLawyerAccount(email);
+    }
+  });
+
   // Handle "View" button clicks for clients
   $(document).on('click', '.view-client', function() {
     const client = JSON.parse($(this).attr('data-client'));
     alert('Client Details:\nName: ' + client.full_name + '\nEmail: ' + client.email);
+  });
+
+  // Handle "Delete" button clicks for clients
+  $(document).on('click', '.delete-client', function() {
+    const email = $(this).data('email');
+    if (confirm('Are you sure you want to delete this client account?')) {
+      deleteClientAccount(email);
+    }
   });
 
   // Handle "View" button clicks for cases
