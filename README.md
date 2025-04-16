@@ -6,10 +6,13 @@ Screenshots
 Below are some key features of the application:
 
 Home Page: 
+
 ![Screenshot 2025-04-16 185344](https://github.com/user-attachments/assets/6e2bde9a-ef94-4de5-a4f5-5ec5eb6be2c6)
 
 
 SignIn Page:
+
+
 ![Screenshot 2025-04-16 185328](https://github.com/user-attachments/assets/4b9ce1fc-39d0-4813-abfb-1cb862738818)
 
 SignUp Page:
@@ -18,7 +21,11 @@ SignUp Page:
 
 ![Screenshot 2025-04-16 185444](https://github.com/user-attachments/assets/ee1a56d0-3076-402c-9dfa-695d7dad07ab)
 
+
+
 Admin Profile:
+
+
 ![Screenshot 2025-04-16 190158](https://github.com/user-attachments/assets/7dce374e-44de-4c69-b1cd-45716f8b7b8d)
 
 ![Screenshot 2025-04-16 190216](https://github.com/user-attachments/assets/72320df9-6227-4488-9478-088d1a4e4f4f)
@@ -31,7 +38,11 @@ Admin Profile:
 
 ![Screenshot 2025-04-16 190418](https://github.com/user-attachments/assets/32a4ac2d-26fe-494a-bc04-ebead118be4d)
 
+
+
 Lawyer Profile:
+
+
 ![Screenshot 2025-04-16 221448](https://github.com/user-attachments/assets/23d8c3f7-5694-4d31-bb85-2c731a29379b)
 
 ![Screenshot 2025-04-16 221504](https://github.com/user-attachments/assets/bcbc2aeb-4769-4351-ab30-2926f5968239)
@@ -40,7 +51,11 @@ Lawyer Profile:
 
 ![Screenshot 2025-04-16 221919](https://github.com/user-attachments/assets/1188cf35-99a6-4fd7-9668-40a15b193d5c)
 
+
+
 Client Profile:
+
+
 ![Screenshot 2025-04-16 222252](https://github.com/user-attachments/assets/33e1a554-81e1-4c25-83b1-c11dcf0abe12)
 
 ![Screenshot 2025-04-16 222329](https://github.com/user-attachments/assets/c19c44d7-c6b7-4121-87cf-c905efee3200)
