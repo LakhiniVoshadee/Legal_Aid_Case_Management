@@ -1,11 +1,14 @@
 Legal Management System
-Project Description:
 
-The Legal Management System is a web-based application designed to streamline legal operations for clients, lawyers, and administrators. It provides user authentication, case management, communication tools, secure legal document handling, and AI-powered legal guidance. Key features include role-based access, case status tracking, in-app messaging, virtual consultations.
-Screenshots
-Below are some key features of the application:
 
-Home Page: 
+Project Description
+
+ The Legal Management System is a web-based application designed to streamline legal operations for clients, lawyers, and administrators. It provides user authentication, case management, communication tools, secure legal document handling, and AI-powered legal guidance. Key features include role-based access, case status tracking, in-app messaging, and virtual consultations.
+  
+Screenshots::
+  
+
+📸 Home Page: Displays an overview of the system and login options.
 
 ![Screenshot 2025-04-16 185344](https://github.com/user-attachments/assets/6e2bde9a-ef94-4de5-a4f5-5ec5eb6be2c6)
 
