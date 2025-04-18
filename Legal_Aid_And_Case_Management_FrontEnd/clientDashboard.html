@@ -41,55 +41,52 @@
 <div class="container-fluid">
   <div class="row min-vh-100">
     <!-- Sidebar -->
-    <div class="col-lg-2 col-md-3 sidebar p-0 shadow-lg">
-      <div class="sidebar-content">
-        <div class="logo mb-5 px-4">
-          <h4 class="text-white text-xl font-bold">
-            LEGAL<span class="fw-light">PRO</span>
-            <i class="fas fa-balance-scale text-primary ml-2"></i>
-          </h4>
+    <!-- Sidebar -->
+    <div class="col-auto sidebar p-0 shadow-sm bg-white">
+      <div class="sidebar-content d-flex flex-column align-items-center">
+        <div class="logo mb-4 px-3 py-4">
+          <i class="fas fa-balance-scale text-primary text-2xl"></i>
         </div>
-        <nav class="sidebar-nav px-3">
+        <nav class="sidebar-nav">
           <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" href="#dashboard-section" data-section="dashboard-section">
-                <i class="bi bi-grid-1x2 me-2"></i> Dashboard
+            <li class="nav-item mb-3">
+              <a class="nav-link active" href="#dashboard-section" data-section="dashboard-section" title="Dashboard">
+                <i class="bi bi-grid-1x2 text-2xl text-dark hover:text-primary"></i>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#appointments-section" data-section="appointments-section">
-                <i class="bi bi-calendar-week me-2"></i> Appointments
+            <li class="nav-item mb-3">
+              <a class="nav-link" href="#appointments-section" data-section="appointments-section" title="Appointments">
+                <i class="bi bi-calendar-week text-2xl text-dark hover:text-primary"></i>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#case-section" data-section="case-section">
-                <i class="bi bi-briefcase me-2"></i> Cases
+            <li class="nav-item mb-3">
+              <a class="nav-link" href="#case-section" data-section="case-section" title="Cases">
+                <i class="bi bi-briefcase text-2xl text-dark hover:text-primary"></i>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#clients-section" data-section="clients-section">
-                <i class="bi bi-people me-2"></i> Find Lawyers
+            <li class="nav-item mb-3">
+              <a class="nav-link" href="#clients-section" data-section="clients-section" title="Find Lawyers">
+                <i class="bi bi-people text-2xl text-dark hover:text-primary"></i>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#message-section" data-section="message-section">
-                <i class="bi bi-chat-text me-2"></i> Messages
+            <li class="nav-item mb-3">
+              <a class="nav-link" href="#message-section" data-section="message-section" title="Messages">
+                <i class="bi bi-chat-text text-2xl text-dark hover:text-primary"></i>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#profile-section" data-section="profile-section">
-                <i class="bi bi-person-circle me-2"></i> Profile
+            <li class="nav-item mb-3">
+              <a class="nav-link" href="#profile-section" data-section="profile-section" title="Profile">
+                <i class="bi bi-person-circle text-2xl text-dark hover:text-primary"></i>
               </a>
             </li>
           </ul>
         </nav>
-        <div class="sidebar-footer mt-auto px-3">
-          <button class="btn btn-outline-light btn-sm w-full text-left" id="deactivate-btn" data-bs-toggle="modal"
-                  data-bs-target="#deactivateModal">
-            <i class="bi bi-shield-exclamation me-2"></i>Deactivate Account
+        <div class="sidebar-footer mt-auto py-4">
+          <button class="btn btn-outline-primary btn-sm rounded-full p-3 hover:bg-primary hover:text-white transition-all duration-300" id="deactivate-btn" data-bs-toggle="modal" data-bs-target="#deactivateModal" title="Deactivate Account">
+            <i class="bi bi-shield-exclamation text-lg"></i>
           </button>
-          <button class="btn btn-outline-light btn-sm w-full text-left mt-2" id="logout-btn">
-            <i class="bi bi-box-arrow-right me-2"></i>Logout
+          <button class="btn btn-outline-primary btn-sm rounded-full p-3 mt-3 hover:bg-primary hover:text-white transition-all duration-300" id="logout-btn" title="Logout">
+            <i class="bi bi-box-arrow-right text-lg"></i>
           </button>
         </div>
       </div>
