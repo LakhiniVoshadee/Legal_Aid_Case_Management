@@ -170,7 +170,6 @@
         </div>
 
         <!-- Appointments Section -->
-        <!-- Appointments Section -->
         <div id="appointments-section" class="content-section" data-aos="fade-up">
           <div class="section-header mb-5">
             <h2 class="text-primary font-bold tracking-wide">
@@ -222,25 +221,48 @@
                 >
                   <form id="appointment-schedule-form" class="needs-validation modern-appointment-form" novalidate>
                     <div class="row g-4">
-                      <!-- Lawyer Selection -->
+                      <!-- Lawyer Email -->
                       <div class="col-md-6">
                         <label for="lawyerEmail" class="form-label text-dark font-medium mb-2">
-                          Select Lawyer
+                          Lawyer Email
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-person-fill text-primary"></i>
-                  </span>
-                          <select
-                            class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-envelope-fill text-primary"></i>
+                          </span>
+                          <input
+                            type="email"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
                             id="lawyerEmail"
                             name="lawyerEmail"
+                            placeholder="Enter lawyer's email (e.g., lakhinivooshadee@gmail.com)"
                             required
                           >
-                            <option value="" selected disabled>Select a lawyer</option>
-                          </select>
                           <div class="invalid-feedback text-danger">
-                            Please select a lawyer.
+                            Please enter a valid lawyer email.
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Client Email -->
+                      <div class="col-md-6">
+                        <label for="clientEmail" class="form-label text-dark font-medium mb-2">
+                          Your Email
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-envelope-fill text-primary"></i>
+                          </span>
+                          <input
+                            type="email"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="clientEmail"
+                            name="clientEmail"
+                            placeholder="Enter your email (e.g., lakhinivoshadee24@gmail.com)"
+                            value=""
+                            required
+                          >
+                          <div class="invalid-feedback text-danger">
+                            Please enter your email.
                           </div>
                         </div>
                       </div>
@@ -250,9 +272,9 @@
                           Appointment Date & Time
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-calendar-event-fill text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-calendar-event-fill text-primary"></i>
+                          </span>
                           <input
                             type="datetime-local"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -266,20 +288,20 @@
                         </div>
                       </div>
                       <!-- Google Meet Link -->
-                      <div class="col-12">
+                      <div class="col-md-6">
                         <label for="googleMeetLink" class="form-label text-dark font-medium mb-2">
                           Google Meet Link (Optional)
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-link-45deg text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-link-45deg text-primary"></i>
+                          </span>
                           <input
                             type="url"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
                             id="googleMeetLink"
                             name="googleMeetLink"
-                            placeholder="Enter Google Meet link"
+                            placeholder="Enter Google Meet link (e.g., https://meet.google.com/xyz-123)"
                           >
                         </div>
                       </div>
@@ -301,10 +323,7 @@
                       </div>
                     </div>
                   </form>
-                  <div id="appointment-message" class="mt-4 alert alert-success d-none rounded-md shadow-sm">
-                    <i class="bi bi-check-circle-fill me-2"></i>
-                    <span id="appointment-success-message">Appointment scheduled successfully!</span>
-                  </div>
+                  <div id="appointment-message" class="mt-4 alert d-none rounded-md shadow-sm"></div>
                 </div>
                 <!-- View Appointments Tab -->
                 <div
@@ -330,7 +349,6 @@
           </div>
         </div>
 
-        <!-- Case Section -->
         <!-- Case Section -->
         <div id="case-section" class="content-section" data-aos="fade-up">
           <div class="section-header mb-5">
@@ -389,9 +407,9 @@
                           First Name
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-person-fill text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-person-fill text-primary"></i>
+                          </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -411,9 +429,9 @@
                           Last Name
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-person-fill text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-person-fill text-primary"></i>
+                          </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -433,9 +451,9 @@
                           Email
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-envelope-fill text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-envelope-fill text-primary"></i>
+                          </span>
                           <input
                             type="email"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -455,9 +473,9 @@
                           Phone Number
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-telephone-fill text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-telephone-fill text-primary"></i>
+                          </span>
                           <input
                             type="tel"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -473,9 +491,9 @@
                           Case Category
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-tag-fill text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-tag-fill text-primary"></i>
+                          </span>
                           <select
                             class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
                             id="caseCategory"
@@ -500,9 +518,9 @@
                           Subject
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-fonts text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-fonts text-primary"></i>
+                          </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -542,9 +560,9 @@
                           Attachments
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-paperclip text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-paperclip text-primary"></i>
+                          </span>
                           <input
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm"
                             type="file"
@@ -612,9 +630,9 @@
                     <div class="row justify-content-center">
                       <div class="col-md-8">
                         <div class="input-group mb-4">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-search text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-search text-primary"></i>
+                          </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -719,6 +737,7 @@
             </div>
           </div>
         </div>
+
         <!-- Messages Section -->
         <div id="message-section" class="content-section" data-aos="fade-up">
           <h2 class="text-primary font-bold mb-5 tracking-wide">
@@ -751,8 +770,8 @@
                     Select a contact to chat
                   </h5>
                   <span id="chat-status" class="badge bg-success px-3 py-2 rounded-full text-sm font-medium">
-            Disconnected
-          </span>
+                    Disconnected
+                  </span>
                 </div>
                 <div class="card-body chat-area p-4" id="chat-messages" style="height: 450px; overflow-y: auto;">
                   <div class="text-center text-muted mt-5">
@@ -782,7 +801,6 @@
             </div>
           </div>
         </div>
-
 
         <!-- Profile Section -->
         <div id="profile-section" class="content-section" data-aos="fade-up">
@@ -844,9 +862,9 @@
                           Full Name
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-person-fill text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-person-fill text-primary"></i>
+                          </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -863,9 +881,9 @@
                           Contact Number
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-telephone-fill text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-telephone-fill text-primary"></i>
+                          </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -882,9 +900,9 @@
                           Address
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-geo-alt-fill text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-geo-alt-fill text-primary"></i>
+                          </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -901,9 +919,9 @@
                           Gender
                         </label>
                         <div class="input-group">
-                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                    <i class="bi bi-gender-ambiguous text-primary"></i>
-                  </span>
+                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                            <i class="bi bi-gender-ambiguous text-primary"></i>
+                          </span>
                           <select
                             class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
                             id="gender"
