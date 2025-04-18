@@ -40,6 +40,9 @@
         <a href="#all-cases" id="all-cases-nav-link"><i class="fas fa-briefcase"></i> All Cases</a>
       </li>
       <li>
+        <a href="#appointments" id="appointments-nav-link"><i class="fas fa-calendar-alt"></i> Appointments</a>
+      </li>
+      <li>
         <a href="#profile" id="profile-nav-link"><i class="fas fa-user"></i> Profile</a>
       </li>
       <li>
@@ -505,6 +508,62 @@
       </div>
     </div>
 
+    <!-- Appointments Section -->
+    <div id="appointments-content" class="content-section">
+      <div class="container-fluid px-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="dashboard-title">Appointments Management</h1>
+          <button class="btn btn-primary btn-sm export-btn">
+            <i class="fas fa-download me-1"></i> Export Data
+          </button>
+        </div>
+
+        <div class="card data-card">
+          <div class="card-header">
+            <h5>Appointments Directory</h5>
+            <div class="card-header-actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" class="form-control form-control-sm" id="appointments-search" placeholder="Search appointments...">
+              </div>
+              <div class="filter-dropdown">
+                <select class="form-select form-select-sm" id="appointments-status-filter">
+                  <option value="all">All Statuses</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="CONFIRMED">Confirmed</option>
+                  <option value="REJECTED">Rejected</option>
+                  <option value="CANCELLED">Cancelled</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover" id="appointments-table">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Client Email</th>
+                  <th>Lawyer Email</th>
+                  <th>Appointment Time</th>
+                  <th>Google Meet Link</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="appointments-tbody"></tbody>
+              </table>
+            </div>
+            <div id="appointments-loading" class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Profile Section -->
     <div id="profile-content" class="content-section">
       <div class="container-fluid px-4">
@@ -538,6 +597,53 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Appointment Edit Modal -->
+<div class="modal fade" id="editAppointmentModal" tabindex="-1" aria-labelledby="editAppointmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editAppointmentModalLabel">Manage Appointment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-appointment-form">
+          <input type="hidden" id="edit-appointment-id">
+          <div class="mb-3">
+            <label for="edit-client-email" class="form-label">Client Email</label>
+            <input type="email" class="form-control" id="edit-client-email" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-lawyer-email" class="form-label">Lawyer Email</label>
+            <input type="email" class="form-control" id="edit-lawyer-email" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-appointment-time" class="form-label">Appointment Time</label>
+            <input type="datetime-local" class="form-control" id="edit-appointment-time" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-google-meet-link" class="form-label">Google Meet Link</label>
+            <input type="url" class="form-control" id="edit-google-meet-link">
+          </div>
+          <div class="mb-3">
+            <label for="edit-status" class="form-label">Status</label>
+            <select class="form-select" id="edit-status" required>
+              <option value="PENDING">Pending</option>
+              <option value="CONFIRMED">Confirmed</option>
+              <option value="REJECTED">Rejected</option>
+              <option value="CANCELLED">Cancelled</option>
+            </select>
+          </div>
+          <div id="edit-appointment-result" class="mt-3"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="save-appointment-changes">Save Changes</button>
       </div>
     </div>
   </div>
