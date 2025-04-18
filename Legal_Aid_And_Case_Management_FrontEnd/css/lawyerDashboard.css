@@ -454,3 +454,99 @@ body {
 #chat-error {
   font-size: 0.9rem;
 }
+/* Appointment List Styling */
+#appointments-section .card {
+  margin-bottom: 1.5rem;
+}
+
+/* Appointment List Styling */
+#appointments-section .card {
+  margin-bottom: 1.5rem;
+}
+
+#pending-appointments-list .card,
+#confirmed-appointments-list .card,
+#rejected-appointments-list .card,
+#cancelled-appointments-list .card {
+  transition: transform 0.2s ease-in-out;
+  border: none;
+}
+
+#pending-appointments-list .card:hover,
+#confirmed-appointments-list .card:hover,
+#rejected-appointments-list .card:hover,
+#cancelled-appointments-list .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+#pending-appointments-list .card-body,
+#confirmed-appointments-list .card-body,
+#rejected-appointments-list .card-body,
+#cancelled-appointments-list .card-body {
+  padding: 1.5rem;
+}
+
+#pending-appointments-list .card-title,
+#confirmed-appointments-list .card-title,
+#rejected-appointments-list .card-title,
+#cancelled-appointments-list .card-title {
+  font-size: 1.25rem;
+  color: #161a2b;
+  margin-bottom: 1rem;
+}
+
+#pending-appointments-list .card-text,
+#confirmed-appointments-list .card-text,
+#rejected-appointments-list .card-text,
+#cancelled-appointments-list .card-text {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-bottom: 0.75rem;
+}
+
+#pending-appointments-list .card-text strong,
+#confirmed-appointments-list .card-text strong,
+#rejected-appointments-list .card-text strong,
+#cancelled-appointments-list .card-text strong {
+  color: #161a2b;
+}
+
+#pending-appointments-message .alert,
+#confirmed-appointments-message .alert,
+#rejected-appointments-message .alert,
+#cancelled-appointments-message .alert {
+  font-size: 0.9rem;
+}
+
+/* Button Styling for Appointment Actions */
+.appointment-action-btn {
+  min-width: 100px;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.appointment-action-btn:hover {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  #appointments-section .nav-tabs .nav-link {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+
+  #pending-appointments-list .card-body,
+  #confirmed-appointments-list .card-body,
+  #rejected-appointments-list .card-body,
+  #cancelled-appointments-list .card-body {
+    padding: 1rem;
+  }
+
+  .appointment-action-btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}

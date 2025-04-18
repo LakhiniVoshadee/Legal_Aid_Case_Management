@@ -176,14 +176,78 @@
             <h2 class="text-primary font-bold tracking-wide">
               <i class="bi bi-calendar-week me-2"></i>Appointments
             </h2>
-            <p class="text-dark mt-1">Manage your upcoming appointments</p>
+            <p class="text-dark mt-1">View and manage your upcoming appointments</p>
           </div>
           <div class="card bg-white shadow-lg rounded-xl border-0 overflow-hidden">
             <div class="card-header bg-gradient-to-r from-primary to-secondary text-white py-3 px-4">
               <h5 class="mb-0 font-semibold tracking-wide">Your Appointments</h5>
             </div>
-            <div class="card-body p-4" id="appointments-list">
-              <p class="text-center text-muted">No appointments scheduled.</p>
+            <div class="card-body p-4">
+              <!-- Tabs for Appointment Status -->
+              <ul class="nav nav-tabs mb-4">
+                <li class="nav-item">
+                  <a class="nav-link active" id="pending-appointments-tab" data-bs-toggle="tab" href="#pending-appointments">Pending</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="confirmed-appointments-tab" data-bs-toggle="tab" href="#confirmed-appointments">Confirmed</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="rejected-appointments-tab" data-bs-toggle="tab" href="#rejected-appointments">Rejected</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="cancelled-appointments-tab" data-bs-toggle="tab" href="#cancelled-appointments">Cancelled</a>
+                </li>
+              </ul>
+              <div class="tab-content">
+                <!-- Pending Appointments Tab -->
+                <div class="tab-pane fade show active" id="pending-appointments">
+                  <div id="pending-appointments-list" class="row">
+                    <div class="col-12 text-center">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      <p>Loading pending appointments...</p>
+                    </div>
+                  </div>
+                  <div id="pending-appointments-message" class="mt-3"></div>
+                </div>
+                <!-- Confirmed Appointments Tab -->
+                <div class="tab-pane fade" id="confirmed-appointments">
+                  <div id="confirmed-appointments-list" class="row">
+                    <div class="col-12 text-center">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      <p>Loading confirmed appointments...</p>
+                    </div>
+                  </div>
+                  <div id="confirmed-appointments-message" class="mt-3"></div>
+                </div>
+                <!-- Rejected Appointments Tab -->
+                <div class="tab-pane fade" id="rejected-appointments">
+                  <div id="rejected-appointments-list" class="row">
+                    <div class="col-12 text-center">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      <p>Loading rejected appointments...</p>
+                    </div>
+                  </div>
+                  <div id="rejected-appointments-message" class="mt-3"></div>
+                </div>
+                <!-- Cancelled Appointments Tab -->
+                <div class="tab-pane fade" id="cancelled-appointments">
+                  <div id="cancelled-appointments-list" class="row">
+                    <div class="col-12 text-center">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      <p>Loading cancelled appointments...</p>
+                    </div>
+                  </div>
+                  <div id="cancelled-appointments-message" class="mt-3"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

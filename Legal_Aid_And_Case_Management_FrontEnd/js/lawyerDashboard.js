@@ -38,6 +38,9 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (targetSectionId === "messages-section") {
         initializeWebSocket();
         fetchContacts();
+      } else if (targetSectionId === "appointments-section") {
+        fetchAppointments("PENDING");
+        document.getElementById("pending-appointments-tab").click();
       }
     });
   });
@@ -46,6 +49,11 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("open-cases-tab").addEventListener("click", fetchOpenCases);
   document.getElementById("assigned-cases-tab").addEventListener("click", fetchAssignedCases);
 
+  // Tab event listeners for appointments section
+  document.getElementById("pending-appointments-tab").addEventListener("click", () => fetchAppointments("PENDING"));
+  document.getElementById("confirmed-appointments-tab").addEventListener("click", () => fetchAppointments("CONFIRMED"));
+  document.getElementById("rejected-appointments-tab").addEventListener("click", () => fetchAppointments("REJECTED"));
+  document.getElementById("cancelled-appointments-tab").addEventListener("click", () => fetchAppointments("CANCELLED"));
   // Chat form submission
   const chatForm = document.getElementById("chat-form");
   if (chatForm) {
@@ -180,6 +188,191 @@ document.addEventListener("DOMContentLoaded", function () {
       if (caseId && action) {
         reviewCase(caseId, action);
       }
+    });
+  }
+
+  // Fetch appointments based on status
+  function fetchAppointments(status) {
+    const listId = `${status.toLowerCase()}-appointments-list`;
+    const messageId = `${status.toLowerCase()}-appointments-message`;
+    const appointmentList = document.getElementById(listId);
+    const appointmentMessage = document.getElementById(messageId);
+
+    appointmentList.innerHTML = `
+    <div class="col-12 text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Loading ${status.toLowerCase()} appointments...</p>
+    </div>`;
+
+    $.ajax({
+      url: "http://localhost:8080/api/v1/appointment/lawyer",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      success: function (appointments) {
+        const filteredAppointments = appointments.filter(
+          (appointment) => appointment.status.toUpperCase() === status
+        );
+        displayAppointments(filteredAppointments, listId);
+        appointmentMessage.innerHTML = "";
+        // Update dashboard card for upcoming appointments (confirmed only)
+        if (status === "CONFIRMED") {
+          document.getElementById("upcoming-appointments").textContent = filteredAppointments.length;
+        }
+        if (!filteredAppointments.length) {
+          appointmentList.innerHTML = `<p class="text-muted">No ${status.toLowerCase()} appointments found.</p>`;
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error(`Error fetching ${status.toLowerCase()} appointments:`, error);
+        if (xhr.status === 403) {
+          alert("Session expired or unauthorized. Please log in again.");
+          localStorage.removeItem("token");
+          localStorage.removeItem("email");
+          window.location.href = "login.html";
+        } else {
+          appointmentList.innerHTML = `
+          <div class="alert alert-danger">Failed to load ${status.toLowerCase()} appointments. Please try again later.</div>`;
+          appointmentMessage.innerHTML = "";
+        }
+      },
+    });
+  }
+
+// Display appointments in the respective tab
+  function displayAppointments(appointments, listId) {
+    const appointmentList = document.getElementById(listId);
+    appointmentList.innerHTML = "";
+    if (!appointments.length) {
+      appointmentList.innerHTML = `<p class="text-muted">No ${listId.replace("-appointments-list", "").toLowerCase()} appointments found.</p>`;
+      return;
+    }
+
+    appointments.forEach((appointment) => {
+      const appointmentTime = new Date(appointment.appointmentTime).toLocaleString();
+      const isPending = appointment.status.toUpperCase() === "PENDING";
+      const isConfirmed = appointment.status.toUpperCase() === "CONFIRMED";
+      const appointmentCard = `
+      <div class="col-md-4 mb-3">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Appointment with ${appointment.clientEmail}</h5>
+            <p class="card-text"><strong>Time:</strong> ${appointmentTime}</p>
+            <p class="card-text"><strong>Google Meet:</strong>
+              <a href="${appointment.googleMeetLink || '#'}" target="_blank" class="text-primary">
+                ${appointment.googleMeetLink ? "Join Meeting" : "N/A"}
+              </a>
+            </p>
+            <p class="card-text"><strong>Status:</strong> ${appointment.status}</p>
+            <div class="d-flex gap-2">
+              ${
+        isPending
+          ? `
+                    <button class="btn btn-success appointment-action-btn confirm-btn" data-appointment-id="${appointment.id}">
+                      <i class="bi bi-check-circle me-2"></i>Confirm
+                    </button>
+                    <button class="btn btn-danger appointment-action-btn reject-btn" data-appointment-id="${appointment.id}">
+                      <i class="bi bi-x-circle me-2"></i>Reject
+                    </button>
+                  `
+          : ""
+      }
+              ${
+        isConfirmed
+          ? `
+                    <button class="btn btn-danger appointment-action-btn cancel-btn" data-appointment-id="${appointment.id}">
+                      <i class="bi bi-x-circle me-2"></i>Cancel
+                    </button>
+                  `
+          : ""
+      }
+            </div>
+          </div>
+        </div>
+      </div>`;
+      appointmentList.innerHTML += appointmentCard;
+    });
+
+    // Add event listeners for confirm, reject, and cancel buttons
+    if (listId === "pending-appointments-list") {
+      document.querySelectorAll(`#${listId} .confirm-btn`).forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const appointmentId = this.getAttribute("data-appointment-id");
+          updateAppointmentStatus(appointmentId, "CONFIRMED");
+        });
+      });
+
+      document.querySelectorAll(`#${listId} .reject-btn`).forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const appointmentId = this.getAttribute("data-appointment-id");
+          updateAppointmentStatus(appointmentId, "REJECTED");
+        });
+      });
+    }
+
+    if (listId === "confirmed-appointments-list") {
+      document.querySelectorAll(`#${listId} .cancel-btn`).forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const appointmentId = this.getAttribute("data-appointment-id");
+          cancelAppointment(appointmentId);
+        });
+      });
+    }
+  }
+
+// Update appointment status (Confirm/Reject)
+  function updateAppointmentStatus(appointmentId, status) {
+    const messageDiv = document.getElementById("pending-appointments-message");
+
+    $.ajax({
+      url: `http://localhost:8080/api/v1/appointment/${appointmentId}/status?status=${status}`,
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      success: function (response) {
+        messageDiv.innerHTML = `<div class="alert alert-success">Appointment ${status.toLowerCase()} successfully!</div>`;
+        // Refresh all tabs to reflect the status change
+        fetchAppointments("PENDING");
+        fetchAppointments("CONFIRMED");
+        fetchAppointments("REJECTED");
+        fetchAppointments("CANCELLED");
+      },
+      error: function (xhr, status, error) {
+        console.error(`Error updating appointment status:`, error);
+        messageDiv.innerHTML = `<div class="alert alert-danger">Error updating appointment status. Please try again.</div>`;
+      },
+    });
+  }
+
+// Cancel appointment
+  function cancelAppointment(appointmentId) {
+    const messageDiv = document.getElementById("confirmed-appointments-message");
+
+    $.ajax({
+      url: `http://localhost:8080/api/v1/appointment/${appointmentId}/cancel`,
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      success: function () {
+        messageDiv.innerHTML = `<div class="alert alert-success">Appointment cancelled successfully!</div>`;
+        // Refresh all tabs to reflect the cancellation
+        fetchAppointments("PENDING");
+        fetchAppointments("CONFIRMED");
+        fetchAppointments("REJECTED");
+        fetchAppointments("CANCELLED");
+      },
+      error: function (xhr, status, error) {
+        console.error(`Error cancelling appointment:`, error);
+        messageDiv.innerHTML = `<div class="alert alert-danger">Error cancelling appointment. Please try again.</div>`;
+      },
     });
   }
 
