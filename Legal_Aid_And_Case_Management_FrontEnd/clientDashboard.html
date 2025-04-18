@@ -170,10 +170,163 @@
         </div>
 
         <!-- Appointments Section -->
+        <!-- Appointments Section -->
         <div id="appointments-section" class="content-section" data-aos="fade-up">
-          <h2 class="text-primary font-bold mb-4">Appointments</h2>
-          <div class="card bg-white shadow-lg rounded-lg p-4">
-            <p class="text-black">Schedule and manage your appointments here.</p>
+          <div class="section-header mb-5">
+            <h2 class="text-primary font-bold tracking-wide">
+              <i class="bi bi-calendar-week me-2"></i>Appointments
+            </h2>
+            <p class="text-dark mt-1">Schedule and manage your appointments with lawyers</p>
+          </div>
+          <div class="card bg-white shadow-lg rounded-xl border-0 overflow-hidden">
+            <div class="card-header bg-gradient-to-r from-primary to-secondary border-0 pt-4 px-4">
+              <ul class="nav nav-tabs card-header-tabs" id="appointmentTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active text-white font-semibold px-4 py-2"
+                    id="schedule-appointment-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#schedule-appointment"
+                    type="button"
+                    role="tab"
+                    aria-controls="schedule-appointment"
+                    aria-selected="true"
+                  >
+                    Schedule New Appointment
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link text-white font-semibold px-4 py-2"
+                    id="view-appointments-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#view-appointments"
+                    type="button"
+                    role="tab"
+                    aria-controls="view-appointments"
+                    aria-selected="false"
+                  >
+                    View Appointments
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="card-body p-5">
+              <div class="tab-content" id="appointmentTabContent">
+                <!-- Schedule Appointment Tab -->
+                <div
+                  class="tab-pane fade show active"
+                  id="schedule-appointment"
+                  role="tabpanel"
+                  aria-labelledby="schedule-appointment-tab"
+                >
+                  <form id="appointment-schedule-form" class="needs-validation modern-appointment-form" novalidate>
+                    <div class="row g-4">
+                      <!-- Lawyer Selection -->
+                      <div class="col-md-6">
+                        <label for="lawyerEmail" class="form-label text-dark font-medium mb-2">
+                          Select Lawyer
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-person-fill text-primary"></i>
+                  </span>
+                          <select
+                            class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="lawyerEmail"
+                            name="lawyerEmail"
+                            required
+                          >
+                            <option value="" selected disabled>Select a lawyer</option>
+                          </select>
+                          <div class="invalid-feedback text-danger">
+                            Please select a lawyer.
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Appointment Date and Time -->
+                      <div class="col-md-6">
+                        <label for="appointmentTime" class="form-label text-dark font-medium mb-2">
+                          Appointment Date & Time
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-calendar-event-fill text-primary"></i>
+                  </span>
+                          <input
+                            type="datetime-local"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="appointmentTime"
+                            name="appointmentTime"
+                            required
+                          >
+                          <div class="invalid-feedback text-danger">
+                            Please select a date and time.
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Google Meet Link -->
+                      <div class="col-12">
+                        <label for="googleMeetLink" class="form-label text-dark font-medium mb-2">
+                          Google Meet Link (Optional)
+                        </label>
+                        <div class="input-group">
+                  <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                    <i class="bi bi-link-45deg text-primary"></i>
+                  </span>
+                          <input
+                            type="url"
+                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                            id="googleMeetLink"
+                            name="googleMeetLink"
+                            placeholder="Enter Google Meet link"
+                          >
+                        </div>
+                      </div>
+                      <!-- Form Actions -->
+                      <div class="col-12 mt-4 flex gap-3 justify-end">
+                        <button
+                          type="submit"
+                          class="btn bg-primary text-white rounded-md px-5 py-2 hover:bg-secondary transition-all duration-300 shadow-md"
+                          id="submit-appointment-btn"
+                        >
+                          <i class="bi bi-calendar-check me-2"></i>Schedule Appointment
+                        </button>
+                        <button
+                          type="reset"
+                          class="btn btn-outline-light rounded-md px-5 py-2 hover:bg-light/20 transition-all duration-300"
+                        >
+                          <i class="bi bi-undo me-2"></i>Reset Form
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                  <div id="appointment-message" class="mt-4 alert alert-success d-none rounded-md shadow-sm">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <span id="appointment-success-message">Appointment scheduled successfully!</span>
+                  </div>
+                </div>
+                <!-- View Appointments Tab -->
+                <div
+                  class="tab-pane fade"
+                  id="view-appointments"
+                  role="tabpanel"
+                  aria-labelledby="view-appointments-tab"
+                >
+                  <div id="appointments-list" class="row">
+                    <div class="col-12 text-center" id="appointments-loading">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      <p class="text-dark mt-2">Loading appointments...</p>
+                    </div>
+                  </div>
+                  <div id="appointments-error" class="alert alert-danger mt-4 d-none rounded-md shadow-sm">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Failed to load appointments. Please try again later.
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

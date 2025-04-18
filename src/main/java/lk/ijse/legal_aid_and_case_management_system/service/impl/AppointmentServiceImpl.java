@@ -4,96 +4,133 @@ import lk.ijse.legal_aid_and_case_management_system.dto.AppointmentDTO;
 import lk.ijse.legal_aid_and_case_management_system.entity.Appointment;
 import lk.ijse.legal_aid_and_case_management_system.entity.Clients;
 import lk.ijse.legal_aid_and_case_management_system.entity.Lawyer;
-import lk.ijse.legal_aid_and_case_management_system.repo.*;
+import lk.ijse.legal_aid_and_case_management_system.repo.AppointmentRepository;
+import lk.ijse.legal_aid_and_case_management_system.repo.ClientRepository;
+import lk.ijse.legal_aid_and_case_management_system.repo.LawyerRepository;
 import lk.ijse.legal_aid_and_case_management_system.service.AppointmentService;
-import org.modelmapper.ModelMapper;
+import lk.ijse.legal_aid_and_case_management_system.util.Enum.AppointmentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class AppointmentServiceImpl implements AppointmentService {
-
-    @Autowired
-    private LawyerRepository lawyerRepository;
-
-    @Autowired
-    private ClientRepository clientRepository;
 
     @Autowired
     private AppointmentRepository appointmentRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private LawyerRepository lawyerRepository;
 
     @Override
     public AppointmentDTO scheduleAppointment(AppointmentDTO appointmentDTO) {
-        // Validate lawyer and client
-        Optional<Lawyer> lawyer = Optional.ofNullable(lawyerRepository.findByUser_Email(appointmentDTO.getLawyerEmail()));
-        if (lawyer.isEmpty()) {
-            throw new RuntimeException("Lawyer not found with email: " + appointmentDTO.getLawyerEmail());
-        }
-        Optional<Clients> client = Optional.ofNullable(clientRepository.findByUser_Email(appointmentDTO.getClientEmail()));
-        if (client.isEmpty()) {
-            throw new RuntimeException("Client not found with email: " + appointmentDTO.getClientEmail());
+        Clients client = clientRepository.findByUser_Email(appointmentDTO.getClientEmail());
+        Lawyer lawyer = lawyerRepository.findByUser_Email(appointmentDTO.getLawyerEmail());
+
+        if (client == null || lawyer == null) {
+            throw new RuntimeException("Client or Lawyer not found");
         }
 
-        // Check for conflicts
-        boolean isConflict = appointmentRepository.existsByLawyerAndAppointmentTime(lawyer.orElse(null), appointmentDTO.getAppointmentTime());
-        if (isConflict) {
-            throw new RuntimeException("Lawyer is unavailable at this time");
-        }
-
-        // Create and populate appointment entity
         Appointment appointment = new Appointment();
-        appointment.setLawyer(lawyer.orElse(null));
-        appointment.setClient(client.orElse(null));
+        appointment.setClient(client);
+        appointment.setLawyer(lawyer);
         appointment.setAppointmentTime(appointmentDTO.getAppointmentTime());
-        appointment.setStatus("PENDING");
-        appointment.setGoogleMeetLink("https://meet.google.com/xyz-abc-def"); // Placeholder link
+        appointment.setGoogleMeetLink(appointmentDTO.getGoogleMeetLink());
+        appointment.setStatus(AppointmentStatus.PENDING.name());
 
-        // Save to database
-        appointment = appointmentRepository.save(appointment);
-
-        // Update DTO with Google Meet link and return
-        appointmentDTO.setGoogleMeetLink(appointment.getGoogleMeetLink());
-        return appointmentDTO;
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        return mapToDTO(savedAppointment);
     }
 
     @Override
-    public List<AppointmentDTO> getAppointmentsByLawyer(String lawyerEmail) {
-        Optional<Lawyer> lawyer = Optional.ofNullable(lawyerRepository.findByUser_Email(lawyerEmail));
-        if (lawyer.isEmpty()) {
-            throw new RuntimeException("Lawyer not found with email: " + lawyerEmail);
-        }
-        List<Appointment> appointments = appointmentRepository.findByLawyer(lawyer.get());
-        return appointments.stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+    public List<AppointmentDTO> getClientAppointments(String clientEmail) {
+        List<Appointment> appointments = appointmentRepository.findByClient_User_Email(clientEmail);
+        return appointments.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public List<AppointmentDTO> getAppointmentsByClient(String clientEmail) {
-        Optional<Clients> client = Optional.ofNullable(clientRepository.findByUser_Email(clientEmail));
-        if (client.isEmpty()) {
-            throw new RuntimeException("Client not found with email: " + clientEmail);
-        }
-        List<Appointment> appointments = appointmentRepository.findByClient(client.get());
-        return appointments.stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+    public List<AppointmentDTO> getLawyerAppointments(String lawyerEmail) {
+        List<Appointment> appointments = appointmentRepository.findByLawyer_User_Email(lawyerEmail);
+        return appointments.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
-    // Helper method to map Appointment entity to AppointmentDTO
+    @Override
+    public List<AppointmentDTO> getAllAppointments() {
+        List<Appointment> appointments = appointmentRepository.findAll();
+        return appointments.stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public AppointmentDTO updateAppointmentStatus(Long appointmentId, AppointmentStatus status, String lawyerEmail) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        if (!appointment.getLawyer().getUser().getEmail().equals(lawyerEmail)) {
+            throw new RuntimeException("Unauthorized: Lawyer does not own this appointment");
+        }
+
+        if (status == AppointmentStatus.CONFIRMED || status == AppointmentStatus.REJECTED) {
+            appointment.setStatus(status.name());
+        } else {
+            throw new RuntimeException("Invalid status for lawyer action");
+        }
+
+        Appointment updatedAppointment = appointmentRepository.save(appointment);
+        return mapToDTO(updatedAppointment);
+    }
+
+    @Override
+    public void cancelAppointment(Long appointmentId, String userEmail) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        boolean isClient = appointment.getClient().getUser().getEmail().equals(userEmail);
+        boolean isLawyer = appointment.getLawyer().getUser().getEmail().equals(userEmail);
+
+        if (!isClient && !isLawyer) {
+            throw new RuntimeException("Unauthorized: User does not own this appointment");
+        }
+
+        appointment.setStatus(AppointmentStatus.CANCELLED.name());
+        appointmentRepository.save(appointment);
+    }
+
+    @Override
+    public AppointmentDTO manageAppointment(Long appointmentId, AppointmentDTO appointmentDTO, AppointmentStatus status) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        Clients client = clientRepository.findByUser_Email(appointmentDTO.getClientEmail());
+        Lawyer lawyer = lawyerRepository.findByUser_Email(appointmentDTO.getLawyerEmail());
+
+        if (client == null || lawyer == null) {
+            throw new RuntimeException("Client or Lawyer not found");
+        }
+
+        appointment.setClient(client);
+        appointment.setLawyer(lawyer);
+        appointment.setAppointmentTime(appointmentDTO.getAppointmentTime());
+        appointment.setGoogleMeetLink(appointmentDTO.getGoogleMeetLink());
+        appointment.setStatus(status.name());
+
+        Appointment updatedAppointment = appointmentRepository.save(appointment);
+        return mapToDTO(updatedAppointment);
+    }
+
     private AppointmentDTO mapToDTO(Appointment appointment) {
-        AppointmentDTO dto = new AppointmentDTO();
-        dto.setLawyerEmail(appointment.getLawyer().getUser().getEmail());
-        dto.setClientEmail(appointment.getClient().getUser().getEmail());
-        dto.setAppointmentTime(appointment.getAppointmentTime());
-        dto.setGoogleMeetLink(appointment.getGoogleMeetLink());
-        return dto;
+        return new AppointmentDTO(
+                appointment.getLawyer().getUser().getEmail(),
+                appointment.getClient().getUser().getEmail(),
+                appointment.getAppointmentTime(),
+                appointment.getGoogleMeetLink(),
+                appointment.getStatus() // Include status
+        );
     }
 }

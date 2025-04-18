@@ -3,20 +3,23 @@ package lk.ijse.legal_aid_and_case_management_system.dto;
 import lombok.Data;
 import java.time.LocalDateTime;
 
-@Data
+
 public class AppointmentDTO {
-    private String lawyerEmail; // To identify the lawyer
-    private String clientEmail; // To identify the client
+    private String lawyerEmail;
+    private String clientEmail;
     private LocalDateTime appointmentTime;
     private String googleMeetLink;
+    private String status; // Add status field
 
-    public AppointmentDTO() {}
+    public AppointmentDTO() {
+    }
 
-    public AppointmentDTO(String lawyerEmail, String clientEmail, LocalDateTime appointmentTime, String googleMeetLink) {
+    public AppointmentDTO(String lawyerEmail, String clientEmail, LocalDateTime appointmentTime, String googleMeetLink, String status) {
         this.lawyerEmail = lawyerEmail;
         this.clientEmail = clientEmail;
         this.appointmentTime = appointmentTime;
         this.googleMeetLink = googleMeetLink;
+        this.status = status;
     }
 
     public String getLawyerEmail() {
@@ -49,5 +52,13 @@ public class AppointmentDTO {
 
     public void setGoogleMeetLink(String googleMeetLink) {
         this.googleMeetLink = googleMeetLink;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

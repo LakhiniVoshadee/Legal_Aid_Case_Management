@@ -33,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchLawyers();
       } else if (targetSectionId === "message-section") {
         initializeMessaging();
+      } else if (targetSectionId === "appointments-section") {
+        initializeAppointments();
       } else if (socket && socket.readyState === WebSocket.OPEN) {
         socket.close();
       }
@@ -128,6 +130,217 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("Email does not match your account email.");
     }
   });
+
+  // Appointment Functions
+  function initializeAppointments() {
+    fetchLawyersForAppointment();
+    fetchClientAppointments();
+    const appointmentForm = document.getElementById("appointment-schedule-form");
+    if (appointmentForm) {
+      appointmentForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        scheduleAppointment();
+      });
+    }
+  }
+
+  function fetchLawyersForAppointment() {
+    const lawyerSelect = document.getElementById("lawyerEmail");
+    lawyerSelect.innerHTML = '<option value="" selected disabled>Loading lawyers...</option>';
+
+    $.ajax({
+      url: "http://localhost:8080/api/v1/user/lawyers",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      success: function (response) {
+        lawyerSelect.innerHTML = '<option value="" selected disabled>Select a lawyer</option>';
+        if (response && response.code === 200 && Array.isArray(response.data)) {
+          response.data.forEach(lawyer => {
+            if (lawyer.email && lawyer.lawyer_name) {
+              const option = document.createElement("option");
+              option.value = lawyer.email;
+              option.textContent = `${lawyer.lawyer_name} (${lawyer.specialization || 'General Practice'})`;
+              lawyerSelect.appendChild(option);
+            }
+          });
+        } else {
+          lawyerSelect.innerHTML = '<option value="" selected disabled>No lawyers available</option>';
+        }
+      },
+      error: function (xhr) {
+        console.error("Error fetching lawyers for appointment:", xhr);
+        lawyerSelect.innerHTML = '<option value="" selected disabled>Error loading lawyers</option>';
+      }
+    });
+  }
+
+  function scheduleAppointment() {
+    const form = document.getElementById("appointment-schedule-form");
+    const submitBtn = document.getElementById("submit-appointment-btn");
+    const messageDiv = document.getElementById("appointment-message");
+
+    if (!form.checkValidity()) {
+      form.classList.add("was-validated");
+      return;
+    }
+
+    const appointmentData = {
+      lawyerEmail: document.getElementById("lawyerEmail").value,
+      clientEmail: email,
+      appointmentTime: new Date(document.getElementById("appointmentTime").value).toISOString(),
+      googleMeetLink: document.getElementById("googleMeetLink").value || null,
+      status: "PENDING"
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Scheduling...';
+    messageDiv.classList.add("d-none");
+
+    $.ajax({
+      url: "http://localhost:8080/api/v1/appointment/schedule",
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      data: JSON.stringify(appointmentData),
+      success: function (response) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-calendar-check me-2"></i>Schedule Appointment';
+        if (response) {
+          messageDiv.innerHTML = `
+            <div class="alert alert-success">
+              <i class="bi bi-check-circle-fill me-2"></i> Appointment scheduled successfully!
+            </div>`;
+          form.reset();
+          form.classList.remove("was-validated");
+          fetchClientAppointments(); // Refresh appointments list
+        } else {
+          messageDiv.innerHTML = `<div class="alert alert-danger">Error: Failed to schedule appointment</div>`;
+        }
+        messageDiv.classList.remove("d-none");
+      },
+      error: function (xhr) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-calendar-check me-2"></i>Schedule Appointment';
+        const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Error scheduling appointment';
+        messageDiv.innerHTML = `<div class="alert alert-danger">Error: ${errorMsg}</div>`;
+        messageDiv.classList.remove("d-none");
+        console.error("Error scheduling appointment:", xhr);
+      }
+    });
+  }
+
+  function fetchClientAppointments() {
+    const appointmentsList = document.getElementById("appointments-list");
+    const errorAlert = document.getElementById("appointments-error");
+
+    appointmentsList.innerHTML = `
+      <div class="col-12 text-center" id="appointments-loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p>Loading appointments...</p>
+      </div>`;
+    errorAlert.classList.add("d-none");
+
+    $.ajax({
+      url: "http://localhost:8080/api/v1/appointment/client",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      success: function (response) {
+        if (response && Array.isArray(response)) {
+          displayAppointments(response);
+        } else {
+          appointmentsList.innerHTML = '<p class="text-center text-muted">No appointments found.</p>';
+        }
+      },
+      error: function (xhr) {
+        console.error("Error fetching appointments:", xhr);
+        appointmentsList.innerHTML = "";
+        errorAlert.classList.remove("d-none");
+      }
+    });
+  }
+
+  function displayAppointments(appointments) {
+    const appointmentsList = document.getElementById("appointments-list");
+    appointmentsList.innerHTML = "";
+    if (!appointments.length) {
+      appointmentsList.innerHTML = '<p class="text-center text-muted">No appointments scheduled.</p>';
+      return;
+    }
+
+    appointments.forEach(appointment => {
+      const appointmentCard = `
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card appointment-card h-100 border-0 rounded-xl shadow-lg overflow-hidden">
+            <div class="card-body p-4 d-flex flex-column">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <i class="bi bi-person-circle text-primary text-2xl"></i>
+                <div>
+                  <h5 class="mb-0 text-dark font-semibold">Lawyer: ${appointment.lawyerEmail}</h5>
+                  <span class="status-badge status-${appointment.status.toLowerCase()} mt-1">${appointment.status}</span>
+                </div>
+              </div>
+              <p class="card-text mb-2 text-dark text-sm">
+                <i class="bi bi-calendar-event me-2 text-primary"></i>
+                ${new Date(appointment.appointmentTime).toLocaleString()}
+              </p>
+              <p class="card-text mb-4 text-dark text-sm">
+                <i class="bi bi-link-45deg me-2 text-primary"></i>
+                ${appointment.googleMeetLink ? `<a href="${appointment.googleMeetLink}" target="_blank" class="text-primary">Join Meeting</a>` : 'No meeting link'}
+              </p>
+              ${appointment.status === 'PENDING' ? `
+                <button
+                  onclick="cancelAppointment(${appointment.id})"
+                  class="btn btn-outline-danger rounded-md py-2 mt-auto hover:bg-red-50 transition-all duration-300"
+                >
+                  <i class="bi bi-x-circle me-2"></i>Cancel Appointment
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        </div>`;
+      appointmentsList.innerHTML += appointmentCard;
+    });
+  }
+
+  window.cancelAppointment = function(appointmentId) {
+    if (!confirm("Are you sure you want to cancel this appointment?")) return;
+
+    const cancelBtn = event.target;
+    cancelBtn.disabled = true;
+    cancelBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Canceling...';
+
+    $.ajax({
+      url: `http://localhost:8080/api/v1/appointment/${appointmentId}/cancel`,
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      success: function () {
+        cancelBtn.disabled = false;
+        cancelBtn.innerHTML = '<i class="bi bi-x-circle me-2"></i>Cancel Appointment';
+        showAlert("success", "Appointment canceled successfully!");
+        fetchClientAppointments();
+      },
+      error: function (xhr) {
+        cancelBtn.disabled = false;
+        cancelBtn.innerHTML = '<i class="bi bi-x-circle me-2"></i>Cancel Appointment';
+        const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Error canceling appointment';
+        showAlert("danger", errorMsg);
+        console.error("Error canceling appointment:", xhr);
+      }
+    });
+  };
 
   // Messaging Functions
   function initializeMessaging() {
@@ -616,7 +829,7 @@ document.addEventListener("DOMContentLoaded", function () {
               </div>
             </div>
             <button
-              onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '&quot;')})"
+              onclick="viewFullProfile(${JSON.stringify(lawyer).replace(/"/g, '"')})"
               class="btn view-profile-btn bg-primary text-white rounded-md py-2 hover:bg-secondary transition-all duration-300 shadow-md"
             >
               <i class="bi bi-eye me-2"></i>View Profile
