@@ -10,7 +10,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-  width: 80px;
+  width: 140px;
   background-color: #ffffff;
   border-right: 1px solid #e5e7eb;
   transition: all 0.3s ease;
@@ -103,7 +103,7 @@ body {
 
 /* Main Content */
 .content-wrapper {
-  margin-left: 80px;
+  margin-left: 190px;
   background-color: #ffffff;
   min-height: 100vh;
 }
@@ -168,8 +168,8 @@ body {
 }
 
 .user-profile img {
-  width: 36px;
-  height: 36px;
+  width: 65px;
+  height: 65px;
   object-fit: cover;
 }
 
@@ -301,7 +301,7 @@ iframe#google-calendar {
 }
 
 .nav-tabs .nav-link.active {
-  background-color: #ffffff;
+  background-color: #8b5cf6;
   color: #8b5cf6;
 }
 
@@ -735,5 +735,114 @@ iframe#google-calendar {
 
   #existing-case .input-group {
     max-width: 100%;
+  }
+}
+/* Dashboard Hero Card */
+.card.bg-gradient-to-r {
+  background: linear-gradient(90deg, #8b5cf6, #6d28d9);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card.bg-gradient-to-r:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.card.bg-gradient-to-r .stat {
+  text-align: center;
+}
+
+.card.bg-gradient-to-r .stat span {
+  display: block;
+  animation: countUp 1s ease-in-out;
+}
+
+/* Lawyers' Posts */
+.post-card {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.post-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.post-card .card-body {
+  padding: 1.5rem;
+}
+
+.post-card .post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #161a2b;
+}
+
+.post-card .post-content {
+  font-size: 0.9rem;
+  color: #161a2b;
+  line-height: 1.5;
+}
+
+.post-card .post-author {
+  font-size: 0.85rem;
+  color: #8b5cf6;
+}
+
+/* Daily Consultations */
+.consultation-card {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.consultation-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.consultation-card .status-badge {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 1rem;
+}
+
+.consultation-card .status-pending {
+  background-color: rgba(251, 191, 36, 0.2);
+  color: #f59e0b;
+}
+
+.consultation-card .status-confirmed {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .card.bg-gradient-to-r .card-body {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .card.bg-gradient-to-r img {
+    margin-top: 1rem;
+  }
+
+  .post-card img {
+    height: 120px;
+  }
+
+  .consultation-card {
+    padding: 0.75rem;
   }
 }

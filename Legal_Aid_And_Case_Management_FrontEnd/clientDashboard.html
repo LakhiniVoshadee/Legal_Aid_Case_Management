@@ -131,6 +131,31 @@
         <!-- Dashboard Section -->
         <div id="dashboard-section" class="content-section active" data-aos="fade-up">
           <div class="row">
+            <div class="row mb-5">
+              <div class="col-12">
+                <div class="card bg-gradient-to-r from-primary to-secondary text-white shadow-xl rounded-xl overflow-hidden">
+                  <div class="card-body p-5 d-flex flex-column flex-md-row align-items-center">
+                    <div class="flex-grow-1">
+                      <h2 class="font-bold text-2xl mb-2">Welcome Back, <span id="welcomeMessage">User</span>!</h2>
+                      <p class="text-light mb-4">Stay updated with your legal matters and connect with top lawyers.</p>
+                      <div class="d-flex gap-4">
+                        <div class="stat">
+                          <span class="text-3xl font-bold" id="total-lawyers">0</span>
+                          <p class="text-light text-sm">Lawyers Available</p>
+                        </div>
+                        <div class="stat">
+                          <span class="text-3xl font-bold" id="today-appointments">0</span>
+                          <p class="text-light text-sm">Today's Consultations</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-4 mt-md-0">
+                      <img src="https://via.placeholder.com/150x150?text=LegalNet" alt="LegalNet Logo" class="rounded-full w-32 h-32 object-cover border-4 border-white shadow-md">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <!-- Total Lawyers Count -->
             <div class="col-md-4 mb-4">
               <div class="dashboard-card bg-white shadow-lg rounded-lg p-4 hover:scale-105 transition-transform">
@@ -710,7 +735,7 @@
                     id="filterBtn"
                     class="btn bg-primary text-white w-100 rounded-md hover:bg-secondary transition-all duration-300 py-2 shadow-md"
                   >
-                    <i class="bi bi-search me-1"></i> Filter
+                    <i class="bi bi-search me-1"></i> Search
                   </button>
                 </div>
               </div>
