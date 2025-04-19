@@ -74,11 +74,6 @@
                 <i class="bi bi-chat-text text-2xl text-dark hover:text-primary"></i>
               </a>
             </li>
-            <li class="nav-item mb-3">
-              <a class="nav-link" href="#profile-section" data-section="profile-section" title="Profile">
-                <i class="bi bi-person-circle text-2xl text-dark hover:text-primary"></i>
-              </a>
-            </li>
           </ul>
         </nav>
         <div class="sidebar-footer mt-auto py-4">
@@ -101,6 +96,9 @@
             <h2 class="text-dark font-bold" id="welcomeMessage"></h2>
           </div>
           <div class="d-flex align-items-center">
+            <button class="btn btn-outline-primary btn-sm rounded-full p-3 me-3 hover:bg-primary hover:text-white transition-all duration-300" data-bs-toggle="modal" data-bs-target="#profileModal" title="Update Profile">
+              <i class="bi bi-person-circle text-lg"></i>
+            </button>
             <div class="dropdown me-3">
               <button class="btn btn-link text-dark notification-btn position-relative" type="button"
                       id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -116,7 +114,7 @@
               <img src="/api/placeholder/36/36" class="rounded-circle me-2 border-2 border-primary" alt="Profile"
                    id="header-profile-pic">
               <div>
-                <span class="d-none d-md-block font-semibold text-dark" id="lawyer-name">John Doe</span>
+                <span class="d-none d-md-block font-semibold text-dark" id="client-name">John Doe</span>
               </div>
             </div>
           </div>
@@ -249,9 +247,9 @@
                           Lawyer Email
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-envelope-fill text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-envelope-fill text-primary"></i>
+                    </span>
                           <input
                             type="email"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -271,9 +269,9 @@
                           Your Email
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-envelope-fill text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-envelope-fill text-primary"></i>
+                    </span>
                           <input
                             type="email"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -294,9 +292,9 @@
                           Appointment Date & Time
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-calendar-event-fill text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-calendar-event-fill text-primary"></i>
+                    </span>
                           <input
                             type="datetime-local"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -315,9 +313,9 @@
                           Google Meet Link (Optional)
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-link-45deg text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-link-45deg text-primary"></i>
+                    </span>
                           <input
                             type="url"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -429,9 +427,9 @@
                           First Name
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-person-fill text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-person-fill text-primary"></i>
+                    </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -451,9 +449,9 @@
                           Last Name
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-person-fill text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-person-fill text-primary"></i>
+                    </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -473,9 +471,9 @@
                           Email
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-envelope-fill text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-envelope-fill text-primary"></i>
+                    </span>
                           <input
                             type="email"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -495,9 +493,9 @@
                           Phone Number
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-telephone-fill text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-telephone-fill text-primary"></i>
+                    </span>
                           <input
                             type="tel"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -513,9 +511,9 @@
                           Case Category
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-tag-fill text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-tag-fill text-primary"></i>
+                    </span>
                           <select
                             class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
                             id="caseCategory"
@@ -540,9 +538,9 @@
                           Subject
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-fonts text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-fonts text-primary"></i>
+                    </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -577,14 +575,14 @@
                         </div>
                       </div>
                       <!-- File Attachment -->
-                      <div class="col-12">
+                      <div class="col-16">
                         <label for="fileAttachment" class="form-label text-dark font-medium mb-2">
                           Attachments
                         </label>
                         <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-paperclip text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-paperclip text-primary"></i>
+                    </span>
                           <input
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm"
                             type="file"
@@ -652,9 +650,9 @@
                     <div class="row justify-content-center">
                       <div class="col-md-8">
                         <div class="input-group mb-4">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-search text-primary"></i>
-                          </span>
+                    <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                      <i class="bi bi-search text-primary"></i>
+                    </span>
                           <input
                             type="text"
                             class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
@@ -792,8 +790,8 @@
                     Select a contact to chat
                   </h5>
                   <span id="chat-status" class="badge bg-success px-3 py-2 rounded-full text-sm font-medium">
-                    Disconnected
-                  </span>
+              Disconnected
+            </span>
                 </div>
                 <div class="card-body chat-area p-4" id="chat-messages" style="height: 450px; overflow-y: auto;">
                   <div class="text-center text-muted mt-5">
@@ -817,165 +815,6 @@
                     >
                       <i class="bi bi-send text-lg"></i>
                     </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Profile Section -->
-        <div id="profile-section" class="content-section" data-aos="fade-up">
-          <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-              <div class="card bg-white shadow-lg rounded-lg border-0 overflow-hidden">
-                <div class="card-header bg-gradient-to-r from-primary to-secondary text-white py-4">
-                  <h5 class="mb-0 text-center font-bold tracking-wide">
-                    <i class="bi bi-person-circle me-2"></i>My Profile
-                  </h5>
-                </div>
-                <div class="card-body p-5">
-                  <form id="profile-form" class="modern-profile-form">
-                    <!-- Alert Messages -->
-                    <div class="alert alert-success d-none" id="update-success">
-                      <i class="bi bi-check-circle-fill me-2"></i>Profile updated successfully!
-                    </div>
-                    <div class="alert alert-danger d-none" id="update-error">
-                      <i class="bi bi-exclamation-triangle-fill me-2"></i>Error updating profile!
-                    </div>
-
-                    <!-- Profile Picture Section -->
-                    <div class="text-center mb-5">
-                      <div class="position-relative d-inline-block">
-                        <img
-                          src="/api/placeholder/100/100"
-                          class="rounded-circle border-4 border-primary shadow-sm mb-3 transition-all duration-300 hover:opacity-90"
-                          alt="Profile Picture"
-                          id="profile-pic"
-                          style="width: 120px; height: 120px; object-fit: cover;"
-                        >
-                        <div class="position-absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4">
-                          <label
-                            for="profile-picture"
-                            class="btn btn-primary btn-sm rounded-full p-2 shadow-md hover:bg-secondary transition-all duration-300 cursor-pointer"
-                            title="Upload new picture"
-                          >
-                            <i class="bi bi-camera-fill text-lg"></i>
-                            <input type="file" id="profile-picture" accept="image/*" class="d-none">
-                          </label>
-                        </div>
-                      </div>
-                      <div class="mt-2">
-                        <button
-                          type="button"
-                          class="btn btn-outline-danger btn-sm rounded-full px-4 py-2 hover:bg-red-50 transition-all duration-300"
-                          id="delete-profile-pic"
-                        >
-                          <i class="bi bi-trash me-1"></i> Delete Picture
-                        </button>
-                      </div>
-                    </div>
-
-                    <!-- Profile Form Fields -->
-                    <div class="row g-4">
-                      <!-- Full Name -->
-                      <div class="col-md-6">
-                        <label for="lawyer_name" class="form-label text-dark font-medium mb-2">
-                          Full Name
-                        </label>
-                        <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-person-fill text-primary"></i>
-                          </span>
-                          <input
-                            type="text"
-                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
-                            id="lawyer_name"
-                            name="lawyer_name"
-                            placeholder="Enter your full name"
-                          >
-                        </div>
-                      </div>
-
-                      <!-- Contact Number -->
-                      <div class="col-md-6">
-                        <label for="contactNumber" class="form-label text-dark font-medium mb-2">
-                          Contact Number
-                        </label>
-                        <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-telephone-fill text-primary"></i>
-                          </span>
-                          <input
-                            type="text"
-                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
-                            id="contactNumber"
-                            name="contactNumber"
-                            placeholder="Enter your contact number"
-                          >
-                        </div>
-                      </div>
-
-                      <!-- Address -->
-                      <div class="col-md-12">
-                        <label for="address" class="form-label text-dark font-medium mb-2">
-                          Address
-                        </label>
-                        <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-geo-alt-fill text-primary"></i>
-                          </span>
-                          <input
-                            type="text"
-                            class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
-                            id="address"
-                            name="address"
-                            placeholder="Enter your address"
-                          >
-                        </div>
-                      </div>
-
-                      <!-- Gender -->
-                      <div class="col-md-12">
-                        <label for="gender" class="form-label text-dark font-medium mb-2">
-                          Gender
-                        </label>
-                        <div class="input-group">
-                          <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
-                            <i class="bi bi-gender-ambiguous text-primary"></i>
-                          </span>
-                          <select
-                            class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
-                            id="gender"
-                            name="gender"
-                          >
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                            <option value="Prefer Not to Say">Prefer Not to Say</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Form Actions -->
-                    <div class="mt-5 flex justify-end gap-3">
-                      <button
-                        type="button"
-                        class="btn btn-outline-light rounded-md px-5 py-2 hover:bg-light/20 transition-all duration-300"
-                        id="cancel-btn"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        class="btn bg-primary text-white rounded-md px-5 py-2 hover:bg-secondary transition-all duration-300 shadow-md"
-                        id="update-profile-btn"
-                      >
-                        <i class="bi bi-save me-2"></i> Update Profile
-                      </button>
-                    </div>
                   </form>
                 </div>
               </div>
@@ -1014,6 +853,163 @@
         <button type="button" class="btn bg-danger text-white hover:bg-red-700 transition-all"
                 id="confirm-deactivate-btn">Deactivate Account
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-white rounded-lg shadow-lg">
+      <div class="modal-header border-0 bg-gradient-to-r from-primary to-secondary text-white py-4">
+        <h5 class="modal-title font-bold tracking-wide" id="profileModalLabel">
+          <i class="bi bi-person-circle me-2"></i>Update Profile
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-5">
+        <form id="profile-form" class="modern-profile-form">
+          <!-- Alert Messages -->
+          <div class="alert alert-success d-none" id="update-success">
+            <i class="bi bi-check-circle-fill me-2"></i>Profile updated successfully!
+          </div>
+          <div class="alert alert-danger d-none" id="update-error">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>Error updating profile!
+          </div>
+
+          <!-- Profile Picture Section -->
+          <div class="text-center mb-5">
+            <div class="position-relative d-inline-block">
+              <img
+                src="/api/placeholder/100/100"
+                class="rounded-circle border-4 border-primary shadow-sm mb-3 transition-all duration-300 hover:opacity-90"
+                alt="Profile Picture"
+                id="profile-pic"
+                style="width: 120px; height: 120px; object-fit: cover;"
+              >
+              <div class="position-absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4">
+                <label
+                  for="profile-picture"
+                  class="btn btn-primary btn-sm rounded-full p-2 shadow-md hover:bg-secondary transition-all duration-300 cursor-pointer"
+                  title="Upload new picture"
+                >
+                  <i class="bi bi-camera-fill text-lg"></i>
+                  <input type="file" id="profile-picture" accept="image/*" class="d-none">
+                </label>
+              </div>
+            </div>
+            <div class="mt-2">
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm rounded-full px-4 py-2 hover:bg-red-50 transition-all duration-300"
+                id="delete-profile-pic"
+              >
+                <i class="bi bi-trash me-1"></i> Delete Picture
+              </button>
+            </div>
+          </div>
+
+          <!-- Profile Form Fields -->
+          <div class="row g-4">
+            <!-- Full Name -->
+            <div class="col-md-6">
+              <label for="lawyer_name" class="form-label text-dark font-medium mb-2">
+                Full Name
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                  <i class="bi bi-person-fill text-primary"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                  id="lawyer_name"
+                  name="lawyer_name"
+                  placeholder="Enter your full name"
+                >
+              </div>
+            </div>
+
+            <!-- Contact Number -->
+            <div class="col-md-6">
+              <label for="contactNumber" class="form-label text-dark font-medium mb-2">
+                Contact Number
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                  <i class="bi bi-telephone-fill text-primary"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                  id="contactNumber"
+                  name="contactNumber"
+                  placeholder="Enter your contact number"
+                >
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="col-md-12">
+              <label for="address" class="form-label text-dark font-medium mb-2">
+                Address
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                  <i class="bi bi-geo-alt-fill text-primary"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                  id="address"
+                  name="address"
+                  placeholder="Enter your address"
+                >
+              </div>
+            </div>
+
+            <!-- Gender -->
+            <div class="col-md-12">
+              <label for="gender" class="form-label text-dark font-medium mb-2">
+                Gender
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark/10 border-0 rounded-l-md">
+                  <i class="bi bi-gender-ambiguous text-primary"></i>
+                </span>
+                <select
+                  class="form-select bg-dark/5 border-0 rounded-r-md text-dark focus:bg-dark/10 shadow-sm transition-all duration-300"
+                  id="gender"
+                  name="gender"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer Not to Say">Prefer Not to Say</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="mt-5 flex justify-end gap-3">
+            <button
+              type="button"
+              class="btn btn-outline-light rounded-md px-5 py-2 hover:bg-light/20 transition-all duration-300"
+              data-bs-dismiss="modal"
+              id="cancel-btn"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn bg-primary text-white rounded-md px-5 py-2 hover:bg-secondary transition-all duration-300 shadow-md"
+              id="update-profile-btn"
+            >
+              <i class="bi bi-save me-2"></i> Update Profile
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

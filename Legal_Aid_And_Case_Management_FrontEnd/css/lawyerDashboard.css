@@ -9,62 +9,90 @@ body {
 
 /* Sidebar Styling */
 .sidebar {
-  background: linear-gradient(180deg, #161a2b 0%, #0f1219 100%);
-  color: #b4b7c5;
-  height: 100vh;
+  width: 140px;
   position: fixed;
   top: 0;
   left: 0;
+  height: 100vh;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
   z-index: 1000;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .sidebar-content {
   display: flex;
   flex-direction: column;
+  align-items: center;
   height: 100%;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 0;
 }
 
 .logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .sidebar-nav .nav-link {
-  color: #b4b7c5;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 0.5rem;
   display: flex;
+  justify-content: center;
   align-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
   transition: all 0.3s ease;
-  font-weight: 500;
 }
 
-.sidebar-nav .nav-link:hover,
+.sidebar-nav .nav-link:hover {
+  background-color: #f3e8ff;
+  transform: scale(1.1);
+}
+
 .sidebar-nav .nav-link.active {
-  color: #fff;
   background-color: #8b5cf6;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-nav .nav-link.active i {
+  color: #ffffff;
+}
+
+.sidebar-nav .nav-link i {
+  transition: color 0.3s ease;
+}
+
+.sidebar-footer {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
 }
 
 .sidebar-footer .btn {
-  color: #b4b7c5;
-  border-color: rgba(255, 255, 255, 0.3);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition: all 0.3s ease;
-  font-weight: 500;
 }
 
 .sidebar-footer .btn:hover {
-  color: #fff;
-  background-color: #6d28d9;
-  border-color: #6d28d9;
+  background-color: #8b5cf6;
+  color: #ffffff;
 }
 
 /* Main Content Styling */
 .content-wrapper {
-  margin-left: 16.666667%;
+  margin-left: 140px;
   background-color: #fff;
   min-height: 100vh;
 }
@@ -172,6 +200,11 @@ body {
   background-color: #6d28d9;
   border-color: #6d28d9;
   box-shadow: 0 2px 10px rgba(109, 40, 217, 0.3);
+}
+
+.btn-outline-primary {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
 }
 
 .btn-outline-light {
@@ -293,18 +326,38 @@ body {
 }
 
 /* Responsive Adjustments */
-@media (max-width: 992px) {
-  .content-wrapper {
-    margin-left: 25%;
-  }
-}
-
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
     height: auto;
     position: relative;
-    transform: translateX(0);
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .sidebar-content {
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0.5rem 0;
+  }
+
+  .logo {
+    display: none;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .sidebar-nav .nav-link {
+    margin-bottom: 0;
+  }
+
+  .sidebar-footer {
+    flex-direction: row;
+    gap: 0.5rem;
   }
 
   .content-wrapper {
@@ -325,6 +378,7 @@ body {
     align-items: flex-start;
   }
 }
+
 /* Tab Styling */
 .nav-tabs {
   border-bottom: 2px solid rgba(22, 26, 43, 0.1);
@@ -361,6 +415,7 @@ body {
 #assigned-case-list .card:hover {
   transform: translateY(-5px);
 }
+
 /* Client List */
 #client-list .card {
   transition: transform 0.2s ease-in-out;
@@ -453,10 +508,6 @@ body {
 
 #chat-error {
   font-size: 0.9rem;
-}
-/* Appointment List Styling */
-#appointments-section .card {
-  margin-bottom: 1.5rem;
 }
 
 /* Appointment List Styling */
