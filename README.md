@@ -5,7 +5,8 @@ Welcome to the Legal Management System, a modern, AI-powered web application bui
 
 
 📽️ Demo Video
-🎥 Watch the Demo:[ LegalManagementSystem_Demo.mp4(https://youtu.be/X-fwJ-rzPIY?si=rxmmBt1VZN7PoBuK)
+🎥 Watch the Demo: 
+  Frontend :  (https://youtu.be/X-fwJ-rzPIY?si=rxmmBt1VZN7PoBuK)
 
 
 
