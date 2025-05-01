@@ -4,9 +4,14 @@ Welcome to the Legal Management System, a modern, AI-powered web application bui
 
 
 
-📽️ Demo Video
-🎥 Watch the Demo: 
-  Frontend :  (https://youtu.be/X-fwJ-rzPIY?si=rxmmBt1VZN7PoBuK)
+
+
+
+## 📽️ Demo Video
+
+🎥 **Watch the Demo:**
+
+- **Frontend:** [https://youtu.be/X-fwJ-rzPIY?si=rxmmBt1VZN7PoBuK](https://youtu.be/X-fwJ-rzPIY?si=rxmmBt1VZN7PoBuK)
 
 
 
@@ -112,14 +117,15 @@ Emails:
 
 🧰 Tech Stack
 
-| Layer     | Technology              |
-|----------|--------------------------|
-| Frontend | React.js (Node.js v16+)  |
-| Backend  | Spring Boot (Java 17+)   |
-| Database | MySQL 8+                 |
-| AI       | OpenAI API               |
-| Video    | Zoom/Google Meet API     |
-
+| Category        | Technologies                                  |
+|----------------|-----------------------------------------------|
+| 🎨 Frontend     | HTML, CSS, JavaScript                         |
+| 🔧 Backend      | Spring Boot, Java 17, Hibernate               |
+| 🔐 Authentication | JWT (JSON Web Tokens)                      |
+| 🛡️ Security     | Spring Security                              |
+| 🗄️ Database     | MySQL                                         |
+| 📧 Email Service| JavaMail API                                  |
+| 🗂️ Version Control | Git, GitHub                               |
 
 Setup Instructions
 
